@@ -1,5 +1,6 @@
 package book;
 
+import com.google.gson.Gson;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -25,6 +26,9 @@ public class Book {
     @Id private int Id;
     @Column private Integer LibraryId;
     @Column private String Title;
+
+
+    @Column private String Author;
     @Column private Integer Isbn;
     @Column private String Description;
     @Column private String BorrowedFromUser;
@@ -41,6 +45,9 @@ public class Book {
     public String getTitle() {return Title;}
     public void setTitle(String title) {Title = title;}
 
+    public String getAuthor() {return Author;}
+    public void setAuthor(String author) {Author = author;}
+
     public int getIsbn() {return Isbn;}
     public void setIsbn(int isbn) {this.Isbn = isbn;}
 
@@ -56,5 +63,10 @@ public class Book {
 
     public String sayHello(){
         return "Hello World!";
+    }
+
+    @Override
+    public String toString(){
+        return new Gson().toJson(this);
     }
 }

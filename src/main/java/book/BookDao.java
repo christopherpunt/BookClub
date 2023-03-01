@@ -1,13 +1,9 @@
 package book;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.util.List;
-
 import DatabaseUtils.HibernateUtils;
 import org.hibernate.Session;
+
+import java.util.List;
 
 public class BookDao {
 

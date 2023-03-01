@@ -1,4 +1,3 @@
-import book.Book;
 import book.BookDao;
 
 public class BookClubServer {
@@ -12,7 +11,7 @@ public class BookClubServer {
         System.out.println("Books:");
 
         for (var book : bookDao.getBooks()) {
-            System.out.println("Book title: " + book.getTitle());
+            System.out.println(book);
         }
     }
 }
