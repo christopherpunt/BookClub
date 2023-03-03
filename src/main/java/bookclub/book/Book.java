@@ -24,7 +24,8 @@ public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int Id;
-    @Column(name = "libraryid")
+
+    @Column
     private String LibraryId;
     @Column
     private String Title;
@@ -34,9 +35,9 @@ public class Book {
     private String Isbn;
     @Column
     private String Description;
-    @Column(name = "borrowedfromuser")
+    @Column
     private String BorrowedFromUser;
-    @Column(name = "lenttouser")
+    @Column
     private String LentToUser;
     //endregion
 
