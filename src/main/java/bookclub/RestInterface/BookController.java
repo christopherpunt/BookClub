@@ -18,7 +18,6 @@ public class BookController {
 
     @RequestMapping(value= "/book", method= RequestMethod.POST)
     public Book createBook(@RequestBody Book book){
-//        return new Book();
         return bookService.createBook(book);
     }
 
