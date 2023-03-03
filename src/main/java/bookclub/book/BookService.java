@@ -1,11 +1,15 @@
-package book;
+package bookclub.book;
 
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import java.util.List;
+
+@Service
 public class BookService {
+
+    @Autowired
+    BookRepository bookDao;
 
     public void getBookFromGoogle(String isbn){
 //        var client = HttpClient.newHttpClient();
@@ -17,5 +21,13 @@ public class BookService {
 //        var response = client.send(request, responsestr);
 
 //        System.out.println(response.body());
+    }
+
+    public Book createBook(Book book){
+        return bookDao.save(book);
+    }
+
+    public List<Book> getBooks(){
+        return bookDao.findAll();
     }
 }

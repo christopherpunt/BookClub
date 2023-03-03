@@ -1,4 +1,4 @@
-package library;
+package bookclub.library;
 
 public class Library {
     public String Id;

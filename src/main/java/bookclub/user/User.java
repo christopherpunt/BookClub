@@ -1,4 +1,4 @@
-package user;
+package bookclub.user;
 
 public class User {
 

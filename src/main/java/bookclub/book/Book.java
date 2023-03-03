@@ -1,9 +1,7 @@
-package book;
+package bookclub.book;
 
 import com.google.gson.Gson;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class Book {
@@ -12,10 +10,10 @@ public class Book {
 
     }
 
-    public Book(int id, int libraryId, String title, int isbn, String description, String borrowedFromUser, String lentToUser){
-        this.Id = id;
+    public Book(String libraryId, String title, String author, String isbn, String description, String borrowedFromUser, String lentToUser){
         this.LibraryId = libraryId;
         this.Title = title;
+        this.Author = author;
         this.Isbn = isbn;
         this.Description = description;
         this.BorrowedFromUser = borrowedFromUser;
@@ -23,24 +21,31 @@ public class Book {
     }
 
     //region Properties
-    @Id private int Id;
-    @Column private Integer LibraryId;
-    @Column private String Title;
-
-
-    @Column private String Author;
-    @Column private Integer Isbn;
-    @Column private String Description;
-    @Column private String BorrowedFromUser;
-    @Column private String LentToUser;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int Id;
+    @Column(name = "libraryid")
+    private String LibraryId;
+    @Column
+    private String Title;
+    @Column
+    private String Author;
+    @Column
+    private String Isbn;
+    @Column
+    private String Description;
+    @Column(name = "borrowedfromuser")
+    private String BorrowedFromUser;
+    @Column(name = "lenttouser")
+    private String LentToUser;
     //endregion
 
     //region Accessors
     public int getId(){return Id;}
     public void setId(int id) {Id =id;}
 
-    public int getLibraryId() {return LibraryId;}
-    public void setLibraryId(int id) {this.LibraryId = id;}
+    public String getLibraryId() {return LibraryId;}
+    public void setLibraryId(String id) {this.LibraryId = id;}
 
     public String getTitle() {return Title;}
     public void setTitle(String title) {Title = title;}
@@ -48,8 +53,8 @@ public class Book {
     public String getAuthor() {return Author;}
     public void setAuthor(String author) {Author = author;}
 
-    public int getIsbn() {return Isbn;}
-    public void setIsbn(int isbn) {this.Isbn = isbn;}
+    public String getIsbn() {return Isbn;}
+    public void setIsbn(String isbn) {this.Isbn = isbn;}
 
     public String getDescription() {return Description;}
     public void setDescription(String description) {this.Description = description;}

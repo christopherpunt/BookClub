@@ -1,6 +1,6 @@
-package DatabaseUtils;
+package bookclub.DatabaseUtils;
 
-import book.Book;
+import bookclub.book.Book;
 import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -22,7 +22,7 @@ public class HibernateUtils {
 
                 // Hibernate settings equivalent to hibernate.cfg.xml's properties
                 Properties settings = new Properties();
-                settings.put(Environment.DRIVER, "com.mysql.jdbc.Driver");
+//                settings.put(Environment.DRIVER, "com.mysql.jdbc.Driver");
                 settings.put(Environment.URL, "jdbc:mysql://localhost/book_club");
                 settings.put(Environment.USER, "BookClub");
                 settings.put(Environment.PASS, "BookClub");
