@@ -3,7 +3,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class Book_test {
+public class BookTest {
     private final Book book = new Book();
 
     @Test

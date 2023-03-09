@@ -1,11 +1,22 @@
 package bookclub.user;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+
+@Entity
 public class User {
 
     //region Properties
+    @jakarta.persistence.Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     public String Id;
+    @Column
     public String firstName;
+    @Column
     public String lastName;
+    @Column
     public String userName;
     //endregion
 
