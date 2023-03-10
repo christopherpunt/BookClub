@@ -5,10 +5,9 @@
 
 trigger:
 - main
-- AzurePipelineTests
 
 pool:
-  vmImage: 'windows-2019'
+  vmImage: ubuntu-latest
 
 steps:
 - task: JavaToolInstaller@0
@@ -17,10 +16,6 @@ steps:
     jdkArchitectureOption: 'x64'
     jdkSourceOption: 'PreInstalled'
   displayName: 'UpdateJavaVersion'
-
-- script: |
-    java -version
-  displayName: 'Check Java Version'
 
 - task: Gradle@3
   inputs:
@@ -32,11 +27,3 @@ steps:
     jdkVersionOption: '1.17'
     sonarQubeRunAnalysis: false
     spotBugsAnalysis: false
-
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
-
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'

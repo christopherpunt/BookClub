@@ -13,29 +13,14 @@ repositories {
 }
 
 dependencies {
+    //Spring Boot
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
+    //Json
     // https://mvnrepository.com/artifact/com.google.code.gson/gson
     implementation 'com.google.code.gson:gson:2.10.1'
-
-//    implementation 'org.springframework.boot:org.springframework.boot.gradle.plugin:3.0.3'
-//    testImplementation 'org.junit.jupiter:junit-jupiter:5.8.1'
-//    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.2'
-//    // https://mvnrepository.com/artifact/org.hibernate/hibernate-core
-//    implementation 'org.hibernate:hibernate-core:6.1.7.Final'
-//
-//
-//    // https://mvnrepository.com/artifact/mysql/mysql-connector-java
-//    implementation 'mysql:mysql-connector-java:8.0.32'
-//
-    // https://mvnrepository.com/artifact/com.google.code.gson/gson
-//    implementation 'com.google.code.gson:gson:2.10.1'
-
-//    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-//    implementation 'org.springframework.boot:spring-boot-starter-web'
-//    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 test {
