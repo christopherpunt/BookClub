@@ -32,7 +32,7 @@ steps:
     jdkArchitectureOption: 'x64'
     publishJUnitResults: true
     testResultsFiles: '**/TEST-*.xml'
-    tasks: 'build --scan --info'
+    tasks: 'build --scan --debug --stacktrace'
 
 - script: echo Hello, world!
   displayName: 'Run a one-line script'
