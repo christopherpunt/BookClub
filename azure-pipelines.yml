@@ -5,6 +5,7 @@
 
 trigger:
 - main
+- AzurePipelineTests
 
 pool:
   vmImage: ubuntu-latest
