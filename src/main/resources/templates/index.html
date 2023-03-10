@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Book Club</title>
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}">
+</head>
+<body class="dark">
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">Book Club</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="./">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/book">Add Books</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <h1>Welcome to Book Club!</h1>
+    <hr />
+
+    <table class="table table-bordered table-striped">
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Library Id</th>
+            <th>Title</th>
+            <th>Author</th>
+            <th>ISBN</th>
+            <th>Description</th>
+            <th>BorrowedFromUser</th>
+            <th>LentToUser</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="item: ${books}">
+            <td th:text="${item.Id}"></td>
+            <td th:text="${item.Library}"></td>
+            <td th:text="${item.Title}"></td>
+            <td th:text="${item.Author}"></td>
+            <td th:text="${item.Isbn}"></td>
+            <td th:text="${item.Description}"></td>
+            <td th:text="${item.BorrowedFromUser}"></td>
+            <td th:text="${item.LentToUser}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <p><a class="btn btn-outline-success" href="/book">
+        <i class="bi bi-plus-square-fill"></i>Add New Book</a>
+    </p>
+</div>
+
+<!-- jQuery and Bootstrap Bundle (includes Popper) -->
+<script th:src="@{/webjars/jquery/3.6.0/jquery.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.bundle.min.js}"></script>
+
+</body>
+</html>

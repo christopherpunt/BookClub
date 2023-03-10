@@ -1,5 +1,7 @@
-package bookclub.book;
+package bookclub.services;
 
+import bookclub.models.Book;
+import bookclub.repositories.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,10 +21,10 @@ public class BookService {
     }
 
     public static Book getBookDetails(String isbn){
-        return GoogleBookDetails.getBookDetailsFromIsbn(isbn);
+        return GoogleBookDetailsService.getBookDetailsFromIsbn(isbn);
     }
 
     public static List<Book> getBooksFromTitle(String title){
-        return GoogleBookDetails.getBooksBasedOnTitle(title);
+        return GoogleBookDetailsService.getBooksBasedOnTitle(title);
     }
 }
