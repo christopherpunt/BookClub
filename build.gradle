@@ -30,6 +30,14 @@ dependencies {
 
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
+
+    // https://mvnrepository.com/artifact/org.webjars/bootstrap
+    implementation 'org.webjars:bootstrap:5.2.3'
+
+    // https://mvnrepository.com/artifact/org.webjars.npm/bootstrap-icons
+    implementation 'org.webjars.npm:bootstrap-icons:1.10.3'
+
+
 }
 
 test {

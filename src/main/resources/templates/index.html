@@ -1,10 +1,41 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Book Club</title>
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}">
 </head>
 <body>
+<div class="container">
     <h1>Welcome to Book Club!</h1>
+    <hr />
+
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Library Id</th>
+                <th>Title</th>
+                <th>Author</th>
+                <th>ISBN</th>
+                <th>Description</th>
+                <th>BorrowedFromUser</th>
+                <th>LentToUser</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="item: ${books}">
+                <td th:text="${item.Id}"></td>
+                <td th:text="${item.Library}"></td>
+                <td th:text="${item.Title}"></td>
+                <td th:text="${item.Author}"></td>
+                <td th:text="${item.Isbn}"></td>
+                <td th:text="${item.Description}"></td>
+                <td th:text="${item.BorrowedFromUser}"></td>
+                <td th:text="${item.LentToUser}"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 </body>
 </html>
