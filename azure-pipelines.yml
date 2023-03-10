@@ -11,8 +11,16 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
+- task: JavaToolInstaller@0
+  inputs:
+    versionSpec: '18'
+    jdkArchitectureOption: 'x64'
+    jdkSourceOption: 'PreInstalled'
+  displayName: 'UpdateJavaVersion'
+
 - script: |
     java -version
+  displayName: 'Check Java Version'
 
 - task: Gradle@2
   inputs:
