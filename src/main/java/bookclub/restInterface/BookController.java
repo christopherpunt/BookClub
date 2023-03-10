@@ -1,4 +1,4 @@
-package bookclub.RestInterface;
+package bookclub.restInterface;
 import bookclub.book.Book;
 import bookclub.book.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
