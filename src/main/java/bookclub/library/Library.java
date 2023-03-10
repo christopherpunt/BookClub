@@ -1,7 +1,16 @@
 package bookclub.library;
 
+import bookclub.user.User;
+import jakarta.persistence.*;
+
+@Entity
 public class Library {
-    public String Id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    public int Id;
+    @Column
     public String Name;
-    public String UserId;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    public User User;
 }

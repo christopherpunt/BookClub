@@ -10,11 +10,11 @@ public class BookService {
     @Autowired
     BookRepository bookDao;
 
-    public bookclub.book.Book createBook(bookclub.book.Book book){
+    public Book createBook(Book book){
         return bookDao.save(book);
     }
 
-    public List<bookclub.book.Book> getBooks(){
+    public List<Book> getBooks(){
         return bookDao.findAll();
     }
 

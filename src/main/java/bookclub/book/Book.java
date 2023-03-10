@@ -1,5 +1,6 @@
 package bookclub.book;
 
+import bookclub.library.Library;
 import com.google.gson.Gson;
 import jakarta.persistence.*;
 
@@ -10,22 +11,23 @@ public class Book {
 
     }
 
-    public Book(String libraryId, String title, String author, String isbn, String description, String borrowedFromUser, String lentToUser){
-        this.LibraryId = libraryId;
-        this.Title = title;
-        this.Author = author;
-        this.Isbn = isbn;
-        this.Description = description;
-        this.BorrowedFromUser = borrowedFromUser;
-        this.LentToUser = lentToUser;
-    }
+//    public Book(Library libraryId, String title, String author, String isbn, String description, String borrowedFromUser, String lentToUser){
+//        this.LibraryId = libraryId;
+//        this.Title = title;
+//        this.Author = author;
+//        this.Isbn = isbn;
+//        this.Description = description;
+//        this.BorrowedFromUser = borrowedFromUser;
+//        this.LentToUser = lentToUser;
+//    }
 
     //region Properties
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int Id;
-    @Column
-    private String LibraryId;
+    @ManyToOne
+    @JoinColumn(name = "library_id")
+    private Library library;
     @Column
     private String Title;
     @Column
@@ -44,8 +46,8 @@ public class Book {
     public int getId(){return Id;}
     public void setId(int id) {Id =id;}
 
-    public String getLibraryId() {return LibraryId;}
-    public void setLibraryId(String id) {this.LibraryId = id;}
+    public Library getLibraryId() {return library;}
+    public void setLibraryId(Library id) {this.library = id;}
 
     public String getTitle() {return Title;}
     public void setTitle(String title) {Title = title;}
