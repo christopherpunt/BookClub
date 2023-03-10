@@ -10,7 +10,7 @@ public class BookService {
     @Autowired
     BookRepository bookDao;
 
-    public bookclub.book.Book createBook(bookclub.book.Book book){
+    public bookclub.book.Book createBook(Book book){
         return bookDao.save(book);
     }
 

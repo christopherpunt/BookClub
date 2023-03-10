@@ -1,29 +1,32 @@
 package bookclub.user;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import bookclub.library.Library;
+import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 public class User {
 
     //region Properties
-    @jakarta.persistence.Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public String Id;
+    public int Id;
     @Column
     public String firstName;
     @Column
     public String lastName;
     @Column
     public String userName;
+
+    @OneToMany(mappedBy = "User")
+    public List<Library> Libraries;
     //endregion
 
     //region Accessors
-    public String getId() {return Id;}
+    public int getId() {return Id;}
 
-    public void setId(String id) {Id = id;}
+    public void setId(int id) {Id = id;}
 
     public String getFirstName() {return firstName;}
 

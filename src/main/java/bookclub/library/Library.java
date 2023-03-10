@@ -1,7 +1,24 @@
 package bookclub.library;
 
+import bookclub.book.Book;
+import bookclub.user.User;
+import jakarta.persistence.*;
+
+import java.util.List;
+
+@Entity
 public class Library {
-    public String Id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    public int Id;
+
+    @Column
     public String Name;
-    public String UserId;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    public User User;
+
+    @OneToMany(mappedBy = "library")
+    public List<Book> Books;
 }
