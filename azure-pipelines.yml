@@ -11,6 +11,9 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
+- script: |
+    java -version
+
 - task: Gradle@2
   inputs:
     workingDirectory: ''
