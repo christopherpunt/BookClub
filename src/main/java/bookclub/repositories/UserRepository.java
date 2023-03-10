@@ -1,5 +1,6 @@
-package bookclub.user;
+package bookclub.repositories;
 
+import bookclub.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

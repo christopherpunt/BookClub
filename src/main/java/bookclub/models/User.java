@@ -1,4 +1,4 @@
-package bookclub.user;
+package bookclub.models;
 
 import jakarta.persistence.*;
 

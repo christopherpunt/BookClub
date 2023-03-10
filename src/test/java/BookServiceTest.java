@@ -1,5 +1,5 @@
-import bookclub.book.Book;
-import bookclub.book.BookService;
+import bookclub.models.Book;
+import bookclub.services.BookService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -18,7 +18,7 @@ public class BookServiceTest {
         assertEquals("Harry Potter the Complete Series", book.getTitle());
         assertEquals("J. K. Rowling", book.getAuthor());
         assertEquals("0545162076", book.getIsbn());
-        assertEquals("Collects the complete series that relates the adventures of young Harry Potter, who attends Hogwarts School of Witchcraft and Wizardry, where he and others of his kind learn their craft.", book.getDescription());;
+        assertEquals("Collects the complete series that relates the adventures of young Harry Potter, who attends Hogwarts School of Witchcraft and Wizardry, where he and others of his kind learn their craft.", book.getDescription());
     }
 
     @Test

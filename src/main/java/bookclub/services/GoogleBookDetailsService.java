@@ -1,20 +1,21 @@
-package bookclub.book;
+package bookclub.services;
 
+import bookclub.models.Book;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Scanner;
 
-public class GoogleBookDetails {
+public class GoogleBookDetailsService {
     static String baseUrl = "https://www.googleapis.com/books/v1/volumes?q=";
 
     public static String executeGetRequest(String urlString){
@@ -50,8 +51,6 @@ public class GoogleBookDetails {
             return null;
         }
 
-        Book book = null;
-
         Gson gson = new Gson();
         JsonElement element = gson.fromJson(response, JsonElement.class);
         JsonObject object = element.getAsJsonObject();
@@ -67,12 +66,10 @@ public class GoogleBookDetails {
     }
 
     public static List<Book> getBooksBasedOnTitle(String title){
-        String urlString = null;
-        try {
-            urlString = baseUrl + URLEncoder.encode(title, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException(e);
-        }
+        String urlString;
+
+        urlString = baseUrl + URLEncoder.encode(title, StandardCharsets.UTF_8);
+
         String response = executeGetRequest(urlString);
 
         if (response == null){

@@ -1,6 +1,6 @@
-package bookclub.restInterface;
-import bookclub.book.Book;
-import bookclub.book.BookService;
+package bookclub.controllers;
+import bookclub.models.Book;
+import bookclub.services.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
