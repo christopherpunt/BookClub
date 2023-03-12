@@ -68,7 +68,7 @@ public class GoogleBookDetailsService {
     public static List<Book> getBooksBasedOnTitle(String title){
         String urlString;
 
-        urlString = baseUrl + URLEncoder.encode(title, StandardCharsets.UTF_8);
+        urlString = baseUrl + URLEncoder.encode(title, StandardCharsets.UTF_8) + "&maxResults=40";
 
         String response = executeGetRequest(urlString);
 
@@ -108,15 +108,18 @@ public class GoogleBookDetailsService {
         JsonArray authorsArray = jsonBook.getAsJsonArray("authors");
         StringBuilder authors = new StringBuilder();
 
-        for (int i = 0; i < authorsArray.size(); i++){
-            if (i == 0){
-                authors.append(authorsArray.get(0).getAsString());
-            } else {
-                authors.append(", ").append(authorsArray.get(i).getAsString());
+        if (authorsArray != null && authorsArray.size() > 0){
+            for (int i = 0; i < authorsArray.size(); i++){
+                if (i == 0){
+                    authors.append(authorsArray.get(0).getAsString());
+                } else {
+                    authors.append(", ").append(authorsArray.get(i).getAsString());
+                }
             }
+
+            book.setAuthor(authors.toString());
         }
 
-        book.setAuthor(authors.toString());
         return book;
     }
 
