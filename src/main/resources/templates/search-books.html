@@ -33,19 +33,23 @@
     </div>
   </form>
   <h2>Results</h2>
-  <table class="table">
+  <table class="table table-striped">
     <thead>
     <tr>
       <th>Title</th>
       <th>Author</th>
       <th>ISBN</th>
+      <th></th>
     </tr>
     </thead>
     <tbody>
     <tr th:each="item: ${books}">
-      <td th:text="${item.Title}"></td>
-      <td th:text="${item.Author}"></td>
-      <td th:text="${item.Isbn}"></td>
+      <form action="#" th:action="@{/addBook}" th:object="${item.Isbn}" method="POST">
+        <td th:text="${item.Title}"></td>
+        <td th:text="${item.Author}"></td>
+        <td th:text="${item.Isbn}"></td>
+        <td><button type="submit" class="btn btn-primary" name="book" value="${item}">Add to Library</button></td>
+      </form>
     </tr>
     </tbody>
   </table>

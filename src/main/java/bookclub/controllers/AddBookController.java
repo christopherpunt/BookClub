@@ -31,9 +31,16 @@ public class AddBookController {
     }
 
     @PostMapping("/addBook")
-    public Book AddBook(@RequestBody Book book){
-        return bookService.createBook(book);
+    public String AddBook(@RequestBody Book book){
+//        Book book = new Book();
+
+//        Book book = GoogleBookDetailsService.getBookDetailsFromIsbn(book);
+
+//        book.setTitle(bookItem.getTitle());
+//        book.setAuthor(bookItem.getAuthor());
+//        book.setIsbn(bookItem.getIsbn());
+
+        bookService.createBook(book);
+        return "redirect:/";
     }
-
-
 }
