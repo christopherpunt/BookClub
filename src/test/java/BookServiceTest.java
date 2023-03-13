@@ -24,7 +24,7 @@ public class BookServiceTest {
     @Test
     public void getBooksFromTitle(){
         List<Book> books = BookService.getBooksFromTitle("A time to kill");
-        assertEquals(10, books.size());
+        assertEquals(40, books.size());
     }
 
 }
