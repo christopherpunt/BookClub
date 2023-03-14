@@ -35,6 +35,8 @@ public class AddBookController {
     public String AddBook(@RequestParam String bookItem){
         Book book = GoogleBookDetailsService.getBookDetailsFromIsbn(bookItem);
 
+        //TODO: book wont save if the description is too long, so set it to blank for nowpro
+//        book.setDescription("");
         bookService.createBook(book);
         return "redirect:/";
     }

@@ -27,7 +27,9 @@ public class Book {
     private String Author;
     @Column
     private String Isbn;
-    @Column
+
+    @Lob
+    @Column(columnDefinition="TEXT")
     private String Description;
     @Column
     private String BorrowedFromUser;
