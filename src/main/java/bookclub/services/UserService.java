@@ -1,5 +1,7 @@
-package bookclub.user;
+package bookclub.services;
 
+import bookclub.models.User;
+import bookclub.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

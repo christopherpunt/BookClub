@@ -1,6 +1,5 @@
-package bookclub.library;
+package bookclub.models;
 
-import bookclub.user.User;
 import jakarta.persistence.*;
 
 @Entity
