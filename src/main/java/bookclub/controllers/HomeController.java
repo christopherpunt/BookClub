@@ -6,19 +6,19 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.security.Principal;
+
 @RestController
 public class HomeController {
 
     @Autowired
     BookService bookService;
 
-    @GetMapping("/")
-    public ModelAndView index(){
-//        return "welcome to book club test";
+    @GetMapping("/home")
+    public ModelAndView index(Principal principal){
 
         ModelAndView modelAndView = new ModelAndView("index.html");
-        modelAndView.addObject("books", bookService.getBooks());
+        modelAndView.addObject("books", bookService.getAllBooksForUser(principal.getName()));
         return modelAndView;
     }
-
 }

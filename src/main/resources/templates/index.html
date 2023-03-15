@@ -4,26 +4,14 @@
     <meta charset="UTF-8">
     <title>Book Club</title>
     <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}">
+    <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="/css/style.css" />
+    <script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
 </head>
 <body class="dark">
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="#">Book Club</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="./">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/book">Add Books</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
+    <!-- Include the navbar fragment -->
+    <div th:insert="common/navbar :: navbar"></div>
 
 <div class="container">
     <h1>Welcome to Book Club!</h1>
@@ -33,7 +21,7 @@
         <thead>
         <tr>
             <th>Id</th>
-            <th>Library Id</th>
+            <th>User Id</th>
             <th>Title</th>
             <th>Author</th>
             <th>ISBN</th>
@@ -45,7 +33,7 @@
         <tbody>
         <tr th:each="item: ${books}">
             <td th:text="${item.Id}"></td>
-            <td th:text="${item.Library}"></td>
+            <td th:text="${item.User.getFullName()}"></td>
             <td th:text="${item.Title}"></td>
             <td th:text="${item.Author}"></td>
             <td th:text="${item.Isbn}"></td>
