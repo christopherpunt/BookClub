@@ -6,10 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -36,7 +33,12 @@ public class UserController {
         return "login";
     }
 
-    @RequestMapping("/register")
+    @PostMapping("/login")
+    public String loginPost(@RequestParam String email, @RequestParam String password){
+        return "login successful";
+    }
+
+    @GetMapping("/register")
     public String showRegistrationForm(Model model){
         model.addAttribute("user", new User());
 
