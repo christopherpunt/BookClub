@@ -33,11 +33,6 @@ public class UserController {
         return "login";
     }
 
-    @PostMapping("/login")
-    public String loginPost(@RequestParam String email, @RequestParam String password){
-        return "login successful";
-    }
-
     @GetMapping("/register")
     public String showRegistrationForm(Model model){
         model.addAttribute("user", new User());
@@ -45,7 +40,7 @@ public class UserController {
         return "signup_form";
     }
 
-    @PostMapping("/process_register")
+    @PostMapping("/register")
     public String processRegister(User user) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String encodedPassword = passwordEncoder.encode(user.getPassword());

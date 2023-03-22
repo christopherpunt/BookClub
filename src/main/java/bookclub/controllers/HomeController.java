@@ -12,13 +12,10 @@ public class HomeController {
     @Autowired
     BookService bookService;
 
-    @GetMapping("/")
+    @GetMapping("/home")
     public ModelAndView index(){
-//        return "welcome to book club test";
-
         ModelAndView modelAndView = new ModelAndView("index.html");
         modelAndView.addObject("books", bookService.getBooks());
         return modelAndView;
     }
-
 }

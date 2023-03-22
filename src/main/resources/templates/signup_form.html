@@ -16,7 +16,7 @@
           <h3>User Registration - Sign Up</h3>
         </div>
         <div class="card-body">
-          <form th:action="@{/process_register}" th:object="${user}" method="post">
+          <form th:action="@{/register}" th:object="${user}" method="post">
             <div class="form-group">
               <label for="email">E-mail</label>
               <input type="email" th:field="*{email}" id="email" class="form-control" required />
