@@ -19,7 +19,7 @@ public class WebSecurityConfig {
                 .requestMatchers("/register").permitAll().anyRequest().fullyAuthenticated()
                 .and()
                 .formLogin()
-                .defaultSuccessUrl("/home", true);
+                .defaultSuccessUrl("/home", true).and().csrf().disable();
         return http.build();
     }
 
