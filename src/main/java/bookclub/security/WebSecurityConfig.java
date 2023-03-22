@@ -15,10 +15,9 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         http
-                .authorizeHttpRequests((requests) -> requests.requestMatchers("/register", "/login")
-                        .permitAll()
-                        .anyRequest()
-                        .authenticated())
+                .authorizeHttpRequests()
+                .requestMatchers("/register").permitAll().anyRequest().fullyAuthenticated()
+                .and()
                 .formLogin()
                 .defaultSuccessUrl("/home", true);
         return http.build();
