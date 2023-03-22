@@ -42,6 +42,7 @@ public class GoogleBookDetailsService {
         return null;
     }
 
+    //TODO: should return optional
     public static Book getBookDetailsFromIsbn(String isbn){
         String urlString = baseUrl + "isbn:" + isbn;
 

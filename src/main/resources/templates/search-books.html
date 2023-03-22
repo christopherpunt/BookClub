@@ -41,21 +41,28 @@
 <script th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.bundle.min.js}"></script>
 
 <script>
-const addToLibraryButton = document.getElementById("add-to-library-button");
+const addToLibraryButtons = document.querySelectorAll(".btn[name='book']");
 
-addToLibraryButton.addEventListener("click", () => {
-  const bookItem = addToLibraryButton.value;
-  const formData = new FormData();
-  formData.append("bookItem", bookItem);
+addToLibraryButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    const bookItem = button.value;
+    const formData = new FormData();
+    formData.append("bookItem", bookItem);
 
-  fetch("/addBook", {
-    method: "POST",
-    body: formData,
-  })
-  .then(response => response.json())
-  .then(data => console.log(data))
-  .catch(error => console.error(error));
+    fetch("/addBook", {
+      method: "POST",
+      body: formData,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        window.location.href = "/home";
+      })
+      .catch((error) => console.error(error));
+  });
 });
+
+
 </script>
 </body>
 </html>

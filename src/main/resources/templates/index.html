@@ -21,7 +21,7 @@
         <thead>
         <tr>
             <th>Id</th>
-            <th>Library Id</th>
+            <th>User Id</th>
             <th>Title</th>
             <th>Author</th>
             <th>ISBN</th>
@@ -33,7 +33,7 @@
         <tbody>
         <tr th:each="item: ${books}">
             <td th:text="${item.Id}"></td>
-            <td th:text="${item.Library}"></td>
+            <td th:text="${item.User.getFullName()}"></td>
             <td th:text="${item.Title}"></td>
             <td th:text="${item.Author}"></td>
             <td th:text="${item.Isbn}"></td>
