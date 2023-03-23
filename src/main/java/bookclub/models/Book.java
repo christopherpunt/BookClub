@@ -35,6 +35,8 @@ public class Book {
     private String BorrowedFromUser;
     @Column
     private String LentToUser;
+    @Column
+    private String BookCoverUrl;
     //endregion
 
     @Override

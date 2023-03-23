@@ -33,6 +33,7 @@
     <table class="table table-bordered table-striped">
         <thead>
         <tr>
+            <th>Image</th>
             <th>Id</th>
             <th>User Id</th>
             <th>Title</th>
@@ -46,6 +47,7 @@
         </thead>
         <tbody>
             <tr th:each="item: ${books}" th:href="@{/book_details(id=${item.Id})}" class="clickable-row">
+                <td><img th:src="${item.BookCoverUrl}"/></td>
                 <td th:text="${item.Id}"></td>
                 <td th:text="${item.User.getFullName()}"></td>
                 <td th:text="${item.Title}"></td>
