@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Book Details</title>
+  <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}">
+</head>
+<body>
+<!-- Include the navbar fragment -->
+<div th:insert="common/navbar :: navbar"></div>
+
+<div class="container mt-4">
+  <h1>Book Details</h1>
+  <hr />
+
+  <div class="row">
+    <div class="col-md-4">
+      <img class="img-fluid" th:src="@{/img/book_placeholder.png}" alt="Book Cover">
+    </div>
+    <div class="col-md-8">
+      <h2 th:text="${book.Title}"></h2>
+      <p>By <span th:text="${book.Author}"></span></p>
+      <p>ISBN: <span th:text="${book.Isbn}"></span></p>
+      <p>Description:</p>
+      <p th:text="${book.Description}"></p>
+    </div>
+  </div>
+
+  <hr />
+
+  <div class="row">
+    <div class="col-md-6">
+      <h3>Borrowed From:</h3>
+      <p th:text="${book.BorrowedFromUser}"></p>
+    </div>
+    <div class="col-md-6">
+      <h3>Lent To:</h3>
+      <p th:text="${book.LentToUser}"></p>
+    </div>
+  </div>
+</div>
+
+<!-- jQuery and Bootstrap Bundle (includes Popper) -->
+<script th:src="@{/webjars/jquery/3.6.0/jquery.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.bundle.min.js}"></script>
+</body>
+</html>

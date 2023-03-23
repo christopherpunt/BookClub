@@ -8,6 +8,7 @@ import bookclub.services.BookService;
 import bookclub.services.GoogleBookDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -76,12 +77,13 @@ public class BookController {
         return "index";
     }
 
-    @GetMapping("/book_details")
-    public String getBookDetails(@RequestParam int Id){
-        Optional<Book> book = bookDao.findById(Id);
+    @GetMapping("/book_details/{id}")
+    public String getBookDetails(@PathVariable int id, Model model){
+        Optional<Book> book = bookDao.findById(id);
 
         if(book.isPresent()){
-            return "book found: " + book.get().getTitle();
+            model.addAttribute("book", book.get());
+            return "book_details";
         }
         return "no book found";
     }

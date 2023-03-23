@@ -41,6 +41,7 @@
             <th>Description</th>
             <th>BorrowedFromUser</th>
             <th>LentToUser</th>
+            <th>Button</th>
         </tr>
         </thead>
         <tbody>
@@ -53,6 +54,11 @@
                 <td th:text="${item.Description}"></td>
                 <td th:text="${item.BorrowedFromUser}"></td>
                 <td th:text="${item.LentToUser}"></td>
+                <td>
+                    <a th:href="@{/book_details/{Id}(Id=${{item.Id}})}">
+                        <button class="btn btn-primary">Details</button>
+                    </a>
+                </td>
             </tr>
         </tbody>
     </table>
@@ -65,6 +71,13 @@
 <!-- jQuery and Bootstrap Bundle (includes Popper) -->
 <script th:src="@{/webjars/jquery/3.6.0/jquery.min.js}"></script>
 <script th:src="@{/webjars/bootstrap/5.2.3/js/bootstrap.bundle.min.js}"></script>
-
+<script>
+    $(document).ready(function() {
+        // Add click event to all rows with clickable-row class
+        $('.clickable-row').click(function() {
+            window.location = $(this).attr('href');
+        });
+    });
+</script>
 </body>
 </html>
