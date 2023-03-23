@@ -2,6 +2,7 @@ package bookclub.controllers;
 
 import bookclub.models.Book;
 import bookclub.models.User;
+import bookclub.repositories.BookRepository;
 import bookclub.repositories.UserRepository;
 import bookclub.services.BookService;
 import bookclub.services.GoogleBookDetailsService;
@@ -22,6 +23,9 @@ public class BookController {
 
     @Autowired
     BookService bookService;
+
+    @Autowired
+    BookRepository bookDao;
 
 //    @RequestMapping(value= "/book", method= RequestMethod.POST)
 //    public Book createBook(@RequestBody Book book){
@@ -70,5 +74,15 @@ public class BookController {
         }
 
         return "index";
+    }
+
+    @GetMapping("/book_details")
+    public String getBookDetails(@RequestParam int Id){
+        Optional<Book> book = bookDao.findById(Id);
+
+        if(book.isPresent()){
+            return "book found: " + book.get().getTitle();
+        }
+        return "no book found";
     }
 }
