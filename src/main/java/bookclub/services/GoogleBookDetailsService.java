@@ -160,7 +160,13 @@ public class GoogleBookDetailsService {
 
     private static String getImageUrl(JsonObject object){
         JsonObject images = object.getAsJsonObject("imageLinks");
-        JsonElement thumbnail = images.get("thumbnail");
-        return thumbnail.getAsString();
+        if (images != null){
+
+            JsonElement thumbnail = images.get("thumbnail");
+            if (thumbnail != null){
+                return thumbnail.getAsString();
+            }
+        }
+        return null;
     }
 }

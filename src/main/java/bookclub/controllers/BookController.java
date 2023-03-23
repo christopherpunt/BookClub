@@ -80,4 +80,10 @@ public class BookController {
         }
         return "no book found";
     }
+
+    @PostMapping("/deleteBook/{id}")
+    public String removeBook(@PathVariable int id, Model model){
+        bookService.deleteBook(id);
+        return "index";
+    }
 }

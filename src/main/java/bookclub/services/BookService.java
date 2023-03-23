@@ -36,6 +36,10 @@ public class BookService {
         return books;
     }
 
+    public void deleteBook(int id){
+        bookDao.deleteById(id);
+    }
+
     public static Book getBookDetails(String isbn){
         return GoogleBookDetailsService.getBookDetailsFromIsbn(isbn);
     }

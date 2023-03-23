@@ -38,6 +38,10 @@
       <p th:text="${book.LentToUser}"></p>
     </div>
   </div>
+
+  <form th:action="@{/deleteBook/{Id}(Id=${book.Id})}" th:method="POST">
+    <button class="btn btn-primary" type="submit">Delete Book</button>
+  </form>
 </div>
 
 <!-- jQuery and Bootstrap Bundle (includes Popper) -->

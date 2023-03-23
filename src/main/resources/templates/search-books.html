@@ -20,6 +20,7 @@
   <table class="table table-striped">
     <thead>
     <tr>
+      <th>Thumbnail</th>
       <th>Title</th>
       <th>Author</th>
       <th>ISBN</th>
@@ -28,6 +29,7 @@
     </thead>
     <tbody>
     <tr th:each="item: ${books}">
+        <td><img th:src="${item.BookCoverUrl}"/></td>
         <td th:text="${item.Title}"></td>
         <td th:text="${item.Author}"></td>
         <td th:text="${item.Isbn}"></td>
