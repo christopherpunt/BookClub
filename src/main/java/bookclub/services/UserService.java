@@ -3,9 +3,11 @@ package bookclub.services;
 import bookclub.models.User;
 import bookclub.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +19,16 @@ public class UserService implements UserDetailsService {
     UserRepository userDao;
 
     public User createUser(User user) {
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String encodedPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(encodedPassword);
+
+        Optional<User> existingUser = userDao.findByEmail(user.getEmail());
+
+        if (existingUser.isPresent()){
+            throw new AuthenticationServiceException("A user with that email already exists");
+        }
+
         return userDao.save(user);
     }
 
