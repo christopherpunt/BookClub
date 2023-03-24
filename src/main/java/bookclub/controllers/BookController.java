@@ -2,12 +2,14 @@ package bookclub.controllers;
 
 import bookclub.models.Book;
 import bookclub.models.User;
+import bookclub.repositories.BookRepository;
 import bookclub.repositories.UserRepository;
 import bookclub.services.BookService;
 import bookclub.services.GoogleBookDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -23,7 +25,10 @@ public class BookController {
 
     @Autowired
     BookService bookService;
-
+    
+    @Autowired
+    BookRepository bookDao;
+    
     @RequestMapping(value= "/bookisbn", method= RequestMethod.POST)
     public Book createBookFromIsbn(@RequestBody String isbn){
         return bookService.createBook(BookService.getBookDetails(isbn));
@@ -33,8 +38,6 @@ public class BookController {
     public List<Book> readBooks(){
         return bookService.getBooks();
     }
-
-
 
     @GetMapping("/book")
     public String showCreateBookForm(){
@@ -62,5 +65,22 @@ public class BookController {
             return ResponseEntity.ok("Book added to library successfully");
         }
         return ResponseEntity.badRequest().body("Failed to Add book to library");
+    }
+
+    @GetMapping("/book_details/{id}")
+    public String getBookDetails(@PathVariable int id, Model model){
+        Optional<Book> book = bookDao.findById(id);
+
+        if(book.isPresent()){
+            model.addAttribute("book", book.get());
+            return "book_details";
+        }
+        return "no book found";
+    }
+
+    @PostMapping("/deleteBook/{id}")
+    public String removeBook(@PathVariable int id, Model model){
+        bookService.deleteBook(id);
+        return "index";
     }
 }

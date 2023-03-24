@@ -9,6 +9,23 @@
     <!-- Include the navbar fragment -->
     <div th:insert="~{common/navbar :: navbar}"></div>
 
+    <!-- Add your custom style here -->
+    <style>
+        /* Add pointer cursor to clickable rows */
+        .clickable-row {
+            cursor: pointer;
+        }
+
+        /* Highlight row on hover */
+        .clickable-row:hover {
+            background-color: #f5f5f5;
+        }
+    </style>
+</head>
+<body class="dark">
+<!-- Include the navbar fragment -->
+<div th:insert="common/navbar :: navbar"></div>
+
 <div class="container">
     <h1>Welcome to Book Club!</h1>
     <hr />
@@ -16,6 +33,7 @@
     <table class="table table-bordered table-striped">
         <thead>
         <tr>
+            <th>Image</th>
             <th>Id</th>
             <th>User Id</th>
             <th>Title</th>
@@ -24,19 +42,26 @@
             <th>Description</th>
             <th>BorrowedFromUser</th>
             <th>LentToUser</th>
+            <th>Button</th>
         </tr>
         </thead>
         <tbody>
-        <tr th:each="item: ${books}">
-            <td th:text="${item.Id}"></td>
-            <td th:text="${item.User.getFullName()}"></td>
-            <td th:text="${item.Title}"></td>
-            <td th:text="${item.Author}"></td>
-            <td th:text="${item.Isbn}"></td>
-            <td th:text="${item.Description}"></td>
-            <td th:text="${item.BorrowedFromUser}"></td>
-            <td th:text="${item.LentToUser}"></td>
-        </tr>
+            <tr th:each="item: ${books}" th:href="@{/book_details(id=${item.Id})}" class="clickable-row">
+                <td><img th:src="${item.BookCoverUrl}"/></td>
+                <td th:text="${item.Id}"></td>
+                <td th:text="${item.User.getFullName()}"></td>
+                <td th:text="${item.Title}"></td>
+                <td th:text="${item.Author}"></td>
+                <td th:text="${item.Isbn}"></td>
+                <td th:text="${item.Description}"></td>
+                <td th:text="${item.BorrowedFromUser}"></td>
+                <td th:text="${item.LentToUser}"></td>
+                <td>
+                    <a th:href="@{/book_details/{Id}(Id=${{item.Id}})}">
+                        <button class="btn btn-primary">Details</button>
+                    </a>
+                </td>
+            </tr>
         </tbody>
     </table>
 
@@ -45,5 +70,13 @@
     </p>
 </div>
 
+<script>
+    $(document).ready(function() {
+        // Add click event to all rows with clickable-row class
+        $('.clickable-row').click(function() {
+            window.location = $(this).attr('href');
+        });
+    });
+</script>
 </body>
 </html>

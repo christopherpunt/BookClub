@@ -77,7 +77,7 @@ public class GoogleBookDetailsService {
             return null;
         }
         
-        LinkedList<Book> books = new LinkedList<Book>();
+        LinkedList<Book> books = new LinkedList<>();
 
         Gson gson = new Gson();
         JsonElement element = gson.fromJson(response, JsonElement.class);
@@ -97,31 +97,38 @@ public class GoogleBookDetailsService {
 
     private static Book getBook(JsonObject jsonBook) {
         Book book = new Book();
-        String isbn10 = "";
 
-        JsonArray identifiers = jsonBook.getAsJsonArray("industryIdentifiers");
-        if (identifiers != null && identifiers.size() > 0){
-            for (JsonElement id : jsonBook.getAsJsonArray("industryIdentifiers")) {
-                JsonObject industryId = id.getAsJsonObject();
-                if (industryId.get("type").getAsString().equals("ISBN_10")) {
-                    isbn10 = industryId.get("identifier").getAsString();
-                    break;
-                }
-            }
-            book.setIsbn(isbn10);
+        book.setIsbn(getIsbn13(jsonBook));
+
+        book.setTitle(getTitle(jsonBook));
+
+        book.setAuthor(getAuthors(jsonBook));
+
+        book.setDescription(getDescription(jsonBook));
+
+        book.setBookCoverUrl(getImageUrl(jsonBook));
+
+        return book;
+    }
+
+    private static String getTitle(JsonObject object){
+        JsonElement title = object.get("title");
+        if (title == null){
+            return "";
         }
+        return title.getAsString();
+    }
 
-        JsonElement title = jsonBook.get("title");
-        if (title != null){
-            book.setTitle(title.getAsString());
+    private static String getDescription(JsonObject object){
+        JsonElement description = object.get("description");
+        if (description == null){
+            return "";
         }
+        return description.getAsString();
+    }
 
-        JsonElement description = jsonBook.get("description");
-        if (description != null){
-            book.setDescription(description.getAsString());
-        }
-
-        JsonArray authorsArray = jsonBook.getAsJsonArray("authors");
+    private static String getAuthors(JsonObject object){
+        JsonArray authorsArray = object.getAsJsonArray("authors");
         StringBuilder authors = new StringBuilder();
 
         if (authorsArray != null && authorsArray.size() > 0){
@@ -132,11 +139,34 @@ public class GoogleBookDetailsService {
                     authors.append(", ").append(authorsArray.get(i).getAsString());
                 }
             }
-
-            book.setAuthor(authors.toString());
         }
-
-        return book;
+        return authors.toString();
     }
 
+    private static String getIsbn13(JsonObject object){
+        String isbn13 = "";
+        JsonArray identifiers = object.getAsJsonArray("industryIdentifiers");
+        if (identifiers != null && identifiers.size() > 0){
+            for (JsonElement id : object.getAsJsonArray("industryIdentifiers")) {
+                JsonObject industryId = id.getAsJsonObject();
+                if (industryId.get("type").getAsString().equals("ISBN_13")) {
+                    isbn13 = industryId.get("identifier").getAsString();
+                    break;
+                }
+            }
+        }
+        return isbn13;
+    }
+
+    private static String getImageUrl(JsonObject object){
+        JsonObject images = object.getAsJsonObject("imageLinks");
+        if (images != null){
+
+            JsonElement thumbnail = images.get("thumbnail");
+            if (thumbnail != null){
+                return thumbnail.getAsString();
+            }
+        }
+        return null;
+    }
 }
