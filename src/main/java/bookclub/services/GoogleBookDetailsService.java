@@ -98,7 +98,7 @@ public class GoogleBookDetailsService {
     private static Book getBook(JsonObject jsonBook) {
         Book book = new Book();
 
-        book.setIsbn(getIsbn10(jsonBook));
+        book.setIsbn(getIsbn13(jsonBook));
 
         book.setTitle(getTitle(jsonBook));
 
@@ -143,19 +143,19 @@ public class GoogleBookDetailsService {
         return authors.toString();
     }
 
-    private static String getIsbn10(JsonObject object){
-        String isbn10 = "";
+    private static String getIsbn13(JsonObject object){
+        String isbn13 = "";
         JsonArray identifiers = object.getAsJsonArray("industryIdentifiers");
         if (identifiers != null && identifiers.size() > 0){
             for (JsonElement id : object.getAsJsonArray("industryIdentifiers")) {
                 JsonObject industryId = id.getAsJsonObject();
-                if (industryId.get("type").getAsString().equals("ISBN_10")) {
-                    isbn10 = industryId.get("identifier").getAsString();
+                if (industryId.get("type").getAsString().equals("ISBN_13")) {
+                    isbn13 = industryId.get("identifier").getAsString();
                     break;
                 }
             }
         }
-        return isbn10;
+        return isbn13;
     }
 
     private static String getImageUrl(JsonObject object){
