@@ -2,11 +2,13 @@ package bookclub.controllers;
 
 import bookclub.models.Book;
 import bookclub.models.User;
+import bookclub.repositories.BookRepository;
 import bookclub.repositories.UserRepository;
 import bookclub.services.BookService;
 import bookclub.services.GoogleBookDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -23,10 +25,8 @@ public class BookController {
     @Autowired
     BookService bookService;
 
-//    @RequestMapping(value= "/book", method= RequestMethod.POST)
-//    public Book createBook(@RequestBody Book book){
-//        return bookService.createBook(book);
-//    }
+    @Autowired
+    BookRepository bookDao;
 
     @RequestMapping(value= "/bookisbn", method= RequestMethod.POST)
     public Book createBookFromIsbn(@RequestBody String isbn){
@@ -37,8 +37,6 @@ public class BookController {
     public List<Book> readBooks(){
         return bookService.getBooks();
     }
-
-
 
     @GetMapping("/book")
     public String showCreateBookForm(){
@@ -69,6 +67,23 @@ public class BookController {
             bookService.createBook(book);
         }
 
+        return "index";
+    }
+
+    @GetMapping("/book_details/{id}")
+    public String getBookDetails(@PathVariable int id, Model model){
+        Optional<Book> book = bookDao.findById(id);
+
+        if(book.isPresent()){
+            model.addAttribute("book", book.get());
+            return "book_details";
+        }
+        return "no book found";
+    }
+
+    @PostMapping("/deleteBook/{id}")
+    public String removeBook(@PathVariable int id, Model model){
+        bookService.deleteBook(id);
         return "index";
     }
 }

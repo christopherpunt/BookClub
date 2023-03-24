@@ -17,7 +17,7 @@ public class BookServiceTest {
 
         assertEquals("Harry Potter the Complete Series", book.getTitle());
         assertEquals("J. K. Rowling", book.getAuthor());
-        assertEquals("0545162076", book.getIsbn());
+        assertEquals("9780545162074", book.getIsbn());
         assertEquals("Collects the complete series that relates the adventures of young Harry Potter, who attends Hogwarts School of Witchcraft and Wizardry, where he and others of his kind learn their craft.", book.getDescription());
     }
 
