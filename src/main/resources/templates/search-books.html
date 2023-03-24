@@ -7,7 +7,7 @@
 </head>
 <body class="dark">
 <!-- Include the navbar fragment -->
-<div th:insert="common/navbar :: navbar"></div>
+<div th:insert="~{common/navbar :: navbar}"></div>
 <div class="container">
   <h1>Search for a book</h1>
   <form method="post" action="/book">
@@ -53,15 +53,15 @@ addToLibraryButtons.forEach((button) => {
       method: "POST",
       body: formData,
     })
-      .then((response) => response.json())
+      .then((response) => response.text())
       .then((data) => {
         console.log(data);
+        alert(data);
         window.location.href = "/home";
       })
       .catch((error) => console.error(error));
   });
 });
-
 
 </script>
 </body>
