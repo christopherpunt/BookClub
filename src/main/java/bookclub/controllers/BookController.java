@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.view.RedirectView;
 
 import java.security.Principal;
 import java.util.List;
@@ -79,8 +80,10 @@ public class BookController {
     }
 
     @PostMapping("/deleteBook/{id}")
-    public String removeBook(@PathVariable int id, Model model){
+    public RedirectView removeBook(@PathVariable int id, Model model){
         bookService.deleteBook(id);
-        return "index";
+        RedirectView redirectView = new RedirectView();
+        redirectView.setUrl("/home");
+        return redirectView;
     }
 }
