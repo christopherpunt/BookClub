@@ -3,15 +3,14 @@ package bookclub.controllers;
 import bookclub.models.User;
 import bookclub.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
-@RestController
-@RequestMapping("/api")
+@Controller
 public class UserController {
 
     @Autowired
@@ -26,4 +25,33 @@ public class UserController {
     public List<User> getUsers(){
         return userService.getUsers();
     }
+
+    @RequestMapping("/login")
+    public String login(Model model){
+        model.addAttribute("user", new User());
+        return "login";
+    }
+
+    @GetMapping("/register")
+    public String showRegistrationForm(Model model){
+        model.addAttribute("user", new User());
+
+        return "signup_form";
+    }
+
+    @PostMapping("/register")
+    public String processRegister(User user) {
+
+
+        userService.createUser(user);
+
+        return "register_success";
+    }
+
+    @GetMapping("/currentUser")
+    public String getCurrentUser(Principal principal){
+        String name = principal.getName();
+        return "hello" + name;
+    }
+
 }

@@ -19,8 +19,8 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int Id;
     @ManyToOne
-    @JoinColumn(name = "library_id")
-    private Library library;
+    @JoinColumn(name = "user_id")
+    private User User;
     @Column
     private String Title;
     @Column
@@ -35,6 +35,8 @@ public class Book {
     private String BorrowedFromUser;
     @Column
     private String LentToUser;
+    @Column
+    private String BookCoverUrl;
     //endregion
 
     @Override
