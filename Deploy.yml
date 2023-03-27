@@ -40,12 +40,10 @@ steps:
     PathtoPublish: $(Build.ArtifactStagingDirectory)
     ArtifactName: 'BookClubBuild'
   displayName: 'Publish Artifact'
-
 - task: AzureRmWebAppDeployment@4
   inputs:
     ConnectionType: 'AzureRM'
-    azureSubscription: 'Azure subscription 1(1)(9033ac52-6a4e-4d10-83f8-df70cdf100d4)'
+    azureSubscription: 'Azure subscription'
     appType: 'webApp'
     WebAppName: 'ShareABook'
     packageForLinux: '$(System.DefaultWorkingDirectory)/build/libs/*.jar'
-
