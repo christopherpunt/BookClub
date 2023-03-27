@@ -30,7 +30,7 @@ steps:
 
 - task: CopyFiles@2
   inputs:
-   Contents: '/build/libs/**'
+   Contents: '**/build/libs/*.jar'
    TargetFolder: $(Build.ArtifactStagingDirectory)
   displayName: 'Copy Files to Artifact Staging'
 
