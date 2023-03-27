@@ -20,7 +20,7 @@ steps:
 - task: Gradle@3
   inputs:
     gradleWrapperFile: 'gradlew'
-    tasks: 'build -debug'
+    tasks: 'build'
     publishJUnitResults: true
     testResultsFiles: '**/TEST-*.xml'
     javaHomeOption: 'JDKVersion'
@@ -28,11 +28,18 @@ steps:
     sonarQubeRunAnalysis: false
     spotBugsAnalysis: false
 
+- task: CopyFiles@2
+  inputs:
+   Contents: '/build/libs/**'
+   TargetFolder: $(Build.ArtifactStagingDirectory)
+  displayName: 'Copy Files to Artifact Staging'
+
+
 - task: PublishBuildArtifacts@1
   inputs:
-    PathtoPublish: '$(System.DefaultWorkingDirectory)/build/libs/BookClub-1.0-SNAPSHOT.jar'
-    ArtifactName: 'BookClub-1.0-SNAPSHOT'
-    publishLocation: 'Container'
+    PathtoPublish: $(Build.ArtifactStagingDirectory)
+    ArtifactName: 'BookClubBuild'
+  displayName: 'Publish Artifact'
 
 - task: AzureRmWebAppDeployment@4
   inputs:
