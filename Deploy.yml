@@ -28,10 +28,24 @@ steps:
     sonarQubeRunAnalysis: false
     spotBugsAnalysis: false
 
+- task: CopyFiles@2
+  inputs:
+   Contents: '**/build/libs/*.jar'
+   TargetFolder: $(Build.ArtifactStagingDirectory)
+  displayName: 'Copy Files to Artifact Staging'
+
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: $(Build.ArtifactStagingDirectory)
+    ArtifactName: 'BookClubBuild'
+  displayName: 'Publish Artifact'
+
 - task: AzureRmWebAppDeployment@4
   inputs:
     ConnectionType: 'AzureRM'
     azureSubscription: 'Azure subscription 1(1)(9033ac52-6a4e-4d10-83f8-df70cdf100d4)'
     appType: 'webApp'
     WebAppName: 'ShareABook'
-    packageForLinux: '$(System.DefaultWorkingDirectory)/**/*.zip'
+    packageForLinux: '$(System.DefaultWorkingDirectory)/build/libs/*.jar'
+
