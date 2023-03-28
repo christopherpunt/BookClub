@@ -27,3 +27,6 @@ hs_err_pid*
 # Ignore Gradle project-specific cache directory
 .gradle
 build
+
+# Ignore files from Intellij run configuraitons
+.run/

@@ -79,11 +79,32 @@ public class BookController {
         return "no book found";
     }
 
+    @GetMapping("/editBookDetails/{id}")
+    public String editBookDetails(@PathVariable int id, Model model){
+        Optional<Book> book = bookDao.findById(id);
+
+        if(book.isPresent()){
+            model.addAttribute("book", book.get());
+            return "edit_book_details";
+        }
+        return "no book found";
+    }
+
     @PostMapping("/deleteBook/{id}")
     public RedirectView removeBook(@PathVariable int id, Model model){
         bookService.deleteBook(id);
         RedirectView redirectView = new RedirectView();
         redirectView.setUrl("/home");
         return redirectView;
+    }
+
+    @PostMapping("/updateBook")
+    public String updateBook(@ModelAttribute("book") Book book) {
+        boolean updated = bookService.updateAllDetails(book);
+
+        if (updated){
+            return "redirect:/book_details/" + book.getId();
+        }
+        return "redirect:/home";
     }
 }
