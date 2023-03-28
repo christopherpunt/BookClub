@@ -9,7 +9,14 @@
 <div th:insert="~{common/navbar :: navbar}"></div>
 
 <div class="container mt-4">
-  <h1>Book Details</h1>
+  <div class="row mb-4">
+    <div class="col-md-6">
+      <h1>Book Details</h1>
+    </div>
+    <div class="col-md-6 text-end">
+      <a th:href="@{/editBookDetails/{id}(id=${book.Id})}" class="btn btn-primary">Edit</a>
+    </div>
+  </div>
   <hr />
 
   <div class="row">
@@ -38,22 +45,6 @@
     </div>
   </div>
 
-  <form th:action="@{/updateBook}" th:method="POST">
-    <input type="hidden" name="id" th:value="${book.Id}" />
-    <div class="form-group">
-      <label for="borrower">Borrowed From:</label>
-      <input type="text" class="form-control" id="borrower" name="borrowedFromUser" th:value="${book.BorrowedFromUser}" />
-    </div>
-    <div class="form-group">
-      <label for="lender">Lent To:</label>
-      <input type="text" class="form-control" id="lender" name="lentToUser" th:value="${book.LentToUser}" />
-    </div>
-    <button class="btn btn-primary" type="submit">Save Changes</button>
-  </form>
-
-  <form th:action="@{/deleteBook/{Id}(Id=${book.Id})}" th:method="POST">
-    <button class="btn btn-danger" type="submit">Delete Book</button>
-  </form>
 </div>
 
 </body>

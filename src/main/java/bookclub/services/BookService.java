@@ -47,4 +47,22 @@ public class BookService {
     public static List<Book> getBooksFromTitle(String title){
         return GoogleBookDetailsService.getBooksBasedOnTitle(title);
     }
+
+    public boolean updateAllDetails(Book book) {
+        Optional<Book> foundBook = bookDao.findById(book.getId());
+        Book bookToSave;
+
+        if (foundBook.isPresent()){
+            bookToSave = foundBook.get();
+            bookToSave.setTitle(book.getTitle());
+            bookToSave.setAuthor(book.getAuthor());
+            bookToSave.setIsbn(book.getIsbn());
+            bookToSave.setDescription(book.getDescription());
+            bookToSave.setBorrowedFromUser(book.getBorrowedFromUser());
+            bookToSave.setLentToUser(book.getLentToUser());
+            bookDao.save(bookToSave);
+            return true;
+        }
+        return false;
+    }
 }

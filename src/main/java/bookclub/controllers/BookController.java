@@ -79,6 +79,17 @@ public class BookController {
         return "no book found";
     }
 
+    @GetMapping("/editBookDetails/{id}")
+    public String editBookDetails(@PathVariable int id, Model model){
+        Optional<Book> book = bookDao.findById(id);
+
+        if(book.isPresent()){
+            model.addAttribute("book", book.get());
+            return "edit_book_details";
+        }
+        return "no book found";
+    }
+
     @PostMapping("/deleteBook/{id}")
     public RedirectView removeBook(@PathVariable int id, Model model){
         bookService.deleteBook(id);
@@ -89,14 +100,11 @@ public class BookController {
 
     @PostMapping("/updateBook")
     public String updateBook(@ModelAttribute("book") Book book) {
-        Optional<Book> foundBook = bookDao.findById(book.getId());
-        Book bookToSave;
-        if (foundBook.isPresent()){
-            bookToSave = foundBook.get();
-            bookToSave.setBorrowedFromUser(book.getBorrowedFromUser());
-            bookToSave.setLentToUser(book.getLentToUser());
-            bookDao.save(bookToSave);
+        boolean updated = bookService.updateAllDetails(book);
+
+        if (updated){
+            return "redirect:/book_details/" + book.getId();
         }
-        return "redirect:/book_details/" + book.getId();
+        return "redirect:/home";
     }
 }
