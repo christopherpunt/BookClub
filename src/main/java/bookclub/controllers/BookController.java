@@ -86,4 +86,17 @@ public class BookController {
         redirectView.setUrl("/home");
         return redirectView;
     }
+
+    @PostMapping("/updateBook")
+    public String updateBook(@ModelAttribute("book") Book book) {
+        Optional<Book> foundBook = bookDao.findById(book.getId());
+        Book bookToSave;
+        if (foundBook.isPresent()){
+            bookToSave = foundBook.get();
+            bookToSave.setBorrowedFromUser(book.getBorrowedFromUser());
+            bookToSave.setLentToUser(book.getLentToUser());
+            bookDao.save(bookToSave);
+        }
+        return "redirect:/book_details/" + book.getId();
+    }
 }
