@@ -1,0 +1,49 @@
+# Gradle
+# Build your Java project and run tests with Gradle using a Gradle wrapper script.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/java
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+- task: JavaToolInstaller@0
+  inputs:
+    versionSpec: '17'
+    jdkArchitectureOption: 'x64'
+    jdkSourceOption: 'PreInstalled'
+  displayName: 'UpdateJavaVersion'
+
+- task: Gradle@3
+  inputs:
+    gradleWrapperFile: 'gradlew'
+    tasks: 'build'
+    publishJUnitResults: true
+    testResultsFiles: '**/TEST-*.xml'
+    javaHomeOption: 'JDKVersion'
+    jdkVersionOption: '1.17'
+    sonarQubeRunAnalysis: false
+    spotBugsAnalysis: false
+
+- task: CopyFiles@2
+  inputs:
+   Contents: '**/build/libs/*.jar'
+   TargetFolder: $(Build.ArtifactStagingDirectory)
+  displayName: 'Copy Files to Artifact Staging'
+
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: $(Build.ArtifactStagingDirectory)
+    ArtifactName: 'BookClubBuild'
+  displayName: 'Publish Artifact'
+- task: AzureRmWebAppDeployment@4
+  inputs:
+    ConnectionType: 'AzureRM'
+    azureSubscription: 'Azure subscription'
+    appType: 'webApp'
+    WebAppName: 'ShareABook'
+    packageForLinux: '$(System.DefaultWorkingDirectory)/build/libs/*.jar'
