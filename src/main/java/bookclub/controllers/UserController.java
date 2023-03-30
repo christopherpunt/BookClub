@@ -26,9 +26,8 @@ public class UserController {
         return userService.getUsers();
     }
 
-    @RequestMapping("/login")
-    public String login(Model model){
-        model.addAttribute("user", new User());
+    @GetMapping("/login")
+    public String login(){
         return "login";
     }
 
@@ -41,8 +40,6 @@ public class UserController {
 
     @PostMapping("/register")
     public String processRegister(User user) {
-
-
         userService.createUser(user);
 
         return "register_success";
