@@ -19,27 +19,29 @@
       <button type="submit" class="btn btn-primary">Search</button>
     </div>
   </form>
-  <h2>Results</h2>
-  <table class="table table-striped">
-    <thead>
-    <tr>
-      <th>Thumbnail</th>
-      <th>Title</th>
-      <th>Author</th>
-      <th>ISBN</th>
-      <th></th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="item: ${books}">
+  <div th:if="${not #lists.isEmpty(books)}">
+    <h2>Results</h2>
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th>Thumbnail</th>
+        <th>Title</th>
+        <th>Author</th>
+        <th>ISBN</th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="item: ${books}">
         <td><img th:src="${item.BookCoverUrl}"/></td>
         <td th:text="${item.Title}"></td>
         <td th:text="${item.Author}"></td>
         <td th:text="${item.Isbn}"></td>
         <td><button type="button" class="btn btn-primary" name="book" th:value="${item.Isbn}" id="add-to-library-button">Add to Library</button></td>
-    </tr>
-    </tbody>
-  </table>
+      </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
 
 <script>
