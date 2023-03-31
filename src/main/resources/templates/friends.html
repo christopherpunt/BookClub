@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>My Friends</title>
+  <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}">
+</head>
+<body class="dark">
+<div th:insert="~{common/navbar :: navbar}"></div>
+<div class="container">
+  <h1>My Friends</h1>
+  <table class="table">
+    <thead>
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="friend : ${friends}">
+      <td th:text="${friend.fullName}"></td>
+      <td th:text="${friend.email}"></td>
+    </tr>
+    </tbody>
+  </table>
+  <div>
+    <a href="/addFriend" class="btn btn-primary">Add Friend</a>
+  </div>
+</div>
+</body>
+</html>

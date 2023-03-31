@@ -8,6 +8,7 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Getter
@@ -24,6 +25,14 @@ public class User  implements UserDetails {
     public String lastName;
     @Column(nullable = false, length = 128)
     public String password;
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_friends",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "friend_id")
+    )
+    public List<User> friends;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -54,6 +63,8 @@ public class User  implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+
 
     public String getFullName(){
         return firstName + " " + lastName;
