@@ -49,6 +49,29 @@ public class FriendServiceTest {
     }
 
     @Test
+    public void addMultipleFriendsTest(){
+        User user = createUser("Chris", "Punt", "chrispunt13@icloud.com", "password");
+        User friend = createUser("Sydney", "Punt", "smfrelier@gmail.com", "password");
+        User friend2 = createUser("Abby", "Punt", "abbyPunt@gmail.com", "password");
+
+        when(userDao.findByEmail(friend.getEmail())).thenReturn(Optional.of(friend));
+        when(userDao.findByEmail(friend2.getEmail())).thenReturn(Optional.of(friend2));
+
+        boolean friendAdded = friendService.addNewFriendship(user, friend);
+        boolean friend2Added = friendService.addNewFriendship(user, friend2);
+
+        assertTrue(friendAdded);
+        assertTrue(friend2Added);
+        verify(userDao, times(2)).save(user);
+        verify(userDao).save(friend);
+        verify(userDao).save(friend2);
+
+        assertEquals(2, user.getFriends().size());
+        assertEquals(1, friend.getFriends().size());
+        assertEquals(1, friend2.getFriends().size());
+    }
+
+    @Test
     public void addUnregisteredFriendTest(){
         User user = createUser("Chris", "Punt", "chrispunt13@icloud.com", "password");
         User friend = createUser("Sydney", "Punt", "smfrelier@gmail.com", null);

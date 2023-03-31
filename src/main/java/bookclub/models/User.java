@@ -28,7 +28,7 @@ public class User  implements UserDetails {
     public String password;
 
     @Column
-    public boolean isRegistered;
+    private boolean isRegistered;
 
     @ManyToMany
     @JoinTable(

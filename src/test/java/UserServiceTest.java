@@ -3,10 +3,7 @@ import bookclub.repositories.UserRepository;
 import bookclub.services.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.mockito.Spy;
+import org.mockito.*;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -35,26 +32,86 @@ public class UserServiceTest {
         User user = createUser("Sydney", "Punt", "smfrelier@gmail.com", password);
         when(userDao.save(user)).thenReturn(user);
 
-        User returnedUser = userService.createUser(user);
+        userService.createUser(user);
 
-        verify(userDao).save(user);
-        assertNotEquals(password, returnedUser.getPassword());
+        ArgumentCaptor<User> captor = ArgumentCaptor.forClass(User.class);
+        verify(userDao).save(captor.capture());
+
+        assertEquals(user.getFirstName(), captor.getValue().getFirstName());
+        assertEquals(user.getLastName(), captor.getValue().getLastName());
+        assertEquals(user.getEmail(), captor.getValue().getEmail());
+        assertEquals(user.getFriends(), captor.getValue().getFriends());
+        assertTrue(captor.getValue().isRegistered());
+
+        //TODO: assert correctly encrypted
+        assertNotEquals(password, user.getPassword());
     }
 
     @Test
-    public void createUserAlreadyExists(){
-        String password = "solofest";
-        User user1 = createUser("Sydney", "Punt", "smfrelier@gmail.com", password);
-        User user2 = createUser("Chris", "Punt", "smfrelier@gmail.com", password);
-        when(userDao.save(user1)).thenReturn(user1);
-        userService.createUser(user1);
-        when(userDao.findByEmail(user1.getEmail())).thenReturn(Optional.of(user1));
+    public void createUserAlreadyRegisteredExists(){
+        User user = createUser("Sydney", "Punt", "smfrelier@gmail.com", "password");
+        user.setRegistered(true);
 
-        AuthenticationServiceException exception = assertThrows(AuthenticationServiceException.class, () -> userService.createUser(user2));
+        when(userDao.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+
+        AuthenticationServiceException exception = assertThrows(AuthenticationServiceException.class, () -> userService.createUser(user));
+        assertEquals("A registered user with that email already exists", exception.getMessage());
+
+        verify(userDao).findByEmail(user.getEmail());
+        verifyNoMoreInteractions(userDao);
+    }
+
+    @Test
+    public void createUserUnregisteredExists(){
+        User user = createUser("Chris", "Punt", "chrispunt@email.com", null);
+        User friend = createUser("Sydney", "Punt", "sydneypunt@email.com", "password");
+        user.setRegistered(false);
+        user.addNewFriend(friend);
+
+        User newUser = createUser("Chris2", "Punt2", "chrispunt@email.com", "password");
+        when(userDao.findByEmail(newUser.getEmail())).thenReturn(Optional.of(user));
+        userService.createUser(newUser);
+
+        ArgumentCaptor<User> captor = ArgumentCaptor.forClass(User.class);
+        verify(userDao).findByEmail(newUser.getEmail());
+        verify(userDao).save(captor.capture()); //save the original user but with new values from newUser
+
+        assertEquals(newUser.getFirstName(), captor.getValue().getFirstName());
+        assertEquals(newUser.getLastName(), captor.getValue().getLastName());
+        assertEquals(newUser.getEmail(), captor.getValue().getEmail());
+        assertEquals(friend, captor.getValue().getFriends().stream().findFirst().get());
+        assertTrue(captor.getValue().isRegistered());
+
+        //TODO: test that this the new user password is encrypted to the captor getpassword
+        assertNotEquals(newUser.getPassword(), captor.getValue().getPassword());
+    }
+
+    @Test
+    public void createUserUnRegisteredUser(){
+        User user = createUser("Chris", "Punt", "chrisPunt@email.com", null);
+
+        userService.createUnregisteredUser(user);
+
+        ArgumentCaptor<User> captor = ArgumentCaptor.forClass(User.class);
+        verify(userDao).save(captor.capture());
+
+        assertFalse(captor.getValue().isRegistered());
+    }
+
+    @Test
+    public void createUserUnRegisteredUserAlreadyExists(){
+        User user = createUser("Chris", "Punt", "chrisPunt@email.com", null);
+
+        when(userDao.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+
+        AuthenticationServiceException exception = assertThrows(AuthenticationServiceException.class, () -> userService.createUnregisteredUser(user));
         assertEquals("A user with that email already exists", exception.getMessage());
 
-        verify(userDao).save(any());
+        verify(userDao).findByEmail(user.getEmail());
+        verifyNoMoreInteractions(userDao);
     }
+
+
 
     @Test
     public void loadByUsernameTest(){
