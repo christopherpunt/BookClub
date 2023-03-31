@@ -15,7 +15,6 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
 import java.security.Principal;
-import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -30,22 +29,22 @@ public class BookController {
     @Autowired
     BookRepository bookDao;
     
-    @RequestMapping(value= "/bookisbn", method= RequestMethod.POST)
-    public Book createBookFromIsbn(@RequestBody String isbn){
-        return bookService.createBook(BookService.getBookDetails(isbn));
-    }
+//    @RequestMapping(value= "/bookisbn", method= RequestMethod.POST)
+//    public Book createBookFromIsbn(@RequestBody String isbn){
+//        return bookService.createBook(BookService.getBookDetails(isbn));
+//    }
+//
+//    @RequestMapping(value="/books", method = RequestMethod.GET)
+//    public List<Book> readBooks(){
+//        return bookService.getBooks();
+//    }
 
-    @RequestMapping(value="/books", method = RequestMethod.GET)
-    public List<Book> readBooks(){
-        return bookService.getBooks();
-    }
-
-    @GetMapping("/book")
+    @GetMapping("/searchBooks")
     public String showCreateBookForm(){
         return "search-books";
     }
 
-    @PostMapping("/book")
+    @PostMapping("/searchBooks")
     public ModelAndView searchBookFromTitle(@RequestBody String title){
         var books = GoogleBookDetailsService.getBooksBasedOnTitle(title);
 
