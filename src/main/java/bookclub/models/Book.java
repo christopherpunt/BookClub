@@ -44,10 +44,12 @@ public class Book {
     @Lob
     @Column(columnDefinition="TEXT")
     private String Description;
-    @Column
-    private String BorrowedFromUser;
-    @Column
-    private String LentToUser;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "borrowed_from_user_id")
+    private User BorrowedFromUser;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "lent_to_user_id")
+    private User LentToUser;
     @Column
     private String BookCoverUrl;
     //endregion

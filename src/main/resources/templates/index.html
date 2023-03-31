@@ -37,9 +37,8 @@
             <td th:text="${item.Author}"></td>
             <td th:text="${item.Isbn}"></td>
             <td th:text="${item.Description}"></td>
-            <td th:text="${item.BorrowedFromUser.getFullName()}"></td>
-            <td th:text="${item.LentToUser.getFullName()}"></td>
-
+            <td th:text="${item.BorrowedFromUser != null ? item.BorrowedFromUser.getFullName() : ''}"></td>
+            <td th:text="${item.LentToUser != null ? item.LentToUser.getFullName() : ''}"></td>
         </tr>
         </tbody>
     </table>
