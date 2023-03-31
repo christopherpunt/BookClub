@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Add Friend</title>
+  <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}">
+</head>
+<body class="dark">
+<div th:insert="~{common/navbar :: navbar}"></div>
+<div class="container">
+  <h2>Add Friend</h2>
+  <form method="post" th:action="@{/addFriend}" th:object="${newFriend}">
+    <div class="form-group">
+      <label for="friendEmail">Email:</label>
+      <input type="email" class="form-control" id="friendEmail" name="email" required>
+    </div>
+    <div class="form-group">
+      <label for="friendEmail">First Name:</label>
+      <input type="text" class="form-control" id="friendFirstName" name="firstName" required>
+    </div>
+    <div class="form-group">
+      <label for="friendEmail">Last Name:</label>
+      <input type="text" class="form-control" id="friendLastName" name="lastName" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Add Friend</button>
+  </form>
+</div>
+</body>
+</html>

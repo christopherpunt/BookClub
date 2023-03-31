@@ -7,7 +7,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @Entity
 @Getter
@@ -22,12 +24,38 @@ public class User  implements UserDetails {
     public String firstName;
     @Column(nullable = false, length = 30)
     public String lastName;
-    @Column(nullable = false, length = 128)
+    @Column(length = 128)
     public String password;
+
+    @Column
+    private boolean isRegistered;
+
+    @ManyToMany
+    @JoinTable(
+            name = "user_friends",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "friend_id")
+    )
+    public List<User> friends;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return AuthorityUtils.createAuthorityList("USER");
+    }
+
+    public boolean addNewFriend(User friend){
+        if (friends == null){
+            friends = new ArrayList<User>();
+            friends.add(friend);
+            setFriends(friends);
+            return true;
+        } else{
+            if (!friends.contains(friend)){
+                friends.add(friend);
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -54,6 +82,8 @@ public class User  implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
+
 
     public String getFullName(){
         return firstName + " " + lastName;
