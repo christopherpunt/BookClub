@@ -51,7 +51,7 @@ public class FriendController {
             return "User not found";
         }
 
-        friendService.addNewFriend(user.get(), newFriend);
+        friendService.addNewFriendship(user.get(), newFriend);
 
         return "redirect:/myFriends";
     }

@@ -11,10 +11,8 @@ import org.mockito.Spy;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 public class FriendServiceTest {
 
@@ -40,12 +38,14 @@ public class FriendServiceTest {
 
         when(userDao.findByEmail(friend.getEmail())).thenReturn(Optional.of(friend));
 
-        User returnedUser = friendService.addNewFriend(user, friend);
+        boolean friendAdded = friendService.addNewFriendship(user, friend);
 
-        assertNotNull(returnedUser);
-        verify(userDao).save(returnedUser);
+        assertTrue(friendAdded);
+        verify(userDao).save(user);
+        verify(userDao).save(friend);
 
-        assertEquals(1, returnedUser.getFriends().size());
+        assertEquals(1, user.getFriends().size());
+        assertEquals(1, friend.getFriends().size());
     }
 
     @Test
@@ -55,12 +55,55 @@ public class FriendServiceTest {
 
         when(userService.createUnregisteredUser(friend)).thenReturn(friend);
 
-        User returnedUser = friendService.addNewFriend(user, friend);
+        boolean friendAdded = friendService.addNewFriendship(user, friend);
 
-        assertNotNull(returnedUser);
-        verify(userDao).save(returnedUser);
+        assertTrue(friendAdded);
+        verify(userDao).save(user);
+        verify(userDao).save(friend);
 
-        assertEquals(1, returnedUser.getFriends().size());
+        assertEquals(1, user.getFriends().size());
+    }
+
+    @Test
+    public void addFriendTestAlreadyFriends(){
+        User user = createUser("Chris", "Punt", "chrispunt13@icloud.com", "password");
+        User friend = createUser("Sydney", "Punt", "smfrelier@gmail.com", null);
+
+        user.addNewFriend(friend);
+        friend.addNewFriend(user);
+
+        when(userDao.findByEmail(friend.getEmail())).thenReturn(Optional.of(friend));
+
+        boolean friendAdded = friendService.addNewFriendship(user, friend);
+
+        assertFalse(friendAdded);
+
+        verify(userDao).findByEmail(friend.getEmail());
+        verifyNoMoreInteractions(userDao);
+
+        assertEquals(1, user.getFriends().size());
+        assertEquals(1, friend.getFriends().size());
+    }
+
+    @Test
+    public void addFriendTestOneAlreadyAFriend(){
+        User user = createUser("Chris", "Punt", "chrispunt13@icloud.com", "password");
+        User friend = createUser("Sydney", "Punt", "smfrelier@gmail.com", null);
+
+        user.addNewFriend(friend);
+
+        when(userDao.findByEmail(friend.getEmail())).thenReturn(Optional.of(friend));
+
+        boolean friendAdded = friendService.addNewFriendship(user, friend);
+
+        assertTrue(friendAdded);
+
+        verify(userDao).findByEmail(friend.getEmail());
+        verify(userDao).save(friend);
+        verifyNoMoreInteractions(userDao);
+
+        assertEquals(1, user.getFriends().size());
+        assertEquals(1, friend.getFriends().size());
     }
 
 

@@ -15,18 +15,32 @@ public class FriendService {
     @Autowired
     private UserService userService;
 
-    public User addNewFriend(User user, User friend){
+    public boolean addNewFriendship(User user, User friend){
         Optional<User> friendOptional = userDao.findByEmail(friend.getEmail());
 
         if(friendOptional.isPresent()){
             User foundFriend = friendOptional.get();
-            user.addNewFriend(foundFriend);
+            return createMutualFriends(user, foundFriend);
         } else{
             User createdFriend = userService.createUnregisteredUser(friend);
-            user.addNewFriend(createdFriend);
+            return createMutualFriends(user, createdFriend);
         }
-        userDao.save(user);
+    }
 
-        return user;
+    private boolean createMutualFriends(User user, User friend){
+        boolean userAddFriend;
+        boolean friendAddFriend;
+
+        userAddFriend = user.addNewFriend(friend);
+        friendAddFriend = friend.addNewFriend(user);
+
+        if (userAddFriend){
+            userDao.save(user);
+        }
+        if (friendAddFriend){
+            userDao.save(friend);
+        }
+
+        return userAddFriend || friendAddFriend;
     }
 }

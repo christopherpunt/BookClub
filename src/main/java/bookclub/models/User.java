@@ -43,14 +43,19 @@ public class User  implements UserDetails {
         return AuthorityUtils.createAuthorityList("USER");
     }
 
-    public void addNewFriend(User friend){
+    public boolean addNewFriend(User friend){
         if (friends == null){
             friends = new ArrayList<User>();
             friends.add(friend);
             setFriends(friends);
+            return true;
         } else{
-            friends.add(friend);
+            if (!friends.contains(friend)){
+                friends.add(friend);
+                return true;
+            }
         }
+        return false;
     }
 
     @Override
