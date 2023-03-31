@@ -7,6 +7,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -23,8 +24,11 @@ public class User  implements UserDetails {
     public String firstName;
     @Column(nullable = false, length = 30)
     public String lastName;
-    @Column(nullable = false, length = 128)
+    @Column(length = 128)
     public String password;
+
+    @Column
+    public boolean isRegistered;
 
     @ManyToMany
     @JoinTable(
@@ -37,6 +41,16 @@ public class User  implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return AuthorityUtils.createAuthorityList("USER");
+    }
+
+    public void addNewFriend(User friend){
+        if (friends == null){
+            friends = new ArrayList<User>();
+            friends.add(friend);
+            setFriends(friends);
+        } else{
+            friends.add(friend);
+        }
     }
 
     @Override

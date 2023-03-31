@@ -1,6 +1,7 @@
 import bookclub.models.User;
 import bookclub.repositories.UserRepository;
 import bookclub.services.FriendService;
+import bookclub.services.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -20,6 +21,9 @@ public class FriendServiceTest {
     @Mock
     private UserRepository userDao;
 
+    @Mock
+    private UserService userService;
+
     @InjectMocks
     @Spy
     private FriendService friendService;
@@ -35,6 +39,21 @@ public class FriendServiceTest {
         User friend = createUser("Sydney", "Punt", "smfrelier@gmail.com", "password");
 
         when(userDao.findByEmail(friend.getEmail())).thenReturn(Optional.of(friend));
+
+        User returnedUser = friendService.addNewFriend(user, friend);
+
+        assertNotNull(returnedUser);
+        verify(userDao).save(returnedUser);
+
+        assertEquals(1, returnedUser.getFriends().size());
+    }
+
+    @Test
+    public void addUnregisteredFriendTest(){
+        User user = createUser("Chris", "Punt", "chrispunt13@icloud.com", "password");
+        User friend = createUser("Sydney", "Punt", "smfrelier@gmail.com", null);
+
+        when(userService.createUnregisteredUser(friend)).thenReturn(friend);
 
         User returnedUser = friendService.addNewFriend(user, friend);
 

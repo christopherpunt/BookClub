@@ -22,12 +22,25 @@ public class UserService implements UserDetailsService {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String encodedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
+        user.isRegistered = true;
 
         Optional<User> existingUser = userDao.findByEmail(user.getEmail());
 
         if (existingUser.isPresent()){
             throw new AuthenticationServiceException("A user with that email already exists");
         }
+
+        return userDao.save(user);
+    }
+
+    public User createUnregisteredUser(User user){
+        Optional<User> existingUser = userDao.findByEmail(user.getEmail());
+
+        if (existingUser.isPresent()){
+            throw new AuthenticationServiceException("A user with that email already exists");
+        }
+
+        user.isRegistered = false;
 
         return userDao.save(user);
     }

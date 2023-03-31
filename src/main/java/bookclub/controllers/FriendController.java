@@ -4,7 +4,6 @@ import bookclub.models.User;
 import bookclub.repositories.UserRepository;
 import bookclub.services.FriendService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -45,15 +44,15 @@ public class FriendController {
     }
 
     @PostMapping("/addFriend")
-    public ResponseEntity<String> addFriend(@ModelAttribute User newFriend, Principal principal){
+    public String addFriend(@ModelAttribute User newFriend, Principal principal){
         Optional<User> user = userDao.findByEmail(principal.getName());
 
         if (user.isEmpty()){
-            return ResponseEntity.badRequest().body("User not found");
+            return "User not found";
         }
 
         friendService.addNewFriend(user.get(), newFriend);
 
-        return ResponseEntity.ok("Friend Added!");
+        return "redirect:/myFriends";
     }
 }
