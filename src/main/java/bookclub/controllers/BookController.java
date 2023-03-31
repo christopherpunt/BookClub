@@ -28,16 +28,6 @@ public class BookController {
     
     @Autowired
     BookRepository bookDao;
-    
-//    @RequestMapping(value= "/bookisbn", method= RequestMethod.POST)
-//    public Book createBookFromIsbn(@RequestBody String isbn){
-//        return bookService.createBook(BookService.getBookDetails(isbn));
-//    }
-//
-//    @RequestMapping(value="/books", method = RequestMethod.GET)
-//    public List<Book> readBooks(){
-//        return bookService.getBooks();
-//    }
 
     @GetMapping("/searchBooks")
     public String showCreateBookForm(){
