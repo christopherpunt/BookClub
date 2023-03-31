@@ -37,7 +37,7 @@
         <td th:text="${item.Title}"></td>
         <td th:text="${item.Author}"></td>
         <td th:text="${item.Isbn}"></td>
-        <td><button type="button" class="btn btn-primary" name="book" th:value="${item.Isbn}" id="add-to-library-button">Add to Library</button></td>
+        <td><button type="button" class="btn btn-primary" name="book" th:value="${item}" id="add-to-library-button">Add to Library</button></td>
       </tr>
       </tbody>
     </table>
@@ -49,13 +49,15 @@ const addToLibraryButtons = document.querySelectorAll(".btn[name='book']");
 
 addToLibraryButtons.forEach((button) => {
   button.addEventListener("click", () => {
-    const bookItem = button.value;
-    const formData = new FormData();
-    formData.append("bookItem", bookItem);
+    const book = button.value;
+    const requestBody = JSON.stringify(book);
 
     fetch("/addBook", {
-      method: "POST",
-      body: formData,
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: requestBody
     })
       .then((response) => response.text())
       .then((data) => {
