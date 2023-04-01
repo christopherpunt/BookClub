@@ -17,19 +17,11 @@ public class BookService {
     BookRepository bookDao;
 
     @Autowired
-    UserRepository userRepo;
-
-    public Book createBook(Book book){
-        return bookDao.save(book);
-    }
-
-    public List<Book> getBooks(){
-        return bookDao.findAll();
-    }
+    UserRepository userDao;
 
     public List<Book> getAllBooksForUser(String username){
-        Optional<User> user = userRepo.findByEmail(username);
-        List<Book> books = new ArrayList<Book>();
+        Optional<User> user = userDao.findByEmail(username);
+        List<Book> books = new ArrayList<>();
 
         user.ifPresent(u -> books.addAll(bookDao.findAllBooksForUser(u.getId())));
 
@@ -38,14 +30,6 @@ public class BookService {
 
     public void deleteBook(int id){
         bookDao.deleteById(id);
-    }
-
-    public static Book getBookDetails(String isbn){
-        return GoogleBookDetailsService.getBookDetailsFromIsbn(isbn);
-    }
-
-    public static List<Book> getBooksFromTitle(String title){
-        return GoogleBookDetailsService.getBooksBasedOnTitle(title);
     }
 
     public boolean updateAllDetails(Book book) {
@@ -61,6 +45,29 @@ public class BookService {
             bookToSave.setBorrowedFromUser(book.getBorrowedFromUser());
             bookToSave.setLentToUser(book.getLentToUser());
             bookDao.save(bookToSave);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean addBookForUser(String username, Book book) {
+        Optional<User> user = userDao.findByEmail(username);
+
+        if (user.isPresent()) {
+            book.setUser(user.get());
+            //TODO: fix description when its too long
+            book.setDescription("");
+            bookDao.save(book);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean lendBook(User user, User friend, int bookId){
+        if (user.getFriends().contains(friend)){
+            Book book = bookDao.getReferenceById(bookId);
+            book.setLentToUser(friend);
+            bookDao.save(book);
             return true;
         }
         return false;

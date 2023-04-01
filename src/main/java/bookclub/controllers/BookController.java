@@ -20,62 +20,53 @@ import java.util.Optional;
 
 @Controller
 public class BookController {
-
-    @Autowired
-    UserRepository userDao;
-
     @Autowired
     BookService bookService;
     
     @Autowired
     BookRepository bookDao;
-    
-    @RequestMapping(value= "/bookisbn", method= RequestMethod.POST)
-    public Book createBookFromIsbn(@RequestBody String isbn){
-        return bookService.createBook(BookService.getBookDetails(isbn));
-    }
 
-    @RequestMapping(value="/books", method = RequestMethod.GET)
-    public List<Book> readBooks(){
-        return bookService.getBooks();
-    }
+    @Autowired
+    UserRepository userDao;
 
-    @GetMapping("/book")
+    @GetMapping("/searchBooks")
     public String showCreateBookForm(){
         return "search-books";
     }
 
-    @PostMapping("/book")
+    @PostMapping("/searchBooks")
     public ModelAndView searchBookFromTitle(@RequestBody String title){
-        var books = GoogleBookDetailsService.getBooksBasedOnTitle(title);
+        List<Book> books = GoogleBookDetailsService.getBooksBasedOnTitle(title);
 
         ModelAndView modelAndView = new ModelAndView("search-books.html");
         modelAndView.addObject("books", books);
         return modelAndView;
     }
 
-    @PostMapping(value = "/addBook", consumes = "multipart/form-data")
-    public ResponseEntity<String> addBook(@RequestParam String bookItem, Principal principal) {
-        Optional<User> user = userDao.findByEmail(principal.getName());
-        if (user.isPresent()) {
-            Book book = GoogleBookDetailsService.getBookDetailsFromIsbn(bookItem);
-            assert book != null;
-            book.setUser(user.get());
-            book.setDescription("");
-            bookService.createBook(book);
+    @PostMapping(value = "/addBook", consumes = "application/json")
+    public ResponseEntity<String> addBook(@RequestBody Book book, Principal principal) {
+        boolean success = bookService.addBookForUser(principal.getName(), book);
+
+        if (success){
             return ResponseEntity.ok("Book added to library successfully");
         }
         return ResponseEntity.badRequest().body("Failed to Add book to library");
     }
 
     @GetMapping("/book_details/{id}")
-    public String getBookDetails(@PathVariable int id, Model model){
+    public String getBookDetails(@PathVariable int id, Model model, Principal principal){
         Optional<Book> book = bookDao.findById(id);
+        Optional<User> userOptional = userDao.findByEmail(principal.getName());
+        if (userOptional.isPresent()){
+            List<User> friends = userOptional.get().getFriends();
 
-        if(book.isPresent()){
-            model.addAttribute("book", book.get());
-            return "book_details";
+            if(book.isPresent()){
+                model.addAttribute("book", book.get());
+                model.addAttribute("friends", friends);
+                return "book_details";
+            }
         }
+
         return "no book found";
     }
 
@@ -106,5 +97,17 @@ public class BookController {
             return "redirect:/book_details/" + book.getId();
         }
         return "redirect:/home";
+    }
+
+    @PostMapping("/lendBook")
+    public ResponseEntity<String> lendBook(@RequestParam int friendId, @RequestParam int bookId, Principal principal){
+        Optional<User> userOptional = userDao.findByEmail(principal.getName());
+        Optional<User> friendOptional = userDao.findById(friendId);
+
+        if (userOptional.isPresent() && friendOptional.isPresent()){
+            bookService.lendBook(userOptional.get(), friendOptional.get(), bookId);
+            return ResponseEntity.ok("Book lent out successfully");
+        }
+        return ResponseEntity.badRequest().body("there was a problem lending out the book");
     }
 }

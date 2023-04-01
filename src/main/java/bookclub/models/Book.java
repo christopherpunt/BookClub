@@ -10,8 +10,21 @@ import lombok.Setter;
 @Entity
 public class Book {
 
-    public Book(){
+    public Book(){}
 
+    //constructor for Post request from search results page
+    public Book(String json) {
+        Book book = fromJson(json);
+
+        this.Id = book.getId();
+        this.User = book.getUser();
+        this.Title = book.getTitle();
+        this.Author = book.getAuthor();
+        this.Isbn = book.getIsbn();
+        this.Description = book.getDescription();
+        this.BorrowedFromUser = book.getBorrowedFromUser();
+        this.LentToUser = book.getLentToUser();
+        this.BookCoverUrl = book.getBookCoverUrl();
     }
 
     //region Properties
@@ -31,10 +44,12 @@ public class Book {
     @Lob
     @Column(columnDefinition="TEXT")
     private String Description;
-    @Column
-    private String BorrowedFromUser;
-    @Column
-    private String LentToUser;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "borrowed_from_user_id")
+    private User BorrowedFromUser;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "lent_to_user_id")
+    private User LentToUser;
     @Column
     private String BookCoverUrl;
     //endregion
@@ -42,5 +57,10 @@ public class Book {
     @Override
     public String toString(){
         return new Gson().toJson(this);
+    }
+
+    public static Book fromJson(String json) {
+        Gson gson = new Gson();
+        return gson.fromJson(json, Book.class);
     }
 }

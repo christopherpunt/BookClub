@@ -13,6 +13,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 public class GoogleBookDetailsService {
@@ -42,14 +43,13 @@ public class GoogleBookDetailsService {
         return null;
     }
 
-    //TODO: should return optional
-    public static Book getBookDetailsFromIsbn(String isbn){
+    public static Optional<Book> getBookDetailsFromIsbn(String isbn){
         String urlString = baseUrl + "isbn:" + isbn;
 
         String response = executeGetRequest(urlString);
 
         if (response == null){
-            return null;
+            return Optional.empty();
         }
 
         Gson gson = new Gson();
@@ -59,11 +59,11 @@ public class GoogleBookDetailsService {
 
         if (totalItems == 1) {
             var jsonBook = object.getAsJsonArray("items").get(0).getAsJsonObject().getAsJsonObject("volumeInfo");
-            return getBook(jsonBook);
+            return Optional.of(getBook(jsonBook));
         }
         
         System.out.println("No book found");
-        return null;
+        return Optional.empty();
     }
 
     public static List<Book> getBooksBasedOnTitle(String title){

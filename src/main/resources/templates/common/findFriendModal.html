@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="findFriendModal">
+    <!-- modal content here -->
+    <div class="modal fade" id="findFriendModal" tabindex="-1" aria-labelledby="findFriendModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="borrowLendModalLabel">Select a friend</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form th:action="@{/lendBook}" method="post">
+              <div class="mb-3">
+                <label for="friendSelect" class="form-label">Select friend:</label>
+                <select class="form-select" id="friendSelect" name="friendId">
+                  <option th:each="friend : ${friends}" th:value="${friend.id}" th:text="${friend.getFullName()}"></option>
+                </select>
+              </div>
+              <input type="hidden" id="bookId" name="bookId" th:value="${book.Id}" />
+              <button type="submit" class="btn btn-primary">Save</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"
+        integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V"
+        crossorigin="anonymous">
+</script>
+</body>
+</html>
