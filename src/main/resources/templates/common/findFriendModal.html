@@ -11,11 +11,11 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <form th:action="@{/borrowOrLend}" method="post">
+            <form th:action="@{/lendBook}" method="post">
               <div class="mb-3">
                 <label for="friendSelect" class="form-label">Select friend:</label>
-                <select class="form-select" id="friendSelect" name="friend">
-                  <option th:each="friend : ${friends}" th:value="${friend.id}" th:text="${friend.name}"></option>
+                <select class="form-select" id="friendSelect" name="friendId">
+                  <option th:each="friend : ${friends}" th:value="${friend.id}" th:text="${friend.getFullName()}"></option>
                 </select>
               </div>
               <input type="hidden" id="bookId" name="bookId" th:value="${book.Id}" />

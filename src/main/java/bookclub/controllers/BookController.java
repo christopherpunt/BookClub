@@ -1,7 +1,9 @@
 package bookclub.controllers;
 
 import bookclub.models.Book;
+import bookclub.models.User;
 import bookclub.repositories.BookRepository;
+import bookclub.repositories.UserRepository;
 import bookclub.services.BookService;
 import bookclub.services.GoogleBookDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +25,9 @@ public class BookController {
     
     @Autowired
     BookRepository bookDao;
+
+    @Autowired
+    UserRepository userDao;
 
     @GetMapping("/searchBooks")
     public String showCreateBookForm(){
@@ -49,13 +54,19 @@ public class BookController {
     }
 
     @GetMapping("/book_details/{id}")
-    public String getBookDetails(@PathVariable int id, Model model){
+    public String getBookDetails(@PathVariable int id, Model model, Principal principal){
         Optional<Book> book = bookDao.findById(id);
+        Optional<User> userOptional = userDao.findByEmail(principal.getName());
+        if (userOptional.isPresent()){
+            List<User> friends = userOptional.get().getFriends();
 
-        if(book.isPresent()){
-            model.addAttribute("book", book.get());
-            return "book_details";
+            if(book.isPresent()){
+                model.addAttribute("book", book.get());
+                model.addAttribute("friends", friends);
+                return "book_details";
+            }
         }
+
         return "no book found";
     }
 
@@ -86,5 +97,17 @@ public class BookController {
             return "redirect:/book_details/" + book.getId();
         }
         return "redirect:/home";
+    }
+
+    @PostMapping("/lendBook")
+    public ResponseEntity<String> lendBook(@RequestParam int friendId, @RequestParam int bookId, Principal principal){
+        Optional<User> userOptional = userDao.findByEmail(principal.getName());
+        Optional<User> friendOptional = userDao.findById(friendId);
+
+        if (userOptional.isPresent() && friendOptional.isPresent()){
+            bookService.lendBook(userOptional.get(), friendOptional.get(), bookId);
+            return ResponseEntity.ok("Book lent out successfully");
+        }
+        return ResponseEntity.badRequest().body("there was a problem lending out the book");
     }
 }

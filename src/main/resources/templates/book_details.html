@@ -13,9 +13,7 @@
       <h1>Book Details</h1>
     </div>
     <div class="col-md-6 text-end">
-      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#findFriendModal">
-        Open Modal
-      </button>
+
       <a th:href="@{/editBookDetails/{id}(id=${book.Id})}" class="btn btn-primary">Edit</a>
     </div>
   </div>
@@ -36,11 +34,15 @@
   <div class="row">
     <div class="col-md-6">
       <h3>Borrowed From:</h3>
-      <p th:text="${book.BorrowedFromUser}"></p>
+      <p th:text="${book.BorrowedFromUser != null ? book.BorrowedFromUser.getFullName() : ''}"></p>
     </div>
     <div class="col-md-6">
       <h3>Lent To:</h3>
-      <p th:text="${book.LentToUser}"></p>
+      <p th:text="${book.LentToUser != null ? book.LentToUser.getFullName() : ''}"></p>
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#findFriendModal">
+        Select Friend to lend to
+      </button>
+
     </div>
   </div>
 </div>
