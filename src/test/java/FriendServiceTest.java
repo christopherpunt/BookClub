@@ -1,4 +1,6 @@
+import bookclub.models.Book;
 import bookclub.models.User;
+import bookclub.repositories.BookRepository;
 import bookclub.repositories.UserRepository;
 import bookclub.services.FriendService;
 import bookclub.services.UserService;
@@ -9,7 +11,10 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -21,6 +26,9 @@ public class FriendServiceTest {
 
     @Mock
     private UserService userService;
+
+    @Mock
+    private BookRepository bookDao;
 
     @InjectMocks
     @Spy
@@ -127,6 +135,57 @@ public class FriendServiceTest {
 
         assertEquals(1, user.getFriends().size());
         assertEquals(1, friend.getFriends().size());
+    }
+
+    @Test
+    public void findAllFriendsBooks(){
+
+        User user = createUser("Chris", "Punt", "chrispunt@email.com", "password");
+        User friend = createUser("Chris2", "Punt2", "chrispunt2@email", "password");
+        User friend2 = createUser("Chris3", "Punt3", "chrispunt3@email", "password");
+        User friend3 = createUser("Chris4", "Punt4", "chrispunt4@email", "password");
+
+        user.addNewFriend(friend);
+        user.addNewFriend(friend2);
+        user.addNewFriend(friend3);
+
+        List<Book> friend1books = new ArrayList<>();
+        List<Book> friend2books = new ArrayList<>();
+        List<Book> friend3books = new ArrayList<>();
+
+        friend1books.add(createBook(friend));
+        friend1books.add(createBook(friend));
+        friend1books.add(createBook(friend));
+
+        friend2books.add(createBook(friend2));
+        friend2books.add(createBook(friend2));
+        friend2books.add(createBook(friend2));
+
+        friend3books.add(createBook(friend3));
+        friend3books.add(createBook(friend3));
+        friend3books.add(createBook(friend3));
+
+        List<Book> allBooks = new ArrayList<>();
+        allBooks.addAll(friend1books);
+        allBooks.addAll(friend2books);
+        allBooks.addAll(friend3books);
+
+
+        when(userDao.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+
+        when(bookDao.findByUserIdIn(List.of(friend.getId(), friend2.getId(), friend3.getId()))).thenReturn(allBooks);
+        List<Book> returnedBooks = friendService.findAllFriendsBooks(user.getEmail());
+
+        assertEquals(9, returnedBooks.size());
+    }
+
+    private Book createBook(User user) {
+        Book book = new Book();
+        book.setTitle(user.getFirstName() + "'s Book");
+        book.setAuthor(user.getLastName());
+        book.setIsbn(UUID.randomUUID().toString());
+        book.setUser(user);
+        return book;
     }
 
 

@@ -5,6 +5,7 @@ import bookclub.models.User;
 import bookclub.repositories.BookRepository;
 import bookclub.repositories.UserRepository;
 import bookclub.services.BookService;
+import bookclub.services.FriendService;
 import bookclub.services.GoogleBookDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -29,17 +30,23 @@ public class BookController {
     @Autowired
     UserRepository userDao;
 
+    @Autowired
+    FriendService friendService;
+
     @GetMapping("/searchBooks")
     public String showCreateBookForm(){
         return "search-books";
     }
 
     @PostMapping("/searchBooks")
-    public ModelAndView searchBookFromTitle(@RequestBody String title){
+    public ModelAndView searchBookFromTitle(@RequestBody String title, Principal principal){
         List<Book> books = GoogleBookDetailsService.getBooksBasedOnTitle(title);
+
+        List<Book> friendsBooks = friendService.findAllFriendsBooks(principal.getName());
 
         ModelAndView modelAndView = new ModelAndView("search-books.html");
         modelAndView.addObject("books", books);
+        modelAndView.addObject("friendsBooks", friendsBooks);
         return modelAndView;
     }
 

@@ -17,7 +17,7 @@ public class Book {
         Book book = fromJson(json);
 
         this.Id = book.getId();
-        this.User = book.getUser();
+        this.user = book.getUser();
         this.Title = book.getTitle();
         this.Author = book.getAuthor();
         this.Isbn = book.getIsbn();
@@ -33,7 +33,7 @@ public class Book {
     private int Id;
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User User;
+    private User user;
     @Column
     private String Title;
     @Column
