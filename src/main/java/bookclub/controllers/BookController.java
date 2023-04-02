@@ -77,11 +77,11 @@ public class BookController {
         Optional<Book> book = bookDao.findById(id);
         Optional<User> userOptional = userDao.findByEmail(principal.getName());
         if (userOptional.isPresent()){
-//            List<User> friends = userOptional.get().getFriends();
+            List<User> friends = friendService.findAllFriendsFromUser(userOptional.get());
 
             if(book.isPresent()){
                 model.addAttribute("book", book.get());
-//                model.addAttribute("friends", friends);
+                model.addAttribute("friends", friends);
                 return "book_details";
             }
         }
