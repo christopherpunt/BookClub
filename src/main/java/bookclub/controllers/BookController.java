@@ -38,6 +38,12 @@ public class BookController {
         return "search-books";
     }
 
+    @GetMapping("/friendsBooks")
+    public String showFriendsBooks(Model model, Principal principal){
+        List<Book> friendsBooks = friendService.findAllFriendsBooks(principal.getName());
+        return friendsBooks.toString();
+    }
+
     @PostMapping("/searchBooks")
     public ModelAndView searchBookFromTitle(@RequestBody String title, Principal principal){
         List<Book> books = GoogleBookDetailsService.getBooksBasedOnTitle(title);
@@ -65,11 +71,11 @@ public class BookController {
         Optional<Book> book = bookDao.findById(id);
         Optional<User> userOptional = userDao.findByEmail(principal.getName());
         if (userOptional.isPresent()){
-            List<User> friends = userOptional.get().getFriends();
+//            List<User> friends = userOptional.get().getFriends();
 
             if(book.isPresent()){
                 model.addAttribute("book", book.get());
-                model.addAttribute("friends", friends);
+//                model.addAttribute("friends", friends);
                 return "book_details";
             }
         }

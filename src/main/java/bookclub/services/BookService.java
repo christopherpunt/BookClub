@@ -63,12 +63,12 @@ public class BookService {
     }
 
     public boolean lendBook(User user, User friend, int bookId){
-        if (user.getFriends().contains(friend)){
-            Book book = bookDao.getReferenceById(bookId);
-            book.setLentToUser(friend);
-            bookDao.save(book);
-            return true;
-        }
+//        if (user.getFriends().contains(friend)){
+//            Book book = bookDao.getReferenceById(bookId);
+//            book.setLentToUser(friend);
+//            bookDao.save(book);
+//            return true;
+//        }
         return false;
     }
 }

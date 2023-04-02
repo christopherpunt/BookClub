@@ -40,7 +40,6 @@ public class UserServiceTest {
         assertEquals(user.getFirstName(), captor.getValue().getFirstName());
         assertEquals(user.getLastName(), captor.getValue().getLastName());
         assertEquals(user.getEmail(), captor.getValue().getEmail());
-        assertEquals(user.getFriends(), captor.getValue().getFriends());
         assertTrue(captor.getValue().isRegistered());
 
         //TODO: assert correctly encrypted

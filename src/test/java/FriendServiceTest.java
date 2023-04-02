@@ -1,6 +1,8 @@
 import bookclub.models.Book;
+import bookclub.models.Friendship;
 import bookclub.models.User;
 import bookclub.repositories.BookRepository;
+import bookclub.repositories.FriendshipRepository;
 import bookclub.repositories.UserRepository;
 import bookclub.services.FriendService;
 import bookclub.services.UserService;
@@ -16,13 +18,16 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 public class FriendServiceTest {
 
     @Mock
     private UserRepository userDao;
+
+    @Mock
+    private FriendshipRepository friendshipDao;
 
     @Mock
     private UserService userService;
@@ -44,16 +49,12 @@ public class FriendServiceTest {
         User user = createUser("Chris", "Punt", "chrispunt13@icloud.com", "password");
         User friend = createUser("Sydney", "Punt", "smfrelier@gmail.com", "password");
 
+        when(friendshipDao.findFriendship(user, friend)).thenReturn(Optional.empty());
         when(userDao.findByEmail(friend.getEmail())).thenReturn(Optional.of(friend));
 
-        boolean friendAdded = friendService.addNewFriendship(user, friend);
+        Friendship friendship = friendService.addNewFriendship(user, friend);
 
-        assertTrue(friendAdded);
-        verify(userDao).save(user);
-        verify(userDao).save(friend);
-
-        assertEquals(1, user.getFriends().size());
-        assertEquals(1, friend.getFriends().size());
+        verify(friendshipDao).save(friendship);
     }
 
     @Test
@@ -62,21 +63,16 @@ public class FriendServiceTest {
         User friend = createUser("Sydney", "Punt", "smfrelier@gmail.com", "password");
         User friend2 = createUser("Abby", "Punt", "abbyPunt@gmail.com", "password");
 
+        when(friendshipDao.findFriendship(user, friend)).thenReturn(Optional.empty());
+
         when(userDao.findByEmail(friend.getEmail())).thenReturn(Optional.of(friend));
         when(userDao.findByEmail(friend2.getEmail())).thenReturn(Optional.of(friend2));
 
-        boolean friendAdded = friendService.addNewFriendship(user, friend);
-        boolean friend2Added = friendService.addNewFriendship(user, friend2);
+        Friendship firstFriendShip = friendService.addNewFriendship(user, friend);
+        Friendship secondFriendShip = friendService.addNewFriendship(user, friend2);
 
-        assertTrue(friendAdded);
-        assertTrue(friend2Added);
-        verify(userDao, times(2)).save(user);
-        verify(userDao).save(friend);
-        verify(userDao).save(friend2);
-
-        assertEquals(2, user.getFriends().size());
-        assertEquals(1, friend.getFriends().size());
-        assertEquals(1, friend2.getFriends().size());
+        verify(friendshipDao).save(firstFriendShip);
+        verify(friendshipDao).save(secondFriendShip);
     }
 
     @Test
@@ -86,13 +82,9 @@ public class FriendServiceTest {
 
         when(userService.createUnregisteredUser(friend)).thenReturn(friend);
 
-        boolean friendAdded = friendService.addNewFriendship(user, friend);
+        Friendship friendship = friendService.addNewFriendship(user, friend);
 
-        assertTrue(friendAdded);
-        verify(userDao).save(user);
-        verify(userDao).save(friend);
-
-        assertEquals(1, user.getFriends().size());
+        verify(friendshipDao).save(friendship);
     }
 
     @Test
@@ -100,41 +92,15 @@ public class FriendServiceTest {
         User user = createUser("Chris", "Punt", "chrispunt13@icloud.com", "password");
         User friend = createUser("Sydney", "Punt", "smfrelier@gmail.com", null);
 
-        user.addNewFriend(friend);
-        friend.addNewFriend(user);
+        Friendship friendship = new Friendship(user, friend);
 
         when(userDao.findByEmail(friend.getEmail())).thenReturn(Optional.of(friend));
+        when(friendshipDao.findFriendship(user, friend)).thenReturn(Optional.of(friendship));
 
-        boolean friendAdded = friendService.addNewFriendship(user, friend);
+        friendService.addNewFriendship(user, friend);
 
-        assertFalse(friendAdded);
-
-        verify(userDao).findByEmail(friend.getEmail());
-        verifyNoMoreInteractions(userDao);
-
-        assertEquals(1, user.getFriends().size());
-        assertEquals(1, friend.getFriends().size());
-    }
-
-    @Test
-    public void addFriendTestOneAlreadyAFriend(){
-        User user = createUser("Chris", "Punt", "chrispunt13@icloud.com", "password");
-        User friend = createUser("Sydney", "Punt", "smfrelier@gmail.com", null);
-
-        user.addNewFriend(friend);
-
-        when(userDao.findByEmail(friend.getEmail())).thenReturn(Optional.of(friend));
-
-        boolean friendAdded = friendService.addNewFriendship(user, friend);
-
-        assertTrue(friendAdded);
-
-        verify(userDao).findByEmail(friend.getEmail());
-        verify(userDao).save(friend);
-        verifyNoMoreInteractions(userDao);
-
-        assertEquals(1, user.getFriends().size());
-        assertEquals(1, friend.getFriends().size());
+        verify(friendshipDao).findFriendship(user, friend);
+        verifyNoMoreInteractions(friendshipDao);
     }
 
     @Test
@@ -144,10 +110,6 @@ public class FriendServiceTest {
         User friend = createUser("Chris2", "Punt2", "chrispunt2@email", "password");
         User friend2 = createUser("Chris3", "Punt3", "chrispunt3@email", "password");
         User friend3 = createUser("Chris4", "Punt4", "chrispunt4@email", "password");
-
-        user.addNewFriend(friend);
-        user.addNewFriend(friend2);
-        user.addNewFriend(friend3);
 
         List<Book> friend1books = new ArrayList<>();
         List<Book> friend2books = new ArrayList<>();
@@ -177,6 +139,23 @@ public class FriendServiceTest {
         List<Book> returnedBooks = friendService.findAllFriendsBooks(user.getEmail());
 
         assertEquals(9, returnedBooks.size());
+    }
+
+    @Test
+    public void findAllFriendsFromUser(){
+        User user = createUser("Chris", "Punt", "chrispunt@email.com", "password");
+        User friend = createUser("Chris2", "Punt2", "chrispunt2@email.com", "password");
+        User friend2 = createUser("Chris2", "Punt2", "chrispunt2@email.com", "password");
+
+        Friendship friendship = new Friendship(user, friend);
+        Friendship friendship2 = new Friendship(user, friend2);
+
+        when(friendshipDao.findAllFriendshipsByUser(user)).thenReturn(List.of(friendship, friendship2));
+
+        List<User> friends;
+        friends = friendService.findAllFriendsFromUser(user);
+
+        assertEquals(2, friends.size());
     }
 
     private Book createBook(User user) {

@@ -1,16 +1,17 @@
 package bookclub.services;
 
 import bookclub.models.Book;
+import bookclub.models.Friendship;
 import bookclub.models.User;
 import bookclub.repositories.BookRepository;
+import bookclub.repositories.FriendshipRepository;
 import bookclub.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class FriendService {
@@ -18,49 +19,64 @@ public class FriendService {
     private UserRepository userDao;
 
     @Autowired
+    private FriendshipRepository friendshipDao;
+
+    @Autowired
     private UserService userService;
 
     @Autowired
     private BookRepository bookDao;
 
-    public boolean addNewFriendship(User user, User friend){
+    public Friendship addNewFriendship(User user, User friend){
+        //if friend already exists
+        //TODO: maybe should do a findByUser method
         Optional<User> friendOptional = userDao.findByEmail(friend.getEmail());
+
+        Friendship friendship;
 
         if(friendOptional.isPresent()){
             User foundFriend = friendOptional.get();
-            return createMutualFriends(user, foundFriend);
+            Optional<Friendship> friendshipOptional = friendshipDao.findFriendship(user, foundFriend);
+            //if friendship already exists
+            if (friendshipOptional.isPresent()){
+                return friendshipOptional.get();
+            }
+
+            friendship = new Friendship(user, foundFriend);
         } else{
             User createdFriend = userService.createUnregisteredUser(friend);
-            return createMutualFriends(user, createdFriend);
+            friendship = new Friendship(user, createdFriend);
         }
+
+        friendshipDao.save(friendship);
+
+        return friendship;
     }
 
-    private boolean createMutualFriends(User user, User friend){
-        boolean userAddFriend;
-        boolean friendAddFriend;
+    public List<User> findAllFriendsFromUser(User user){
+        List<Friendship> friendships = friendshipDao.findAllFriendshipsByUser(user);
 
-        userAddFriend = user.addNewFriend(friend);
-        friendAddFriend = friend.addNewFriend(user);
+        List<User> friends = new ArrayList<>();
 
-        if (userAddFriend){
-            userDao.save(user);
-        }
-        if (friendAddFriend){
-            userDao.save(friend);
+        for (Friendship friendship : friendships) {
+            friends.add(friendship.getFriend());
         }
 
-        return userAddFriend || friendAddFriend;
+        return friends;
     }
 
     public List<Book> findAllFriendsBooks(String userEmail){
         Optional<User> userOptional = userDao.findByEmail(userEmail);
 
-        if (userOptional.isPresent() && userOptional.get().getFriends() != null) {
-            User user = userOptional.get();
-            List<Integer> friendIds = user.getFriends().stream().map(User::getId).collect(Collectors.toList());
-            return bookDao.findByUserIdIn(friendIds);
+        List<Book> books = new ArrayList<>();
+
+        if (userOptional.isPresent()){
+            List<User> friends = findAllFriendsFromUser(userOptional.get());
+            for (User user : friends) {
+                books.addAll(bookDao.findByUser(user));
+            }
         }
 
-        return Collections.emptyList();
+        return books;
     }
 }
