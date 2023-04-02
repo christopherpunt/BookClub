@@ -33,26 +33,32 @@ public class BookController {
     @Autowired
     FriendService friendService;
 
-    @GetMapping("/searchBooks")
-    public String showCreateBookForm(){
-        return "search-books";
+    @GetMapping("/searchFriendsBooks")
+    public String showSearchFriendsBooks(){
+        return "search-friends-books";
     }
 
-    @GetMapping("/friendsBooks")
-    public String showFriendsBooks(Model model, Principal principal){
+    @PostMapping("/searchFriendsBooks")
+    public ModelAndView searchFriendsBooks(@RequestParam String searchTerm, Principal principal){
         List<Book> friendsBooks = friendService.findAllFriendsBooks(principal.getName());
-        return friendsBooks.toString();
+        ModelAndView modelAndView = new ModelAndView("search-friends-books.html");
+        modelAndView.addObject("friendsBooks", friendsBooks);
+        return modelAndView;
     }
 
-    @PostMapping("/searchBooks")
+    @GetMapping("/searchGoogleBooks")
+    public String showCreateBookForm(){
+        return "search-google-books";
+    }
+
+
+
+    @PostMapping("/searchGoogleBooks")
     public ModelAndView searchBookFromTitle(@RequestBody String title, Principal principal){
         List<Book> books = GoogleBookDetailsService.getBooksBasedOnTitle(title);
 
-        List<Book> friendsBooks = friendService.findAllFriendsBooks(principal.getName());
-
-        ModelAndView modelAndView = new ModelAndView("search-books.html");
+        ModelAndView modelAndView = new ModelAndView("search-google-books.html");
         modelAndView.addObject("books", books);
-        modelAndView.addObject("friendsBooks", friendsBooks);
         return modelAndView;
     }
 

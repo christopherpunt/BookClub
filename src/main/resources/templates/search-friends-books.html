@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Book Club</title>
+  <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}">
+  <link th:rel ="stylesheet" type="text/css" th:href="@{/static/main.css}">
+</head>
+<body class="dark">
+<!-- Include the navbar fragment -->
+<div th:insert="~{common/navbar :: navbar}"></div>
+
+<div class="container">
+  <h1>Search for a book</h1>
+  <div id="alert-container"></div>
+  <form method="post" action="/searchFriendsBooks">
+    <div class="input-group mb-3">
+      <input type="text" name="searchTerm" class="form-control" placeholder="Enter book title or author" aria-label="Enter book title or author">
+      <button type="submit" class="btn btn-primary">Search</button>
+    </div>
+  </form>
+
+  <div th:if="${not #lists.isEmpty(friendsBooks)}">
+    <h2>Friends Books</h2>
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th>Thumbnail</th>
+        <th>Title</th>
+        <th>Author</th>
+        <th>ISBN</th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="item: ${friendsBooks}">
+        <td><img th:src="${item.BookCoverUrl}"/></td>
+        <td th:text="${item.Title}"></td>
+        <td th:text="${item.Author}"></td>
+        <td th:text="${item.Isbn}"></td>
+        <td><button type="button" class="btn btn-primary" name="book" th:value="${item}" id="request-to-borrow-button">Request To Borrow</button></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+</body>
+</html>
