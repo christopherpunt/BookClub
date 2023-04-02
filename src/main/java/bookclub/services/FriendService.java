@@ -79,4 +79,21 @@ public class FriendService {
 
         return books;
     }
+
+    public List<Book> findAllFriendsBooksMatchSearch(String userEmail, String searchTerm){
+        Optional<User> userOptional = userDao.findByEmail(userEmail);
+
+        List<Book> books = new ArrayList<>();
+
+        if (userOptional.isPresent()){
+            List<User> friends = findAllFriendsFromUser(userOptional.get());
+            for (User user : friends) {
+                books.addAll(bookDao.findByUser(user));
+            }
+        }
+
+        //filter books
+        return books.stream().filter(b -> b.getTitle().toLowerCase().contains(searchTerm.toLowerCase()) ||
+                b.getAuthor().toLowerCase().contains(searchTerm.toLowerCase())).toList();
+    }
 }
