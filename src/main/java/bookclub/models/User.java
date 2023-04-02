@@ -30,33 +30,37 @@ public class User  implements UserDetails {
     @Column
     private boolean isRegistered;
 
-    @ManyToMany
-    @JoinTable(
-            name = "user_friends",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "friend_id")
-    )
-    public List<User> friends;
+    @OneToMany
+    private List<Friendship> friendships;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return AuthorityUtils.createAuthorityList("USER");
     }
 
-    public boolean addNewFriend(User friend){
-        if (friends == null){
-            friends = new ArrayList<User>();
-            friends.add(friend);
-            setFriends(friends);
-            return true;
-        } else{
-            if (!friends.contains(friend)){
-                friends.add(friend);
-                return true;
+    public List<User> getFriends() {
+        List<User> friends = new ArrayList<>();
+        for (Friendship friendship : friendships) {
+            friends.add(friendship.getFriend());
+        }
+        return friends;
+    }
+
+    public boolean addNewFriend(User friend) {
+        if (friendships == null) {
+            friendships = new ArrayList<>();
+        }
+
+        for (Friendship friendship : friendships) {
+            if (friendship.getFriend().equals(friend)) {
+                return false;
             }
         }
-        return false;
+        Friendship friendship = new Friendship(this, friend);
+        friendships.add(friendship);
+        return true;
     }
+
 
     @Override
     public String getUsername() {
@@ -82,8 +86,6 @@ public class User  implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
-
 
     public String getFullName(){
         return firstName + " " + lastName;

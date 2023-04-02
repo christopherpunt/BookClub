@@ -13,12 +13,13 @@
 <div class="container">
   <h1>Search for a book</h1>
   <div id="alert-container"></div>
-  <form method="post" action="/searchBooks">
+  <form method="post" action="/searchGoogleBooks">
     <div class="input-group mb-3">
       <input type="text" name="search" class="form-control" placeholder="Enter book title or author" aria-label="Enter book title or author">
       <button type="submit" class="btn btn-primary">Search</button>
     </div>
   </form>
+
   <div th:if="${not #lists.isEmpty(books)}">
     <h2>Results</h2>
     <table class="table table-striped">

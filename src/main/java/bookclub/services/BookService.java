@@ -7,7 +7,7 @@ import bookclub.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,12 +20,11 @@ public class BookService {
     UserRepository userDao;
 
     public List<Book> getAllBooksForUser(String username){
-        Optional<User> user = userDao.findByEmail(username);
-        List<Book> books = new ArrayList<>();
-
-        user.ifPresent(u -> books.addAll(bookDao.findAllBooksForUser(u.getId())));
-
-        return books;
+        Optional<User> userOptional = userDao.findByEmail(username);
+        if (userOptional.isPresent()){
+            return bookDao.findByUser(userOptional.get());
+        }
+        return Collections.emptyList();
     }
 
     public void deleteBook(int id){
@@ -64,12 +63,12 @@ public class BookService {
     }
 
     public boolean lendBook(User user, User friend, int bookId){
-        if (user.getFriends().contains(friend)){
-            Book book = bookDao.getReferenceById(bookId);
-            book.setLentToUser(friend);
-            bookDao.save(book);
-            return true;
-        }
+//        if (user.getFriends().contains(friend)){
+//            Book book = bookDao.getReferenceById(bookId);
+//            book.setLentToUser(friend);
+//            bookDao.save(book);
+//            return true;
+//        }
         return false;
     }
 }

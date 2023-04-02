@@ -5,6 +5,7 @@ import bookclub.models.User;
 import bookclub.repositories.BookRepository;
 import bookclub.repositories.UserRepository;
 import bookclub.services.BookService;
+import bookclub.services.FriendService;
 import bookclub.services.GoogleBookDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -29,16 +30,34 @@ public class BookController {
     @Autowired
     UserRepository userDao;
 
-    @GetMapping("/searchBooks")
-    public String showCreateBookForm(){
-        return "search-books";
+    @Autowired
+    FriendService friendService;
+
+    @GetMapping("/searchFriendsBooks")
+    public String showSearchFriendsBooks(){
+        return "search-friends-books";
     }
 
-    @PostMapping("/searchBooks")
-    public ModelAndView searchBookFromTitle(@RequestBody String title){
+    @PostMapping("/searchFriendsBooks")
+    public ModelAndView searchFriendsBooks(@RequestParam String searchTerm, Principal principal){
+        List<Book> friendsBooks = friendService.findAllFriendsBooks(principal.getName());
+        ModelAndView modelAndView = new ModelAndView("search-friends-books.html");
+        modelAndView.addObject("friendsBooks", friendsBooks);
+        return modelAndView;
+    }
+
+    @GetMapping("/searchGoogleBooks")
+    public String showCreateBookForm(){
+        return "search-google-books";
+    }
+
+
+
+    @PostMapping("/searchGoogleBooks")
+    public ModelAndView searchBookFromTitle(@RequestBody String title, Principal principal){
         List<Book> books = GoogleBookDetailsService.getBooksBasedOnTitle(title);
 
-        ModelAndView modelAndView = new ModelAndView("search-books.html");
+        ModelAndView modelAndView = new ModelAndView("search-google-books.html");
         modelAndView.addObject("books", books);
         return modelAndView;
     }
@@ -58,7 +77,7 @@ public class BookController {
         Optional<Book> book = bookDao.findById(id);
         Optional<User> userOptional = userDao.findByEmail(principal.getName());
         if (userOptional.isPresent()){
-            List<User> friends = userOptional.get().getFriends();
+            List<User> friends = friendService.findAllFriendsFromUser(userOptional.get());
 
             if(book.isPresent()){
                 model.addAttribute("book", book.get());
