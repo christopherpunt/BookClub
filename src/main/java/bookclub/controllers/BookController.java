@@ -40,7 +40,7 @@ public class BookController {
 
     @PostMapping("/searchFriendsBooks")
     public ModelAndView searchFriendsBooks(@RequestParam String searchTerm, Principal principal){
-        List<Book> friendsBooks = friendService.findAllFriendsBooks(principal.getName());
+        List<Book> friendsBooks = friendService.findAllFriendsBooksMatchSearch(principal.getName(), searchTerm);
         ModelAndView modelAndView = new ModelAndView("search-friends-books.html");
         modelAndView.addObject("friendsBooks", friendsBooks);
         return modelAndView;
@@ -50,8 +50,6 @@ public class BookController {
     public String showCreateBookForm(){
         return "search-google-books";
     }
-
-
 
     @PostMapping("/searchGoogleBooks")
     public ModelAndView searchBookFromTitle(@RequestBody String title, Principal principal){
