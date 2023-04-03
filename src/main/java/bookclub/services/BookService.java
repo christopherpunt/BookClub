@@ -27,7 +27,7 @@ public class BookService {
         return Collections.emptyList();
     }
 
-    public void deleteBook(int id){
+    public void deleteBook(Long id){
         bookDao.deleteById(id);
     }
 
@@ -62,7 +62,7 @@ public class BookService {
         return false;
     }
 
-    public boolean lendBook(User user, User friend, int bookId){
+    public boolean lendBook(User user, User friend, Long bookId){
 //        if (user.getFriends().contains(friend)){
 //            Book book = bookDao.getReferenceById(bookId);
 //            book.setLentToUser(friend);

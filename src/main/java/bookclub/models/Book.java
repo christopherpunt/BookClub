@@ -30,7 +30,7 @@ public class Book {
     //region Properties
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int Id;
+    private Long Id;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;

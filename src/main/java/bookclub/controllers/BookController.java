@@ -71,7 +71,7 @@ public class BookController {
     }
 
     @GetMapping("/book_details/{id}")
-    public String getBookDetails(@PathVariable int id, Model model, Principal principal){
+    public String getBookDetails(@PathVariable Long id, Model model, Principal principal){
         Optional<Book> book = bookDao.findById(id);
         Optional<User> userOptional = userDao.findByEmail(principal.getName());
         if (userOptional.isPresent()){
@@ -88,7 +88,7 @@ public class BookController {
     }
 
     @GetMapping("/editBookDetails/{id}")
-    public String editBookDetails(@PathVariable int id, Model model){
+    public String editBookDetails(@PathVariable Long id, Model model){
         Optional<Book> book = bookDao.findById(id);
 
         if(book.isPresent()){
@@ -99,7 +99,7 @@ public class BookController {
     }
 
     @PostMapping("/deleteBook/{id}")
-    public RedirectView removeBook(@PathVariable int id, Model model){
+    public RedirectView removeBook(@PathVariable Long id, Model model){
         bookService.deleteBook(id);
         RedirectView redirectView = new RedirectView();
         redirectView.setUrl("/home");
@@ -117,7 +117,7 @@ public class BookController {
     }
 
     @PostMapping("/lendBook")
-    public ResponseEntity<String> lendBook(@RequestParam int friendId, @RequestParam int bookId, Principal principal){
+    public ResponseEntity<String> lendBook(@RequestParam Long friendId, @RequestParam Long bookId, Principal principal){
         Optional<User> userOptional = userDao.findByEmail(principal.getName());
         Optional<User> friendOptional = userDao.findById(friendId);
 
