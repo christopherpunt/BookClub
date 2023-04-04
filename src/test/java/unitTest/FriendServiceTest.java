@@ -1,3 +1,5 @@
+package unitTest;
+
 import bookclub.models.Book;
 import bookclub.models.Friendship;
 import bookclub.models.User;
@@ -19,6 +21,7 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
+import static utils.UserUtils.createUser;
 
 public class FriendServiceTest {
 
@@ -165,15 +168,5 @@ public class FriendServiceTest {
         book.setIsbn(UUID.randomUUID().toString());
         book.setUser(user);
         return book;
-    }
-
-
-    private User createUser(String firstName, String lastName, String email, String password){
-        User user = new User();
-        user.setFirstName(firstName);
-        user.setLastName(lastName);
-        user.setEmail(email);
-        user.setPassword(password);
-        return user;
     }
 }
