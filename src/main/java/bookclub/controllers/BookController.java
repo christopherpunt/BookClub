@@ -7,6 +7,7 @@ import bookclub.repositories.UserRepository;
 import bookclub.services.BookService;
 import bookclub.services.FriendService;
 import bookclub.services.GoogleBookDetailsService;
+import bookclub.services.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -32,6 +33,9 @@ public class BookController {
 
     @Autowired
     FriendService friendService;
+
+    @Autowired
+    NotificationService notificationService;
 
     @GetMapping("/searchFriendsBooks")
     public String showSearchFriendsBooks(){
@@ -116,13 +120,11 @@ public class BookController {
         return "redirect:/home";
     }
 
-    @PostMapping("/lendBook")
-    public ResponseEntity<String> lendBook(@RequestParam Long friendId, @RequestParam Long bookId, Principal principal){
-        Optional<User> userOptional = userDao.findByEmail(principal.getName());
-        Optional<User> friendOptional = userDao.findById(friendId);
+    @PostMapping("/borrowBook")
+    public ResponseEntity<String> borrowBook(@RequestParam Long friendId, @RequestParam Long bookId, Principal principal){
+        boolean returnStatus = notificationService.sendBorrowRequest(principal.getName(), friendId, bookId);
 
-        if (userOptional.isPresent() && friendOptional.isPresent()){
-            bookService.lendBook(userOptional.get(), friendOptional.get(), bookId);
+        if (returnStatus){
             return ResponseEntity.ok("Book lent out successfully");
         }
         return ResponseEntity.badRequest().body("there was a problem lending out the book");
