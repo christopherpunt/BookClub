@@ -1,3 +1,5 @@
+package unitTest;
+
 import bookclub.models.User;
 import bookclub.repositories.UserRepository;
 import bookclub.services.UserService;
