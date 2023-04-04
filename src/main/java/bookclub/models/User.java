@@ -33,6 +33,9 @@ public class User  implements UserDetails {
     @OneToMany
     private List<Friendship> friendships;
 
+    @OneToMany
+    private List<Notification> notifications;
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return AuthorityUtils.createAuthorityList("USER");
