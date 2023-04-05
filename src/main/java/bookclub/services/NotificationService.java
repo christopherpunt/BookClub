@@ -36,7 +36,7 @@ public class NotificationService {
         if (sender.isPresent() && user.isPresent() && book.isPresent()){
             notification.setNotificationType(NotificationType.BorrowRequest);
             notification.setStatus(NotificationStatus.UNREAD);
-            notification.setUser(user.get());
+            notification.setReceiver(user.get());
             notification.setSender(sender.get());
             notification.setAction("action");
 
@@ -55,7 +55,7 @@ public class NotificationService {
             notification.setNotificationType(NotificationType.FriendRequest);
             notification.setStatus(NotificationStatus.UNREAD);
             notification.setSender(user.get());
-            notification.setUser(friend.get());
+            notification.setReceiver(friend.get());
 
             notificationDao.save(notification);
         }
@@ -70,7 +70,7 @@ public class NotificationService {
             return new ArrayList<>();
         }
 
-        Optional<List<Notification>> notificationList = notificationDao.findByUser(user.get());
+        Optional<List<Notification>> notificationList = notificationDao.findByReceiver(user.get());
         return notificationList.orElseGet(ArrayList::new);
     }
 

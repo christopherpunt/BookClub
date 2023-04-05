@@ -54,12 +54,17 @@ public class FriendService {
     }
 
     public List<User> findAllFriendsFromUser(User user){
-        List<Friendship> friendships = friendshipDao.findAllFriendshipsByUser(user);
+        List<Friendship> userFriendships = friendshipDao.findAllFriendshipsByUser(user);
+        List<Friendship> friendFriendships = friendshipDao.findAllFriendshipsByFriend(user);
 
         List<User> friends = new ArrayList<>();
 
-        for (Friendship friendship : friendships) {
+        for (Friendship friendship : userFriendships) {
             friends.add(friendship.getFriend());
+        }
+
+        for (Friendship friendship : friendFriendships) {
+            friends.add(friendship.getUser());
         }
 
         return friends;

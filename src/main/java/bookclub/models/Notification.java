@@ -15,7 +15,7 @@ public class Notification {
     private Long id;
 
     @ManyToOne
-    private User user;
+    private User receiver;
 
     @ManyToOne
     private User sender;
