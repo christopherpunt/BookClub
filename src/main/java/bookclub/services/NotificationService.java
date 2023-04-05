@@ -11,6 +11,8 @@ import bookclub.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -59,5 +61,29 @@ public class NotificationService {
         }
 
         return notification;
+    }
+
+    public List<Notification> getNotificationsForUsername(String username) {
+        Optional<User> user = userDao.findByEmail(username);
+
+        if (user.isEmpty()){
+            return new ArrayList<>();
+        }
+
+        Optional<List<Notification>> notificationList = notificationDao.findByUser(user.get());
+        return notificationList.orElseGet(ArrayList::new);
+    }
+
+    public void completeNotification(Long id) {
+        Optional<Notification> notificationOptional = notificationDao.findById(id);
+
+        if (notificationOptional.isEmpty()){
+            return;
+        }
+        Notification notification = notificationOptional.get();
+
+        notification.setStatus(NotificationStatus.COMPLETED);
+
+        notificationDao.save(notification);
     }
 }

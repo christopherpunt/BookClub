@@ -125,8 +125,8 @@ public class BookController {
         boolean returnStatus = notificationService.sendBorrowRequest(principal.getName(), friendId, bookId);
 
         if (returnStatus){
-            return ResponseEntity.ok("Book lent out successfully");
+            return ResponseEntity.ok("Book request sent");
         }
-        return ResponseEntity.badRequest().body("there was a problem lending out the book");
+        return ResponseEntity.badRequest().body("there was a problem sending the borrow request");
     }
 }
