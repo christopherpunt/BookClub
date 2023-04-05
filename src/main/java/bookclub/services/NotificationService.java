@@ -84,6 +84,8 @@ public class NotificationService {
 
         notification.setStatus(NotificationStatus.COMPLETED);
 
+        //TODO: check notification type and act accordingly
+
         notificationDao.save(notification);
     }
 }
