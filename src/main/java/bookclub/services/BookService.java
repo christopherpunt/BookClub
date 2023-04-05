@@ -62,13 +62,27 @@ public class BookService {
         return false;
     }
 
-    public boolean lendBook(User user, User friend, Long bookId){
-//        if (user.getFriends().contains(friend)){
-//            Book book = bookDao.getReferenceById(bookId);
-//            book.setLentToUser(friend);
-//            bookDao.save(book);
-//            return true;
-//        }
-        return false;
+    public boolean lendBook(Long bookId, User giver, User receiver){
+        Optional<Book> bookOptional = bookDao.findById(bookId);
+
+        if (bookOptional.isEmpty()){
+            return false;
+        }
+        Book book = bookOptional.get();
+        book.setLentToUser(receiver);
+        bookDao.save(book);
+
+        Book newBook = new Book();
+        newBook.setUser(receiver);
+        newBook.setBorrowedFromUser(giver);
+        newBook.setBookCoverUrl(book.getBookCoverUrl());
+        newBook.setTitle(book.getTitle());
+        newBook.setAuthor(book.getAuthor());
+        newBook.setDescription(book.getDescription());
+        newBook.setIsbn(book.getIsbn());
+
+        bookDao.save(newBook);
+
+        return true;
     }
 }

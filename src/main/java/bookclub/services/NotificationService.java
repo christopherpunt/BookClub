@@ -22,6 +22,9 @@ public class NotificationService {
     NotificationRepository notificationDao;
 
     @Autowired
+    BookService bookService;
+
+    @Autowired
     UserRepository userDao;
 
     @Autowired
@@ -38,6 +41,7 @@ public class NotificationService {
             notification.setStatus(NotificationStatus.UNREAD);
             notification.setReceiver(user.get());
             notification.setSender(sender.get());
+            notification.setNotificationData(bookId.toString());
             notification.setAction("action");
 
             notificationDao.save(notification);
@@ -85,6 +89,9 @@ public class NotificationService {
         notification.setStatus(NotificationStatus.COMPLETED);
 
         //TODO: check notification type and act accordingly
+        if (notification.getNotificationType() == NotificationType.BorrowRequest){
+            bookService.lendBook(id, notification.getReceiver(), notification.getSender());
+        }
 
         notificationDao.save(notification);
     }
