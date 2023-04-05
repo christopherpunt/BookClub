@@ -20,8 +20,6 @@
         <thead>
         <tr>
             <th>Image</th>
-            <th>Id</th>
-            <th>User Id</th>
             <th>Title</th>
             <th>Author</th>
             <th>ISBN</th>
@@ -33,8 +31,7 @@
         <tbody>
         <tr th:each="item: ${books}" class="clickable-row">
             <td><img th:src="${item.BookCoverUrl}"/></td>
-            <td th:attr="data-href=@{/book_details/{bookId}(bookId=${item.Id})}" class="book-id" th:text="${item.Id}"></td>
-            <td th:text="${item.User.getFullName()}"></td>
+            <td th:attr="data-href=@{/book_details/{bookId}(bookId=${item.Id})}" class="book-id" th:hidden="true" th:text="${item.Id}"></td>
             <td th:text="${item.Title}"></td>
             <td th:text="${item.Author}"></td>
             <td th:text="${item.Isbn}"></td>
