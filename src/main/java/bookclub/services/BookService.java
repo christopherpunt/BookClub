@@ -95,7 +95,8 @@ public class BookService {
             return false;
         }
         Book book = bookOptional.get();
-        bookDao.delete(book);
+        book.setBorrowedFromUser(null);
+        bookDao.save(book);
 
         User borrowedFromUser = borrowedFromUserOptional.get();
         Book borrowedBook = bookDao.findByUserAndIsbn(borrowedFromUser, book.getIsbn());

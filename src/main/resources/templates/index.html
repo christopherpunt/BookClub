@@ -22,8 +22,7 @@
             <th>Image</th>
             <th>Title</th>
             <th>Author</th>
-            <th>ISBN</th>
-            <th>Description</th>
+            <th>Is Owner</th>
             <th>BorrowedFromUser</th>
             <th>LentToUser</th>
         </tr>
@@ -34,8 +33,7 @@
             <td th:attr="data-href=@{/book_details/{bookId}(bookId=${item.Id})}" class="book-id" th:hidden="true" th:text="${item.Id}"></td>
             <td th:text="${item.Title}"></td>
             <td th:text="${item.Author}"></td>
-            <td th:text="${item.Isbn}"></td>
-            <td th:text="${item.Description}"></td>
+            <td th:text="${item.isOwner}"></td>
             <td th:text="${item.BorrowedFromUser != null ? item.BorrowedFromUser.getFullName() : ''}"></td>
             <td th:text="${item.LentToUser != null ? item.LentToUser.getFullName() : ''}"></td>
         </tr>
