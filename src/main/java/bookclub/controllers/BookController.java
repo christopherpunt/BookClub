@@ -38,8 +38,11 @@ public class BookController {
     NotificationService notificationService;
 
     @GetMapping("/searchFriendsBooks")
-    public String showSearchFriendsBooks(){
-        return "search-friends-books";
+    public ModelAndView showSearchFriendsBooks(Principal principal){
+        List<Book> friendsBooks = friendService.findAllFriendsBooks(principal.getName());
+        ModelAndView modelAndView = new ModelAndView("search-friends-books.html");
+        modelAndView.addObject("friendsBooks", friendsBooks);
+        return modelAndView;
     }
 
     @PostMapping("/searchFriendsBooks")

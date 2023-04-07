@@ -90,7 +90,7 @@ public class NotificationService {
 
         //TODO: check notification type and act accordingly
         if (notification.getNotificationType() == NotificationType.BorrowRequest){
-            bookService.lendBook(id, notification.getReceiver(), notification.getSender());
+            bookService.lendBook(Long.parseLong(notification.getNotificationData()), notification.getReceiver(), notification.getSender());
         }
 
         notificationDao.save(notification);
