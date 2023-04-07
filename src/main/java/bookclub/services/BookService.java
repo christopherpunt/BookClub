@@ -54,6 +54,7 @@ public class BookService {
 
         if (user.isPresent()) {
             book.setUser(user.get());
+            book.setOwner(true);
             //TODO: fix description when its too long
             book.setDescription("");
             bookDao.save(book);

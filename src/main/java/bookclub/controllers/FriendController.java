@@ -1,7 +1,6 @@
 package bookclub.controllers;
 
 import bookclub.models.User;
-import bookclub.repositories.FriendshipRepository;
 import bookclub.repositories.UserRepository;
 import bookclub.services.FriendService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +21,6 @@ public class FriendController {
 
     @Autowired
     private FriendService friendService;
-
-    @Autowired
-    private FriendshipRepository friendshipRepository;
 
     @GetMapping("/myFriends")
     public ModelAndView getFriendsList(Principal principal){
