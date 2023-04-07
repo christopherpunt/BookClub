@@ -129,4 +129,10 @@ public class BookController {
         }
         return ResponseEntity.badRequest().body("there was a problem sending the borrow request");
     }
+
+    @PostMapping("book/returnBook")
+    public ResponseEntity<String> returnBook(@RequestParam Long bookId, @RequestParam Long borrowedFromUserId){
+        bookService.returnBook(bookId, borrowedFromUserId);
+        return ResponseEntity.ok("Book Returned!");
+    }
 }

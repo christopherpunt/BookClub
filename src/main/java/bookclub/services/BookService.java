@@ -85,4 +85,23 @@ public class BookService {
 
         return true;
     }
+
+    public boolean returnBook(Long bookId, Long borrowedFromUserId) {
+        Optional<Book> bookOptional = bookDao.findById(bookId);
+        Optional<User> borrowedFromUserOptional = userDao.findById(borrowedFromUserId);
+
+        if (bookOptional.isEmpty() || borrowedFromUserOptional.isEmpty()){
+            return false;
+        }
+        Book book = bookOptional.get();
+        bookDao.delete(book);
+
+        User borrowedFromUser = borrowedFromUserOptional.get();
+        Book borrowedBook = bookDao.findByUserAndIsbn(borrowedFromUser, book.getIsbn());
+        borrowedBook.setLentToUser(null);
+        bookDao.save(borrowedBook);
+
+        return true;
+
+    }
 }
