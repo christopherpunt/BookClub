@@ -93,7 +93,7 @@ public class FriendService {
         if (userOptional.isPresent()){
             List<User> friends = findAllFriendsFromUser(userOptional.get());
             for (User user : friends) {
-                books.addAll(bookDao.findByUser(user));
+                books.addAll(bookDao.findByUser(user).stream().filter(Book::isOwner).toList());
             }
         }
 

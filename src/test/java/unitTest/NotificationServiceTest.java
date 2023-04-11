@@ -44,6 +44,7 @@ public class NotificationServiceTest {
         User user = UserUtils.createUser("Chris Punt", "chrispunt@email.com");
         User friend = UserUtils.createUser("Chris2 Punt2", "chrispunt2@email.com");
         Book book = new Book();
+        book.setId(1L);
 
         when(userDao.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
         when(userDao.findById(friend.getId())).thenReturn(Optional.of(friend));
@@ -60,6 +61,9 @@ public class NotificationServiceTest {
     public void sendFriendRequestNotificationTest(){
         User user = UserUtils.createUser("Chris Punt", "chrispunt@email.com");
         User sender = UserUtils.createUser("Chris2 Punt2", "chrispunt2@email.com");
+
+        when(userDao.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+        when(userDao.findById(sender.getId())).thenReturn(Optional.of(sender));
 
         Notification notification = notificationService.sendFriendRequest(user.getEmail(), sender.getId());
 
