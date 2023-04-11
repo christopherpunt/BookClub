@@ -1,6 +1,5 @@
 package unitTest;
 
-import bookclub.models.Book;
 import bookclub.models.Friendship;
 import bookclub.models.User;
 import bookclub.repositories.BookRepository;
@@ -17,7 +16,6 @@ import org.mockito.Spy;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
@@ -159,14 +157,5 @@ public class FriendServiceTest {
         friends = friendService.findAllFriendsFromUser(user);
 
         assertEquals(2, friends.size());
-    }
-
-    private Book createBook(User user) {
-        Book book = new Book();
-        book.setTitle(user.getFirstName() + "'s Book");
-        book.setAuthor(user.getLastName());
-        book.setIsbn(UUID.randomUUID().toString());
-        book.setUser(user);
-        return book;
     }
 }
