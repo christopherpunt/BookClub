@@ -73,7 +73,7 @@ public class BookController {
 
     @PostMapping("/deleteBook/{id}")
     public RedirectView removeBook(@PathVariable Long id, Model model){
-        bookService.deleteBook(id);
+        bookDao.deleteById(id);
         RedirectView redirectView = new RedirectView();
         redirectView.setUrl("/home");
         return redirectView;

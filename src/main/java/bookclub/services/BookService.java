@@ -27,10 +27,6 @@ public class BookService {
         return Collections.emptyList();
     }
 
-    public void deleteBook(Long id){
-        bookDao.deleteById(id);
-    }
-
     public boolean updateAllDetails(Book book) {
         Optional<Book> foundBook = bookDao.findById(book.getId());
         Book bookToSave;
@@ -49,7 +45,7 @@ public class BookService {
         return false;
     }
 
-    public boolean addBookForUser(String username, Book book) {
+    public boolean newBookForOwner(String username, Book book) {
         Optional<User> user = userDao.findByEmail(username);
 
         if (user.isPresent()) {
@@ -87,21 +83,21 @@ public class BookService {
         return true;
     }
 
-    public boolean returnBook(Long bookId, Long borrowedFromUserId) {
+    public boolean returnBook(Long bookId, Long ownerId) {
         Optional<Book> bookOptional = bookDao.findById(bookId);
-        Optional<User> borrowedFromUserOptional = userDao.findById(borrowedFromUserId);
+        Optional<User> ownerOptional = userDao.findById(ownerId);
 
-        if (bookOptional.isEmpty() || borrowedFromUserOptional.isEmpty()){
+        if (bookOptional.isEmpty() || ownerOptional.isEmpty()){
             return false;
         }
         Book book = bookOptional.get();
         book.setBorrowedFromUser(null);
         bookDao.save(book);
 
-        User borrowedFromUser = borrowedFromUserOptional.get();
-        Book borrowedBook = bookDao.findByUserAndIsbn(borrowedFromUser, book.getIsbn());
-        borrowedBook.setLentToUser(null);
-        bookDao.save(borrowedBook);
+        User owner = ownerOptional.get();
+        Book ownersBook = bookDao.findByUserAndIsbn(owner, book.getIsbn());
+        ownersBook.setLentToUser(null);
+        bookDao.save(ownersBook);
 
         return true;
 

@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import utils.UserUtils;
+import utils.UserTestUtils;
 
 import java.util.Optional;
 
@@ -41,8 +41,8 @@ public class NotificationServiceTest {
 
     @Test
     public void sendBorrowRequestNotificationTest(){
-        User user = UserUtils.createUser("Chris Punt", "chrispunt@email.com");
-        User friend = UserUtils.createUser("Chris2 Punt2", "chrispunt2@email.com");
+        User user = UserTestUtils.createUser("Chris Punt", "chrispunt@email.com");
+        User friend = UserTestUtils.createUser("Chris2 Punt2", "chrispunt2@email.com");
         Book book = new Book();
         book.setId(1L);
 
@@ -59,8 +59,8 @@ public class NotificationServiceTest {
 
     @Test
     public void sendFriendRequestNotificationTest(){
-        User user = UserUtils.createUser("Chris Punt", "chrispunt@email.com");
-        User sender = UserUtils.createUser("Chris2 Punt2", "chrispunt2@email.com");
+        User user = UserTestUtils.createUser("Chris Punt", "chrispunt@email.com");
+        User sender = UserTestUtils.createUser("Chris2 Punt2", "chrispunt2@email.com");
 
         when(userDao.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
         when(userDao.findById(sender.getId())).thenReturn(Optional.of(sender));

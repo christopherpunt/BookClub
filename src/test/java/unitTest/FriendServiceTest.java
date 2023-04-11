@@ -21,7 +21,7 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
-import static utils.UserUtils.createUser;
+import static utils.UserTestUtils.createUser;
 
 public class FriendServiceTest {
 

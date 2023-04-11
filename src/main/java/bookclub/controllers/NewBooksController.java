@@ -36,7 +36,7 @@ public class NewBooksController {
 
     @PostMapping(value = "/addBook", consumes = "application/json")
     public ResponseEntity<String> addBook(@RequestBody Book book, Principal principal) {
-        boolean success = bookService.addBookForUser(principal.getName(), book);
+        boolean success = bookService.newBookForOwner(principal.getName(), book);
 
         if (success){
             return ResponseEntity.ok("Book added to library successfully");
