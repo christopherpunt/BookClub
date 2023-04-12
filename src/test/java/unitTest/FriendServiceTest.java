@@ -1,5 +1,6 @@
 package unitTest;
 
+import bookclub.models.Book;
 import bookclub.models.Friendship;
 import bookclub.models.User;
 import bookclub.repositories.BookRepository;
@@ -8,6 +9,7 @@ import bookclub.repositories.UserRepository;
 import bookclub.services.FriendService;
 import bookclub.services.UserService;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import utils.FriendshipTestUtils;
@@ -17,6 +19,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 import static utils.UserTestUtils.createUser;
 
@@ -97,63 +100,30 @@ public class FriendServiceTest extends BaseUnitTest {
     }
 
     @Test
-    public void findAllFriendsBooksTest(){
+    public void findAllFriendsBooksTest() {
+        //arrange
         User user = UserTestUtils.createUser("Chris Punt", "chris@email.com");
         User friend1 = UserTestUtils.createUser("Sydney Punt", "sydney@email.com");
+        User friend2 = UserTestUtils.createUser("Gail Punt", "gail@email.com");
 
-        Friendship friendship = FriendshipTestUtils.createFriendship(user, friend1);
+        List<Friendship> friendships = FriendshipTestUtils.createFriendships(user, friend1, friend2);
 
         when(userDao.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
 
-        when(friendshipDao.findAllFriendshipsByUser(user)).
+        when(friendshipDao.findAllFriendshipsByUser(user)).thenReturn(friendships);
 
-        BookTestUtils.createBooksForUser(10, user);
+        //act
+        List<Book> returnedBooks = friendService.findAllFriendsBooks(user.getEmail());
 
+        //assert
+        assertNotNull(returnedBooks);
 
+        @SuppressWarnings("unchecked")
+        ArgumentCaptor<List<Long>> userIdListCaptor = ArgumentCaptor.forClass(List.class);
+        verify(bookDao).findByUserIdIn(userIdListCaptor.capture());
 
-//        assertNotNull(f);
-
+        assertEquals(2, userIdListCaptor.getValue().size());
     }
-
-
-    //TODO: re-enable test
-//    @Test
-//    public void findAllFriendsBooks(){
-//
-//        User user = createUser("Chris", "Punt", "chrispunt@email.com", "password");
-//        User friend = createUser("Chris2", "Punt2", "chrispunt2@email", "password");
-//        User friend2 = createUser("Chris3", "Punt3", "chrispunt3@email", "password");
-//        User friend3 = createUser("Chris4", "Punt4", "chrispunt4@email", "password");
-//
-//        List<Book> friend1books = new ArrayList<>();
-//        List<Book> friend2books = new ArrayList<>();
-//        List<Book> friend3books = new ArrayList<>();
-//
-//        friend1books.add(createBook(friend));
-//        friend1books.add(createBook(friend));
-//        friend1books.add(createBook(friend));
-//
-//        friend2books.add(createBook(friend2));
-//        friend2books.add(createBook(friend2));
-//        friend2books.add(createBook(friend2));
-//
-//        friend3books.add(createBook(friend3));
-//        friend3books.add(createBook(friend3));
-//        friend3books.add(createBook(friend3));
-//
-//        List<Book> allBooks = new ArrayList<>();
-//        allBooks.addAll(friend1books);
-//        allBooks.addAll(friend2books);
-//        allBooks.addAll(friend3books);
-//
-//
-//        when(userDao.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
-//
-//        when(bookDao.findByUserIdIn(List.of(friend.getId(), friend2.getId(), friend3.getId()))).thenReturn(allBooks);
-//        List<Book> returnedBooks = friendService.findAllFriendsBooks(user.getEmail());
-//
-//        assertEquals(9, returnedBooks.size());
-//    }
 
     @Test
     public void findAllFriendsFromUser(){

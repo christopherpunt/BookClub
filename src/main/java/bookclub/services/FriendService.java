@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class FriendService {
@@ -61,13 +62,8 @@ public class FriendService {
 
         List<User> friends = new ArrayList<>();
 
-        for (Friendship friendship : userFriendships) {
-            friends.add(friendship.getFriend());
-        }
-
-        for (Friendship friendship : friendFriendships) {
-            friends.add(friendship.getUser());
-        }
+        friends.addAll(userFriendships.stream().map(Friendship::getFriend).toList());
+        friends.addAll(friendFriendships.stream().map(Friendship::getUser).toList());
 
         return friends;
     }
@@ -75,29 +71,17 @@ public class FriendService {
     public List<Book> findAllFriendsBooks(String userEmail){
         Optional<User> userOptional = userDao.findByEmail(userEmail);
 
-        List<Book> books = new ArrayList<>();
-
         if (userOptional.isPresent()){
             List<User> friends = findAllFriendsFromUser(userOptional.get());
-            for (User user : friends) {
-                books.addAll(bookDao.findByUser(user).stream().filter(Book::isOwner).toList());
-            }
+            return bookDao.findByUserIdIn(friends.stream()
+                    .map(User::getId).collect(Collectors.toList())).stream()
+                    .filter(Book::isOwner).toList();
         }
-
-        return books;
+        return List.of();
     }
 
     public List<Book> findAllFriendsBooksMatchSearch(String userEmail, String searchTerm){
-        Optional<User> userOptional = userDao.findByEmail(userEmail);
-
-        List<Book> books = new ArrayList<>();
-
-        if (userOptional.isPresent()){
-            List<User> friends = findAllFriendsFromUser(userOptional.get());
-            for (User user : friends) {
-                books.addAll(bookDao.findByUser(user).stream().filter(Book::isOwner).toList());
-            }
-        }
+        List<Book> books = findAllFriendsBooks(userEmail);
 
         //filter books
         return books.stream().filter(b -> b.getTitle().toLowerCase().contains(searchTerm.toLowerCase()) ||
