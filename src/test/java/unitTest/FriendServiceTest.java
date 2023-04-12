@@ -7,12 +7,11 @@ import bookclub.repositories.FriendshipRepository;
 import bookclub.repositories.UserRepository;
 import bookclub.services.FriendService;
 import bookclub.services.UserService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.mockito.Spy;
+import utils.FriendshipTestUtils;
+import utils.UserTestUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 import static utils.UserTestUtils.createUser;
 
-public class FriendServiceTest {
+public class FriendServiceTest extends BaseUnitTest {
 
     @Mock
     private UserRepository userDao;
@@ -36,13 +35,7 @@ public class FriendServiceTest {
     private BookRepository bookDao;
 
     @InjectMocks
-    @Spy
     private FriendService friendService;
-
-    @BeforeEach
-    void setUp(){
-        MockitoAnnotations.openMocks(this);
-    }
 
     @Test
     public void addFriendTest(){
@@ -52,7 +45,7 @@ public class FriendServiceTest {
         when(friendshipDao.findFriendship(user, friend)).thenReturn(Optional.empty());
         when(userDao.findByEmail(friend.getEmail())).thenReturn(Optional.of(friend));
 
-        Friendship friendship = friendService.addNewFriendship(user, friend);
+        Friendship friendship = friendService.addNewFriendship(user.getEmail(), friend);
 
         verify(friendshipDao).save(friendship);
     }
@@ -68,8 +61,8 @@ public class FriendServiceTest {
         when(userDao.findByEmail(friend.getEmail())).thenReturn(Optional.of(friend));
         when(userDao.findByEmail(friend2.getEmail())).thenReturn(Optional.of(friend2));
 
-        Friendship firstFriendShip = friendService.addNewFriendship(user, friend);
-        Friendship secondFriendShip = friendService.addNewFriendship(user, friend2);
+        Friendship firstFriendShip = friendService.addNewFriendship(user.getEmail(), friend);
+        Friendship secondFriendShip = friendService.addNewFriendship(user.getEmail(), friend2);
 
         verify(friendshipDao).save(firstFriendShip);
         verify(friendshipDao).save(secondFriendShip);
@@ -82,7 +75,7 @@ public class FriendServiceTest {
 
         when(userService.createUnregisteredUser(friend)).thenReturn(friend);
 
-        Friendship friendship = friendService.addNewFriendship(user, friend);
+        Friendship friendship = friendService.addNewFriendship(user.getEmail(), friend);
 
         verify(friendshipDao).save(friendship);
     }
@@ -97,11 +90,31 @@ public class FriendServiceTest {
         when(userDao.findByEmail(friend.getEmail())).thenReturn(Optional.of(friend));
         when(friendshipDao.findFriendship(user, friend)).thenReturn(Optional.of(friendship));
 
-        friendService.addNewFriendship(user, friend);
+        friendService.addNewFriendship(user.getEmail(), friend);
 
         verify(friendshipDao).findFriendship(user, friend);
         verifyNoMoreInteractions(friendshipDao);
     }
+
+    @Test
+    public void findAllFriendsBooksTest(){
+        User user = UserTestUtils.createUser("Chris Punt", "chris@email.com");
+        User friend1 = UserTestUtils.createUser("Sydney Punt", "sydney@email.com");
+
+        Friendship friendship = FriendshipTestUtils.createFriendship(user, friend1);
+
+        when(userDao.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+
+        when(friendshipDao.findAllFriendshipsByUser(user)).
+
+        BookTestUtils.createBooksForUser(10, user);
+
+
+
+//        assertNotNull(f);
+
+    }
+
 
     //TODO: re-enable test
 //    @Test

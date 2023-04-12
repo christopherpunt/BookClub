@@ -31,6 +31,7 @@ public class FriendController {
             return null;
         }
 
+        //TODO: don't get user before sending to friend service
         List<User> friends = friendService.findAllFriendsFromUser(user.get());
         ModelAndView modelAndView = new ModelAndView("friends.html");
         modelAndView.addObject("friends", friends);
@@ -44,13 +45,7 @@ public class FriendController {
 
     @PostMapping("/addFriend")
     public String addFriend(@ModelAttribute User newFriend, Principal principal){
-        Optional<User> user = userDao.findByEmail(principal.getName());
-
-        if (user.isEmpty()){
-            return "User not found";
-        }
-
-        friendService.addNewFriendship(user.get(), newFriend);
+        friendService.addNewFriendship(principal.getName(), newFriend);
 
         return "redirect:/myFriends";
     }

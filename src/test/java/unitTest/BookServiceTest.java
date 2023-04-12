@@ -5,12 +5,10 @@ import bookclub.models.User;
 import bookclub.repositories.BookRepository;
 import bookclub.repositories.UserRepository;
 import bookclub.services.BookService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import utils.BookTestUtils;
 import utils.UserTestUtils;
 
@@ -20,7 +18,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class BookServiceTest {
+public class BookServiceTest extends BaseUnitTest {
 
     @Mock
     BookRepository bookDao;
@@ -30,11 +28,6 @@ public class BookServiceTest {
 
     @InjectMocks
     BookService bookService;
-
-    @BeforeEach
-    void setUp(){
-        MockitoAnnotations.openMocks(this);
-    }
 
     @Test
     public void getAllUserBooksTest(){

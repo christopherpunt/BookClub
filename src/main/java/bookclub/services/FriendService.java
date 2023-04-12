@@ -27,14 +27,15 @@ public class FriendService {
     @Autowired
     private BookRepository bookDao;
 
-    public Friendship addNewFriendship(User user, User friend){
-        //if friend already exists
-        //TODO: maybe should do a findByUser method
+    public Friendship addNewFriendship(String userEmail, User friend){
+
+        Optional<User> userOptional = userDao.findByEmail(userEmail);
         Optional<User> friendOptional = userDao.findByEmail(friend.getEmail());
 
         Friendship friendship;
-
-        if(friendOptional.isPresent()){
+        User user;
+        if(userOptional.isPresent() && friendOptional.isPresent()){
+            user = userOptional.get();
             User foundFriend = friendOptional.get();
             Optional<Friendship> friendshipOptional = friendshipDao.findFriendship(user, foundFriend);
             //if friendship already exists
@@ -43,14 +44,15 @@ public class FriendService {
             }
 
             friendship = new Friendship(user, foundFriend);
-        } else{
+        } else if (userOptional.isPresent()){ //user exists but friend doesn't
+            user = userOptional.get();
             User createdFriend = userService.createUnregisteredUser(friend);
             friendship = new Friendship(user, createdFriend);
+        } else {
+            return null;
         }
 
-        friendshipDao.save(friendship);
-
-        return friendship;
+        return friendshipDao.save(friendship);
     }
 
     public List<User> findAllFriendsFromUser(User user){

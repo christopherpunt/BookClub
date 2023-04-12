@@ -7,11 +7,9 @@ import bookclub.repositories.BookRepository;
 import bookclub.repositories.NotificationRepository;
 import bookclub.repositories.UserRepository;
 import bookclub.services.NotificationService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import utils.UserTestUtils;
 
 import java.util.Optional;
@@ -20,7 +18,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class NotificationServiceTest {
+public class NotificationServiceTest extends BaseUnitTest{
 
     @Mock
     private NotificationRepository notificationDao;
@@ -33,11 +31,6 @@ public class NotificationServiceTest {
 
     @InjectMocks
     private NotificationService notificationService;
-
-    @BeforeEach
-    void setUp(){
-        MockitoAnnotations.openMocks(this);
-    }
 
     @Test
     public void sendBorrowRequestNotificationTest(){

@@ -15,18 +15,13 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class UserServiceTest {
+public class UserServiceTest extends BaseUnitTest{
     @Mock
     private UserRepository userDao;
 
     @InjectMocks
     @Spy
     private UserService userService;
-
-    @BeforeEach
-    void setUp(){
-        MockitoAnnotations.openMocks(this);
-    }
 
     @Test
     public void createUserGoldenPath(){
