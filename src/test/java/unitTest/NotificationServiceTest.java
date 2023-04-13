@@ -1,5 +1,6 @@
 package unitTest;
 
+import bookclub.enums.NotificationType;
 import bookclub.models.Book;
 import bookclub.models.Notification;
 import bookclub.models.User;
@@ -8,13 +9,14 @@ import bookclub.repositories.NotificationRepository;
 import bookclub.repositories.UserRepository;
 import bookclub.services.NotificationService;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import utils.UserTestUtils;
 
 import java.util.Optional;
 
-import static org.mockito.ArgumentMatchers.any;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -34,34 +36,55 @@ public class NotificationServiceTest extends BaseUnitTest{
 
     @Test
     public void sendBorrowRequestNotificationTest(){
-        User user = UserTestUtils.createUser("Chris Punt");
-        User friend = UserTestUtils.createUser("Chris2 Punt2");
+        //arrange
+        User sender = UserTestUtils.createUser("Chris Punt");
+        User receiver = UserTestUtils.createUser("Chris2 Punt2");
         Book book = new Book();
         book.setId(1L);
 
-        when(userDao.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
-        when(userDao.findById(friend.getId())).thenReturn(Optional.of(friend));
+        when(userDao.findByEmail(sender.getEmail())).thenReturn(Optional.of(sender));
+        when(userDao.findById(receiver.getId())).thenReturn(Optional.of(receiver));
         when(bookDao.findById(book.getId())).thenReturn(Optional.of(book));
 
-        boolean returnedStatus = notificationService.sendBorrowRequest(user.getEmail(), friend.getId(), book.getId());
+        //act
+        boolean returnValue = notificationService.sendBorrowRequest(sender.getEmail(), receiver.getId(), book.getId());
 
-        //TODO: Argument captor?
+        //assert
+        assertTrue(returnValue);
 
-        verify(notificationDao).save(any());
+        ArgumentCaptor<Notification> notificationCaptor = ArgumentCaptor.forClass(Notification.class);
+        verify(notificationDao).save(notificationCaptor.capture());
+        assertNotNull(notificationCaptor.getValue());
+        Notification notification = notificationCaptor.getValue();
+
+        assertEquals(sender, notification.getSender());
+        assertEquals(receiver, notification.getReceiver());
+        assertEquals(NotificationType.BorrowRequest, notification.getNotificationType());
+        assertEquals(book.getId().toString(), notification.getNotificationData());
     }
 
     @Test
     public void sendFriendRequestNotificationTest(){
-        User user = UserTestUtils.createUser("Chris Punt");
-        User sender = UserTestUtils.createUser("Chris2 Punt2");
+        //arrange
+        User sender = UserTestUtils.createUser("Chris Punt");
+        User receiver = UserTestUtils.createUser("Sydney Punt");
 
-        when(userDao.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
-        when(userDao.findById(sender.getId())).thenReturn(Optional.of(sender));
+        when(userDao.findByEmail(sender.getEmail())).thenReturn(Optional.of(sender));
+        when(userDao.findById(receiver.getId())).thenReturn(Optional.of(receiver));
 
-        Notification notification = notificationService.sendFriendRequest(user.getEmail(), sender.getId());
+        //act
+        boolean returnValue = notificationService.sendFriendRequest(sender.getEmail(), receiver.getId());
 
-        //TODO: Argument captor?
+        //assert
+        assertTrue(returnValue);
 
-        verify(notificationDao).save(notification);
+        ArgumentCaptor<Notification> notificationCaptor = ArgumentCaptor.forClass(Notification.class);
+        verify(notificationDao).save(notificationCaptor.capture());
+        assertNotNull(notificationCaptor.getValue());
+        Notification notification = notificationCaptor.getValue();
+
+        assertEquals(sender, notification.getSender());
+        assertEquals(receiver, notification.getReceiver());
+        assertEquals(NotificationType.FriendRequest, notification.getNotificationType());
     }
 }

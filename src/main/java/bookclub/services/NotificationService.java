@@ -32,39 +32,41 @@ public class NotificationService {
 
     public boolean sendBorrowRequest(String username, Long friend, Long bookId) {
         Optional<User> sender = userDao.findByEmail(username);
-        Optional<User> user = userDao.findById(friend);
+        Optional<User> receiver = userDao.findById(friend);
         Optional<Book> book = bookDao.findById(bookId);
 
-        Notification notification = new Notification();
-        if (sender.isPresent() && user.isPresent() && book.isPresent()){
-            notification.setNotificationType(NotificationType.BorrowRequest);
-            notification.setStatus(NotificationStatus.UNREAD);
-            notification.setReceiver(user.get());
-            notification.setSender(sender.get());
-            notification.setNotificationData(bookId.toString());
-            notification.setAction("action");
-
-            notificationDao.save(notification);
-            return true;
+        if (sender.isEmpty() || receiver.isEmpty() || book.isEmpty()){
+            return false;
         }
-        return false;
+
+        Notification notification = new Notification();
+        notification.setNotificationType(NotificationType.BorrowRequest);
+        notification.setStatus(NotificationStatus.UNREAD);
+        notification.setReceiver(receiver.get());
+        notification.setSender(sender.get());
+        notification.setNotificationData(bookId.toString());
+        notification.setAction("action");
+
+        notificationDao.save(notification);
+        return true;
     }
 
-    public Notification sendFriendRequest(String username, Long userId){
-        Optional<User> user = userDao.findByEmail(username);
-        Optional<User> friend = userDao.findById(userId);
+    public boolean sendFriendRequest(String username, Long userId){
+        Optional<User> sender = userDao.findByEmail(username);
+        Optional<User> receiver = userDao.findById(userId);
 
-        Notification notification = new Notification();
-        if(user.isPresent() && friend.isPresent()){
-            notification.setNotificationType(NotificationType.FriendRequest);
-            notification.setStatus(NotificationStatus.UNREAD);
-            notification.setSender(user.get());
-            notification.setReceiver(friend.get());
-
-            notificationDao.save(notification);
+        if(sender.isEmpty() || receiver.isEmpty()){
+            return false;
         }
 
-        return notification;
+        Notification notification = new Notification();
+        notification.setNotificationType(NotificationType.FriendRequest);
+        notification.setStatus(NotificationStatus.UNREAD);
+        notification.setSender(sender.get());
+        notification.setReceiver(receiver.get());
+
+        notificationDao.save(notification);
+        return true;
     }
 
     public List<Notification> getNotificationsForUsername(String username) {

@@ -45,12 +45,10 @@ public class FriendBooksController {
 
     @PostMapping("/borrowBook")
     public ResponseEntity<String> borrowBook(@RequestParam Long friendId, @RequestParam Long bookId, Principal principal){
-        boolean returnStatus = notificationService.sendBorrowRequest(principal.getName(), friendId, bookId);
+        notificationService.sendBorrowRequest(principal.getName(), friendId, bookId);
 
-        if (returnStatus){
-            return ResponseEntity.ok("Book request sent");
-        }
-        return ResponseEntity.badRequest().body("there was a problem sending the borrow request");
+        return ResponseEntity.ok("Book request sent");
+//        return ResponseEntity.badRequest().body("there was a problem sending the borrow request");
     }
 
     @PostMapping("book/returnBook")
