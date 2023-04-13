@@ -32,7 +32,7 @@ public class BookServiceTest extends BaseUnitTest {
     @Test
     public void getAllUserBooksTest(){
         //arrange
-        User user = UserTestUtils.createUser("Chris Punt", "chris@email.com");
+        User user = UserTestUtils.createUser("Chris Punt");
         List<Book> books = BookTestUtils.createBooksForUser(10, user);
 
         when(userDao.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
@@ -47,7 +47,7 @@ public class BookServiceTest extends BaseUnitTest {
     @Test
     public void getAllUserBooksNoUserTest(){
         //arrange
-        User user = UserTestUtils.createUser("Chris Punt", "non-user@email.com");
+        User user = UserTestUtils.createUser("Chris Punt");
 
         //act
         List<Book> returnedBooks = bookService.getAllBooksForUser(user.getEmail());
@@ -63,7 +63,7 @@ public class BookServiceTest extends BaseUnitTest {
     @Test
     public void addBookAsOwnedByUserTest(){
         //arrange
-        User user = UserTestUtils.createUser("Chris Punt", "chris@email.com");
+        User user = UserTestUtils.createUser("Chris Punt");
         Book book = BookTestUtils.createBook("Title", "Author", "Description", "ISBN");
 
         when(userDao.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
@@ -83,8 +83,8 @@ public class BookServiceTest extends BaseUnitTest {
     @Test
     public void lendBookTest(){
         //arrange
-        User giver = UserTestUtils.createUser("Chris Punt", "chris@email.com");
-        User receiver = UserTestUtils.createUser("Sydney Punt", "sydney@email.com");
+        User giver = UserTestUtils.createUser("Chris Punt");
+        User receiver = UserTestUtils.createUser("Sydney Punt");
         Book book = BookTestUtils.createOwnedBook(giver);
 
         when(bookDao.findById(book.getId())).thenReturn(Optional.of(book));
@@ -114,8 +114,8 @@ public class BookServiceTest extends BaseUnitTest {
     @Test
     public void returnBookTest(){
         //arrange
-        User owner = UserTestUtils.createUser("Chris Punt", "chris@email.com");
-        User borrower = UserTestUtils.createUser("Sydney Punt", "sydney@email.com");
+        User owner = UserTestUtils.createUser("Chris Punt");
+        User borrower = UserTestUtils.createUser("Sydney Punt");
         Book ownersBook = BookTestUtils.createOwnedBook(owner);
         Book borrowersBook = BookTestUtils.createBorrowedBook(owner, borrower);
 

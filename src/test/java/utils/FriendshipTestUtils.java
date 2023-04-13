@@ -15,5 +15,4 @@ public class FriendshipTestUtils {
 
         return friendships;
     }
-
 }

@@ -34,8 +34,8 @@ public class NotificationServiceTest extends BaseUnitTest{
 
     @Test
     public void sendBorrowRequestNotificationTest(){
-        User user = UserTestUtils.createUser("Chris Punt", "chrispunt@email.com");
-        User friend = UserTestUtils.createUser("Chris2 Punt2", "chrispunt2@email.com");
+        User user = UserTestUtils.createUser("Chris Punt");
+        User friend = UserTestUtils.createUser("Chris2 Punt2");
         Book book = new Book();
         book.setId(1L);
 
@@ -52,8 +52,8 @@ public class NotificationServiceTest extends BaseUnitTest{
 
     @Test
     public void sendFriendRequestNotificationTest(){
-        User user = UserTestUtils.createUser("Chris Punt", "chrispunt@email.com");
-        User sender = UserTestUtils.createUser("Chris2 Punt2", "chrispunt2@email.com");
+        User user = UserTestUtils.createUser("Chris Punt");
+        User sender = UserTestUtils.createUser("Chris2 Punt2");
 
         when(userDao.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
         when(userDao.findById(sender.getId())).thenReturn(Optional.of(sender));

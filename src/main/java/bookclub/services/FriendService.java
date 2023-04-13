@@ -45,15 +45,14 @@ public class FriendService {
             }
 
             friendship = new Friendship(user, foundFriend);
+            return friendshipDao.save(friendship);
         } else if (userOptional.isPresent()){ //user exists but friend doesn't
             user = userOptional.get();
             User createdFriend = userService.createUnregisteredUser(friend);
             friendship = new Friendship(user, createdFriend);
-        } else {
-            return null;
+            friendshipDao.save(friendship);
         }
-
-        return friendshipDao.save(friendship);
+        return null;
     }
 
     public List<User> findAllFriendsFromUser(User user){

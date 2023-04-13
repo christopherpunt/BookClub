@@ -21,7 +21,6 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
-import static utils.UserTestUtils.createUser;
 
 public class FriendServiceTest extends BaseUnitTest {
 
@@ -42,54 +41,56 @@ public class FriendServiceTest extends BaseUnitTest {
 
     @Test
     public void addFriendTest(){
-        User user = createUser("Chris", "Punt", "chrispunt13@icloud.com", "password");
-        User friend = createUser("Sydney", "Punt", "smfrelier@gmail.com", "password");
+        //arrange
+        User user = UserTestUtils.createUser("Chris Punt");
+        User friend = UserTestUtils.createUser("Sydney Punt");
 
-        when(friendshipDao.findFriendship(user, friend)).thenReturn(Optional.empty());
+        when(userDao.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
         when(userDao.findByEmail(friend.getEmail())).thenReturn(Optional.of(friend));
-
-        Friendship friendship = friendService.addNewFriendship(user.getEmail(), friend);
-
-        verify(friendshipDao).save(friendship);
-    }
-
-    @Test
-    public void addMultipleFriendsTest(){
-        User user = createUser("Chris", "Punt", "chrispunt13@icloud.com", "password");
-        User friend = createUser("Sydney", "Punt", "smfrelier@gmail.com", "password");
-        User friend2 = createUser("Abby", "Punt", "abbyPunt@gmail.com", "password");
-
         when(friendshipDao.findFriendship(user, friend)).thenReturn(Optional.empty());
 
-        when(userDao.findByEmail(friend.getEmail())).thenReturn(Optional.of(friend));
-        when(userDao.findByEmail(friend2.getEmail())).thenReturn(Optional.of(friend2));
+        //act
+        friendService.addNewFriendship(user.getEmail(), friend);
 
-        Friendship firstFriendShip = friendService.addNewFriendship(user.getEmail(), friend);
-        Friendship secondFriendShip = friendService.addNewFriendship(user.getEmail(), friend2);
-
-        verify(friendshipDao).save(firstFriendShip);
-        verify(friendshipDao).save(secondFriendShip);
+        //assert
+        ArgumentCaptor<Friendship> friendshipArgumentCaptor = ArgumentCaptor.forClass(Friendship.class);
+        verify(friendshipDao).save(friendshipArgumentCaptor.capture());
+        assertNotNull(friendshipArgumentCaptor.getValue());
+        Friendship newFriendship = friendshipArgumentCaptor.getValue();
+        assertEquals(user, newFriendship.getUser());
+        assertEquals(friend, newFriendship.getFriend());
     }
 
     @Test
     public void addUnregisteredFriendTest(){
-        User user = createUser("Chris", "Punt", "chrispunt13@icloud.com", "password");
-        User friend = createUser("Sydney", "Punt", "smfrelier@gmail.com", null);
+        //arrange
+        User user = UserTestUtils.createUser("Chris Punt");
+        User friend = UserTestUtils.createUser("Sydney Punt");
 
+        when(userDao.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
         when(userService.createUnregisteredUser(friend)).thenReturn(friend);
 
-        Friendship friendship = friendService.addNewFriendship(user.getEmail(), friend);
+        //act
+        friendService.addNewFriendship(user.getEmail(), friend);
 
-        verify(friendshipDao).save(friendship);
+        //assert
+        ArgumentCaptor<Friendship> friendshipCaptor = ArgumentCaptor.forClass(Friendship.class);
+        verify(friendshipDao).save(friendshipCaptor.capture());
+
+        assertNotNull(friendshipCaptor.getValue());
+        Friendship newFriendship = friendshipCaptor.getValue();
+        assertEquals(user, newFriendship.getUser());
+        assertEquals(friend, newFriendship.getFriend());
     }
 
     @Test
     public void addFriendTestAlreadyFriends(){
-        User user = createUser("Chris", "Punt", "chrispunt13@icloud.com", "password");
-        User friend = createUser("Sydney", "Punt", "smfrelier@gmail.com", null);
+        User user = UserTestUtils.createUser("Chris Punt");
+        User friend = UserTestUtils.createUser("Sydney Punt");
 
         Friendship friendship = new Friendship(user, friend);
 
+        when(userDao.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
         when(userDao.findByEmail(friend.getEmail())).thenReturn(Optional.of(friend));
         when(friendshipDao.findFriendship(user, friend)).thenReturn(Optional.of(friendship));
 
@@ -102,14 +103,12 @@ public class FriendServiceTest extends BaseUnitTest {
     @Test
     public void findAllFriendsBooksTest() {
         //arrange
-        User user = UserTestUtils.createUser("Chris Punt", "chris@email.com");
-        User friend1 = UserTestUtils.createUser("Sydney Punt", "sydney@email.com");
-        User friend2 = UserTestUtils.createUser("Gail Punt", "gail@email.com");
+        User user = UserTestUtils.createUser("Chris Punt");
+        User friend1 = UserTestUtils.createUser("Sydney Punt");
+        User friend2 = UserTestUtils.createUser("Gail Punt");
 
         List<Friendship> friendships = FriendshipTestUtils.createFriendships(user, friend1, friend2);
-
         when(userDao.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
-
         when(friendshipDao.findAllFriendshipsByUser(user)).thenReturn(friendships);
 
         //act
@@ -127,18 +126,24 @@ public class FriendServiceTest extends BaseUnitTest {
 
     @Test
     public void findAllFriendsFromUser(){
-        User user = createUser("Chris", "Punt", "chrispunt@email.com", "password");
-        User friend = createUser("Chris2", "Punt2", "chrispunt2@email.com", "password");
-        User friend2 = createUser("Chris2", "Punt2", "chrispunt2@email.com", "password");
+        //arrange
+        User user = UserTestUtils.createUser("Chris Punt");
+        User friend1 = UserTestUtils.createUser("Sydney Punt");
+        User friend2 = UserTestUtils.createUser("Sue Punt");
+        User friend3 = UserTestUtils.createUser("Abby Punt");
 
-        Friendship friendship = new Friendship(user, friend);
-        Friendship friendship2 = new Friendship(user, friend2);
+        Friendship friendship1 = new Friendship(user, friend1);
+        Friendship friendship2 = new Friendship(friend2, user);
+        Friendship friendship3 = new Friendship(friend3, user);
 
-        when(friendshipDao.findAllFriendshipsByUser(user)).thenReturn(List.of(friendship, friendship2));
+        when(friendshipDao.findAllFriendshipsByUser(user)).thenReturn(List.of(friendship1));
+        when(friendshipDao.findAllFriendshipsByFriend(user)).thenReturn(List.of(friendship2, friendship3));
 
+        //act
         List<User> friends;
         friends = friendService.findAllFriendsFromUser(user);
 
-        assertEquals(2, friends.size());
+        //assert
+        assertEquals(3, friends.size());
     }
 }

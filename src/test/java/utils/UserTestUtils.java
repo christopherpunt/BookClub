@@ -5,11 +5,11 @@ import bookclub.models.User;
 public class UserTestUtils {
 
     public static User
-    createUser(String name, String email){
+    createUser(String name){
         User user = new User();
         user.setFirstName(name.split(" ")[0]);
         user.setLastName(name.split(" ")[1]);
-        user.setEmail(email);
+        user.setEmail(user.getFirstName() + "@email.com");
         return user;
     }
 
