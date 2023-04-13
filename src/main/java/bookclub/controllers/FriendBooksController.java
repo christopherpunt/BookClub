@@ -3,7 +3,6 @@ package bookclub.controllers;
 import bookclub.models.Book;
 import bookclub.services.BookService;
 import bookclub.services.FriendService;
-import bookclub.services.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -17,10 +16,6 @@ import java.util.List;
 
 @Controller
 public class FriendBooksController {
-
-    @Autowired
-    NotificationService notificationService;
-
     @Autowired
     BookService bookService;
 
@@ -44,11 +39,14 @@ public class FriendBooksController {
     }
 
     @PostMapping("/borrowBook")
-    public ResponseEntity<String> borrowBook(@RequestParam Long friendId, @RequestParam Long bookId, Principal principal){
-        notificationService.sendBorrowRequest(principal.getName(), friendId, bookId);
+    public ResponseEntity<String> borrowBook(@RequestParam Long lenderId, @RequestParam Long bookId, Principal principal){
+        boolean returnValue = bookService.borrowBook(principal.getName(), lenderId, bookId);
+
+        if (!returnValue){
+            return ResponseEntity.badRequest().body("there was a problem sending the borrow request");
+        }
 
         return ResponseEntity.ok("Book request sent");
-//        return ResponseEntity.badRequest().body("there was a problem sending the borrow request");
     }
 
     @PostMapping("book/returnBook")

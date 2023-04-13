@@ -19,6 +19,9 @@ public class BookService {
     @Autowired
     UserRepository userDao;
 
+    @Autowired
+    NotificationService notificationService;
+
     public List<Book> getAllBooksForUser(String username){
         Optional<User> userOptional = userDao.findByEmail(username);
         if (userOptional.isPresent()){
@@ -101,5 +104,9 @@ public class BookService {
 
         return true;
 
+    }
+
+    public boolean borrowBook(String borrowerEmail, Long lenderId, Long bookId) {
+        return notificationService.sendBorrowRequest(borrowerEmail, lenderId, bookId);
     }
 }
