@@ -45,8 +45,11 @@ public class FriendController {
 
     @PostMapping("/addFriend")
     public String addFriend(@ModelAttribute User newFriend, Principal principal){
-        friendService.addNewFriendship(principal.getName(), newFriend);
+        boolean returnValue = friendService.addNewFriendship(principal.getName(), newFriend);
 
+        if (!returnValue){
+            return "A problem occurred trying to send friend request";
+        }
         return "redirect:/myFriends";
     }
 }

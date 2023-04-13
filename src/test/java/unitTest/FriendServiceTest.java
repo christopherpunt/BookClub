@@ -7,6 +7,7 @@ import bookclub.repositories.BookRepository;
 import bookclub.repositories.FriendshipRepository;
 import bookclub.repositories.UserRepository;
 import bookclub.services.FriendService;
+import bookclub.services.NotificationService;
 import bookclub.services.UserService;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -18,8 +19,7 @@ import utils.UserTestUtils;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class FriendServiceTest extends BaseUnitTest {
@@ -36,6 +36,9 @@ public class FriendServiceTest extends BaseUnitTest {
     @Mock
     private BookRepository bookDao;
 
+    @Mock
+    private NotificationService notificationService;
+
     @InjectMocks
     private FriendService friendService;
 
@@ -50,15 +53,11 @@ public class FriendServiceTest extends BaseUnitTest {
         when(friendshipDao.findFriendship(user, friend)).thenReturn(Optional.empty());
 
         //act
-        friendService.addNewFriendship(user.getEmail(), friend);
+        boolean returnValue = friendService.addNewFriendship(user.getEmail(), friend);
 
         //assert
-        ArgumentCaptor<Friendship> friendshipArgumentCaptor = ArgumentCaptor.forClass(Friendship.class);
-        verify(friendshipDao).save(friendshipArgumentCaptor.capture());
-        assertNotNull(friendshipArgumentCaptor.getValue());
-        Friendship newFriendship = friendshipArgumentCaptor.getValue();
-        assertEquals(user, newFriendship.getUser());
-        assertEquals(friend, newFriendship.getFriend());
+        assertTrue(returnValue);
+        verify(notificationService).sendFriendRequest(user.getEmail(), friend.getId());
     }
 
     @Test
@@ -69,22 +68,20 @@ public class FriendServiceTest extends BaseUnitTest {
 
         when(userDao.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
         when(userService.createUnregisteredUser(friend)).thenReturn(friend);
+        when(notificationService.sendFriendRequest(user.getEmail(), friend.getId())).thenReturn(true);
 
         //act
-        friendService.addNewFriendship(user.getEmail(), friend);
+        boolean returnValue = friendService.addNewFriendship(user.getEmail(), friend);
 
         //assert
-        ArgumentCaptor<Friendship> friendshipCaptor = ArgumentCaptor.forClass(Friendship.class);
-        verify(friendshipDao).save(friendshipCaptor.capture());
-
-        assertNotNull(friendshipCaptor.getValue());
-        Friendship newFriendship = friendshipCaptor.getValue();
-        assertEquals(user, newFriendship.getUser());
-        assertEquals(friend, newFriendship.getFriend());
+        assertTrue(returnValue);
+        verify(userService).createUnregisteredUser(friend);
+        verify(notificationService).sendFriendRequest(user.getEmail(), friend.getId());
     }
 
     @Test
     public void addFriendTestAlreadyFriends(){
+        //arrange
         User user = UserTestUtils.createUser("Chris Punt");
         User friend = UserTestUtils.createUser("Sydney Punt");
 
@@ -94,9 +91,11 @@ public class FriendServiceTest extends BaseUnitTest {
         when(userDao.findByEmail(friend.getEmail())).thenReturn(Optional.of(friend));
         when(friendshipDao.findFriendship(user, friend)).thenReturn(Optional.of(friendship));
 
+        //act
         friendService.addNewFriendship(user.getEmail(), friend);
 
-        verify(friendshipDao).findFriendship(user, friend);
+        //assert
+        verifyNoInteractions(notificationService);
         verifyNoMoreInteractions(friendshipDao);
     }
 

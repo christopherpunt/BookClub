@@ -28,31 +28,32 @@ public class FriendService {
     @Autowired
     private BookRepository bookDao;
 
-    public Friendship addNewFriendship(String userEmail, User friend){
+    @Autowired
+    private NotificationService notificationService;
 
+    public boolean addNewFriendship(String userEmail, User createdFriend){
         Optional<User> userOptional = userDao.findByEmail(userEmail);
-        Optional<User> friendOptional = userDao.findByEmail(friend.getEmail());
+        Optional<User> friendOptional = userDao.findByEmail(createdFriend.getEmail());
 
-        Friendship friendship;
-        User user;
-        if(userOptional.isPresent() && friendOptional.isPresent()){
-            user = userOptional.get();
-            User foundFriend = friendOptional.get();
-            Optional<Friendship> friendshipOptional = friendshipDao.findFriendship(user, foundFriend);
-            //if friendship already exists
-            if (friendshipOptional.isPresent()){
-                return friendshipOptional.get();
-            }
-
-            friendship = new Friendship(user, foundFriend);
-            return friendshipDao.save(friendship);
-        } else if (userOptional.isPresent()){ //user exists but friend doesn't
-            user = userOptional.get();
-            User createdFriend = userService.createUnregisteredUser(friend);
-            friendship = new Friendship(user, createdFriend);
-            friendshipDao.save(friendship);
+        if (userOptional.isEmpty()){
+            return false;
         }
-        return null;
+        User user = userOptional.get();
+
+        if (friendOptional.isEmpty()){
+            User newFriend = userService.createUnregisteredUser(createdFriend);
+            return notificationService.sendFriendRequest(user.getEmail(), newFriend.getId());
+        }
+        User foundFriend = friendOptional.get();
+
+        Optional<Friendship> friendshipOptional = friendshipDao.findFriendship(user, foundFriend);
+        //if friendship already exists can't create new friendship
+        if (friendshipOptional.isPresent()){
+            return false;
+        }
+
+        notificationService.sendFriendRequest(user.getEmail(), foundFriend.getId());
+        return true;
     }
 
     public List<User> findAllFriendsFromUser(User user){
