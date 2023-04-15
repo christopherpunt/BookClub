@@ -1,12 +1,14 @@
 package bookclub.models;
 
+import bookclub.converters.NotificationDataConverter;
+import bookclub.enums.NotificationData;
 import bookclub.enums.NotificationStatus;
 import bookclub.enums.NotificationType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.HashMap;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -30,10 +32,14 @@ public class Notification {
     @Enumerated(EnumType.STRING)
     private NotificationStatus status;
 
+    @Convert(converter = NotificationDataConverter.class)
     @Column
-    private HashMap<String, Object> notificationData;
+    private Map<String, Object> notificationData;
 
     @Column
     private String action;
 
+    public void addNotificationData(NotificationData key, Object value){
+        notificationData.put(key.getKey(), value);
+    }
 }

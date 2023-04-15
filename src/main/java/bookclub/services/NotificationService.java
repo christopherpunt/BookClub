@@ -1,5 +1,6 @@
 package bookclub.services;
 
+import bookclub.enums.NotificationData;
 import bookclub.enums.NotificationStatus;
 import bookclub.enums.NotificationType;
 import bookclub.models.Book;
@@ -38,7 +39,7 @@ public class NotificationService {
         Optional<User> receiver = userDao.findById(friend);
         Optional<Book> book = bookDao.findById(bookId);
 
-        if (sender.isEmpty() || receiver.isEmpty() || book.isEmpty()){
+        if (sender.isEmpty() || receiver.isEmpty() || book.isEmpty()) {
             return false;
         }
 
@@ -47,18 +48,18 @@ public class NotificationService {
         notification.setStatus(NotificationStatus.UNREAD);
         notification.setReceiver(receiver.get());
         notification.setSender(sender.get());
-        notification.setNotificationData(bookId.toString());
+        notification.addNotificationData(NotificationData.BOOKID, bookId);
         notification.setAction("action");
 
         notificationDao.save(notification);
         return true;
     }
 
-    public boolean sendFriendRequest(String username, Long userId){
+    public boolean sendFriendRequest(String username, Long userId) {
         Optional<User> sender = userDao.findByEmail(username);
         Optional<User> receiver = userDao.findById(userId);
 
-        if(sender.isEmpty() || receiver.isEmpty()){
+        if (sender.isEmpty() || receiver.isEmpty()) {
             return false;
         }
 
@@ -75,7 +76,7 @@ public class NotificationService {
     public List<Notification> getNotificationsForUsername(String username) {
         Optional<User> user = userDao.findByEmail(username);
 
-        if (user.isEmpty()){
+        if (user.isEmpty()) {
             return new ArrayList<>();
         }
 
@@ -87,7 +88,7 @@ public class NotificationService {
         Optional<Notification> notificationOptional = notificationDao.findById(id);
         boolean handled = false;
 
-        if (notificationOptional.isEmpty()){
+        if (notificationOptional.isEmpty()) {
             return;
         }
         Notification notification = notificationOptional.get();
@@ -95,15 +96,22 @@ public class NotificationService {
         notification.setStatus(NotificationStatus.COMPLETED);
 
         switch (notification.getNotificationType()) {
-            case BorrowRequest ->
-                bookService.lendBook(Long.parseLong(notification.getNotificationData().get()), notification.getReceiver(), notification.getSender());
+            case BorrowRequest -> {
+                bookService.lendBook(
+                        (Long) notification.getNotificationData().get(NotificationData.BOOKID),
+                        notification.getReceiver(),
+                        notification.getSender());
                 handled = true;
-            case FriendRequest ->
-                friendService.addNewFriendship(notification.getNotificationData(), (User) notification.getNotificationData());
+            }
+            case FriendRequest -> {
+                friendService.addNewFriendship(
+                        (String) notification.getNotificationData().get(NotificationData.USER_EMAIL),
+                        (User) notification.getNotificationData().get(NotificationData.CREATED_FRIEND));
                 handled = true;
+            }
         }
 
-        if (handled){
+        if (handled) {
             notificationDao.save(notification);
         }
     }
