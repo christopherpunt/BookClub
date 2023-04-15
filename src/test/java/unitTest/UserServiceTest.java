@@ -1,19 +1,25 @@
+package unitTest;
+
 import bookclub.models.User;
 import bookclub.repositories.UserRepository;
 import bookclub.services.UserService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.*;
+import org.mockito.ArgumentCaptor;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Spy;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import utils.UserTestUtils;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-public class UserServiceTest {
+public class UserServiceTest extends BaseUnitTest{
     @Mock
     private UserRepository userDao;
 
@@ -21,19 +27,17 @@ public class UserServiceTest {
     @Spy
     private UserService userService;
 
-    @BeforeEach
-    void setUp(){
-        MockitoAnnotations.openMocks(this);
-    }
-
     @Test
     public void createUserGoldenPath(){
+        //arrange
         String password = "solofest";
-        User user = createUser("Sydney", "Punt", "smfrelier@gmail.com", password);
+        User user = UserTestUtils.createUser("Sydney", "Punt", "sydney@email.com", password);
         when(userDao.save(user)).thenReturn(user);
 
+        //act
         userService.createUser(user);
 
+        //assert
         ArgumentCaptor<User> captor = ArgumentCaptor.forClass(User.class);
         verify(userDao).save(captor.capture());
 
@@ -42,18 +46,23 @@ public class UserServiceTest {
         assertEquals(user.getEmail(), captor.getValue().getEmail());
         assertTrue(captor.getValue().isRegistered());
 
-        //TODO: assert correctly encrypted
         assertNotEquals(password, user.getPassword());
+        String encodedPassword = captor.getValue().getPassword();
+        assertTrue(new BCryptPasswordEncoder().matches(password, encodedPassword));
     }
 
     @Test
     public void createUserAlreadyRegisteredExists(){
-        User user = createUser("Sydney", "Punt", "smfrelier@gmail.com", "password");
+        //arrange
+        User user = UserTestUtils.createUser("Sydney", "Punt", "smfrelier@gmail.com", "password");
         user.setRegistered(true);
 
         when(userDao.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
 
+        //act
         AuthenticationServiceException exception = assertThrows(AuthenticationServiceException.class, () -> userService.createUser(user));
+
+        //assert
         assertEquals("A registered user with that email already exists", exception.getMessage());
 
         verify(userDao).findByEmail(user.getEmail());
@@ -62,15 +71,20 @@ public class UserServiceTest {
 
     @Test
     public void createUserUnregisteredExists(){
-        User user = createUser("Chris", "Punt", "chrispunt@email.com", null);
-        User friend = createUser("Sydney", "Punt", "sydneypunt@email.com", "password");
+        //arrange
+        String password = "password";
+        User user = UserTestUtils.createUser("Chris", "Punt", "chrispunt@email.com", null);
+        User friend = UserTestUtils.createUser("Sydney", "Punt", "sydneypunt@email.com", null);
         user.setRegistered(false);
         user.addNewFriend(friend);
 
-        User newUser = createUser("Chris2", "Punt2", "chrispunt@email.com", "password");
+        User newUser = UserTestUtils.createUser("Chris2", "Punt2", "chrispunt@email.com", password);
         when(userDao.findByEmail(newUser.getEmail())).thenReturn(Optional.of(user));
+
+        //act
         userService.createUser(newUser);
 
+        //assert
         ArgumentCaptor<User> captor = ArgumentCaptor.forClass(User.class);
         verify(userDao).findByEmail(newUser.getEmail());
         verify(userDao).save(captor.capture()); //save the original user but with new values from newUser
@@ -81,16 +95,21 @@ public class UserServiceTest {
         assertEquals(friend, captor.getValue().getFriends().stream().findFirst().get());
         assertTrue(captor.getValue().isRegistered());
 
-        //TODO: test that this the new user password is encrypted to the captor getpassword
-        assertNotEquals(newUser.getPassword(), captor.getValue().getPassword());
+        assertNotEquals(password, captor.getValue().getPassword());
+        assertNotEquals(password, user.getPassword());
+        String encodedPassword = captor.getValue().getPassword();
+        assertTrue(new BCryptPasswordEncoder().matches(password, encodedPassword));
     }
 
     @Test
     public void createUserUnRegisteredUser(){
-        User user = createUser("Chris", "Punt", "chrisPunt@email.com", null);
+        //arrange
+        User user = UserTestUtils.createUser("Chris", "Punt", "chrisPunt@email.com", null);
 
+        //act
         userService.createUnregisteredUser(user);
 
+        //assert
         ArgumentCaptor<User> captor = ArgumentCaptor.forClass(User.class);
         verify(userDao).save(captor.capture());
 
@@ -99,45 +118,45 @@ public class UserServiceTest {
 
     @Test
     public void createUserUnRegisteredUserAlreadyExists(){
-        User user = createUser("Chris", "Punt", "chrisPunt@email.com", null);
+        //arrange
+        User user = UserTestUtils.createUser("Chris", "Punt", "chrisPunt@email.com", null);
 
         when(userDao.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
 
+        //act
         AuthenticationServiceException exception = assertThrows(AuthenticationServiceException.class, () -> userService.createUnregisteredUser(user));
+
+        //assert
         assertEquals("A user with that email already exists", exception.getMessage());
 
         verify(userDao).findByEmail(user.getEmail());
         verifyNoMoreInteractions(userDao);
     }
 
-
-
     @Test
     public void loadByUsernameTest(){
-        User user = createUser("Sydney", "Punt", "smfrelier@gmail.com", "solofest");
+        //arrange
+        User user = UserTestUtils.createUser("Sydney", "Punt", "smfrelier@gmail.com", "solofest");
         when(userDao.findByEmail(user.email)).thenReturn(Optional.of(user));
 
+        //act
         UserDetails returned = userService.loadUserByUsername(user.getEmail());
 
+        //assert
         assertEquals(user.getEmail(), returned.getUsername());
         assertEquals(user.getPassword(), returned.getPassword());
     }
 
     @Test
     public void loadByUsernameDoesntExistTest(){
-        User user = createUser("Sydney", "Punt", "smfrelier@gmail.com", "solofest");
+        //arrange
+        User user = UserTestUtils.createUser("Sydney", "Punt", "smfrelier@gmail.com", "solofest");
         when(userDao.findByEmail(user.email)).thenReturn(Optional.empty());
 
+        //act
         UsernameNotFoundException exception = assertThrows(UsernameNotFoundException.class, () -> userService.loadUserByUsername(user.getEmail()));
-        assertEquals("Could not find username with email: " + user.getEmail(), exception.getMessage());
-    }
 
-    private User createUser(String firstName, String lastName, String email, String password){
-        User user = new User();
-        user.setFirstName(firstName);
-        user.setLastName(lastName);
-        user.setEmail(email);
-        user.setPassword(password);
-        return user;
+        //assert
+        assertEquals("Could not find username with email: " + user.getEmail(), exception.getMessage());
     }
 }

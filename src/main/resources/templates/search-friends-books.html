@@ -33,13 +33,21 @@
       </tr>
       </thead>
       <tbody>
+
       <tr th:each="item: ${friendsBooks}">
         <td><img th:src="${item.BookCoverUrl}"/></td>
         <td th:text="${item.Title}"></td>
         <td th:text="${item.Author}"></td>
         <td th:text="${item.Isbn}"></td>
-        <td><button type="button" class="btn btn-primary" name="book" th:value="${item}" id="request-to-borrow-button">Request To Borrow</button></td>
+        <td>
+          <form method="post" action="/borrowBook">
+            <input type="hidden" name="bookId" th:value="${item.Id}">
+            <input type="hidden" name="friendId" th:value="${item.User.Id}">
+            <button type="submit" class="btn btn-primary">Request To Borrow</button>
+          </form>
+        </td>
       </tr>
+
       </tbody>
     </table>
   </div>

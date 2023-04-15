@@ -18,6 +18,7 @@ public class Book {
 
         this.Id = book.getId();
         this.user = book.getUser();
+        this.isOwner = book.isOwner();
         this.Title = book.getTitle();
         this.Author = book.getAuthor();
         this.Isbn = book.getIsbn();
@@ -31,25 +32,35 @@ public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long Id;
+
+    @Column
+    private boolean isOwner;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
+
     @Column
     private String Title;
+
     @Column
     private String Author;
+
     @Column
     private String Isbn;
 
     @Lob
     @Column(columnDefinition="TEXT")
     private String Description;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "borrowed_from_user_id")
     private User BorrowedFromUser;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "lent_to_user_id")
     private User LentToUser;
+
     @Column
     private String BookCoverUrl;
     //endregion

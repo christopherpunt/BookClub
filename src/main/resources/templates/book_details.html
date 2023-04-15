@@ -33,8 +33,15 @@
   <hr />
   <div class="row">
     <div class="col-md-6">
-      <h3>Borrowed From:</h3>
-      <p th:text="${book.BorrowedFromUser != null ? book.BorrowedFromUser.getFullName() : ''}"></p>
+      <div th:if="${book.BorrowedFromUser != null}">
+        <h3>Borrowed From:</h3>
+        <p th:text="${book.BorrowedFromUser != null ? book.BorrowedFromUser.getFullName() : ''}"></p>
+        <form th:action="@{/book/returnBook}" method="post">
+          <input type="hidden" name="bookId" th:value="${book.Id}" />
+          <input type="hidden" name="borrowedFromUserId" th:value="${book.BorrowedFromUser.Id}" />
+          <button type="submit">Return Book</button>
+        </form>
+      </div>
     </div>
     <div class="col-md-6">
       <h3>Lent To:</h3>

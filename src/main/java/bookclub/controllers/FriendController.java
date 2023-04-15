@@ -1,7 +1,6 @@
 package bookclub.controllers;
 
 import bookclub.models.User;
-import bookclub.repositories.FriendshipRepository;
 import bookclub.repositories.UserRepository;
 import bookclub.services.FriendService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +12,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 public class FriendController {
@@ -23,19 +21,9 @@ public class FriendController {
     @Autowired
     private FriendService friendService;
 
-    @Autowired
-    private FriendshipRepository friendshipRepository;
-
     @GetMapping("/myFriends")
     public ModelAndView getFriendsList(Principal principal){
-        Optional<User> user = userDao.findByEmail(principal.getName());
-
-        if (user.isEmpty()){
-            System.out.println("FriendController: no user found with that email");
-            return null;
-        }
-
-        List<User> friends = friendService.findAllFriendsFromUser(user.get());
+        List<User> friends = friendService.findAllFriendsFromUser(principal.getName());
         ModelAndView modelAndView = new ModelAndView("friends.html");
         modelAndView.addObject("friends", friends);
         return modelAndView;
@@ -48,13 +36,7 @@ public class FriendController {
 
     @PostMapping("/addFriend")
     public String addFriend(@ModelAttribute User newFriend, Principal principal){
-        Optional<User> user = userDao.findByEmail(principal.getName());
-
-        if (user.isEmpty()){
-            return "User not found";
-        }
-
-        friendService.addNewFriendship(user.get(), newFriend);
+        friendService.addNewFriendship(principal.getName(), newFriend);
 
         return "redirect:/myFriends";
     }

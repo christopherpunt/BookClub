@@ -9,6 +9,8 @@
 </head>
 <body class="dark">
 <div th:insert="~{common/navbar :: navbar}"></div>
+<div th:replace="~{common/notifications :: notificationsModal}"></div>
+
 
 <div class="container">
     <h1>Welcome to Book Club!</h1>
@@ -18,12 +20,9 @@
         <thead>
         <tr>
             <th>Image</th>
-            <th>Id</th>
-            <th>User Id</th>
             <th>Title</th>
             <th>Author</th>
-            <th>ISBN</th>
-            <th>Description</th>
+            <th>Is Owner</th>
             <th>BorrowedFromUser</th>
             <th>LentToUser</th>
         </tr>
@@ -31,21 +30,15 @@
         <tbody>
         <tr th:each="item: ${books}" class="clickable-row">
             <td><img th:src="${item.BookCoverUrl}"/></td>
-            <td th:attr="data-href=@{/book_details/{bookId}(bookId=${item.Id})}" class="book-id" th:text="${item.Id}"></td>
-            <td th:text="${item.User.getFullName()}"></td>
+            <td th:attr="data-href=@{/book_details/{bookId}(bookId=${item.Id})}" class="book-id" th:hidden="true" th:text="${item.Id}"></td>
             <td th:text="${item.Title}"></td>
             <td th:text="${item.Author}"></td>
-            <td th:text="${item.Isbn}"></td>
-            <td th:text="${item.Description}"></td>
+            <td th:text="${item.isOwner}"></td>
             <td th:text="${item.BorrowedFromUser != null ? item.BorrowedFromUser.getFullName() : ''}"></td>
             <td th:text="${item.LentToUser != null ? item.LentToUser.getFullName() : ''}"></td>
         </tr>
         </tbody>
     </table>
-
-    <p><a class="btn btn-outline-success" href="/searchBooks">
-        <i class="bi bi-plus-square-fill"></i>Add New Book</a>
-    </p>
 </div>
 
 <script>
