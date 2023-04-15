@@ -87,4 +87,13 @@ public class FriendService {
         return books.stream().filter(b -> b.getTitle().toLowerCase().contains(searchTerm.toLowerCase()) ||
                 b.getAuthor().toLowerCase().contains(searchTerm.toLowerCase())).toList();
     }
+
+    public void completeFriendship(String email, User friend) {
+        Optional<User> userOptional = userDao.findByEmail(email);
+        Optional<User> friendOptional = userDao.findByEmail(friend.getEmail());
+
+        if (userOptional.isPresent() && friendOptional.isPresent()){
+            friendshipDao.save(new Friendship(userOptional.get(), friendOptional.get()));
+        }
+    }
 }

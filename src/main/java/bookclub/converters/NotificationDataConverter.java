@@ -8,16 +8,15 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Map;
 
 @Slf4j
 @Converter
-public class NotificationDataConverter implements AttributeConverter<Map<String, Object>, String> {
+public class NotificationDataConverter implements AttributeConverter<HashMap, String> {
 
     private final static ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
-    public String convertToDatabaseColumn(Map<String, Object> attribute) {
+    public String convertToDatabaseColumn(HashMap attribute) {
         try {
             return objectMapper.writeValueAsString(attribute);
         } catch (JsonProcessingException e) {
@@ -27,7 +26,7 @@ public class NotificationDataConverter implements AttributeConverter<Map<String,
     }
 
     @Override
-    public Map<String, Object> convertToEntityAttribute(String dbData) {
+    public HashMap<String, Object> convertToEntityAttribute(String dbData) {
         try {
             if (dbData != null && !dbData.isEmpty()) {
                 return objectMapper.readValue(dbData, HashMap.class);

@@ -90,7 +90,7 @@ public class BookServiceTest extends BaseUnitTest {
         when(bookDao.findById(book.getId())).thenReturn(Optional.of(book));
 
         //act
-        boolean returnValue = bookService.lendBook(book.getId(),giver, receiver);
+        boolean returnValue = bookService.completeBorrowRequest(book.getId(),giver, receiver);
 
         //assert
         assertTrue(returnValue);

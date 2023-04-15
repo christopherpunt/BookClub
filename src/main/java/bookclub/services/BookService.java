@@ -59,7 +59,7 @@ public class BookService {
         return false;
     }
 
-    public boolean lendBook(Long bookId, User giver, User receiver){
+    public boolean completeBorrowRequest(Long bookId, User giver, User receiver){
         Optional<Book> bookOptional = bookDao.findById(bookId);
 
         if (bookOptional.isEmpty()){

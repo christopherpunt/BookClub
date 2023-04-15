@@ -1,6 +1,7 @@
 package bookclub.controllers;
 
 import bookclub.models.Notification;
+import bookclub.services.NotificationCompletionService;
 import bookclub.services.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,6 +19,9 @@ public class NotificationController {
     @Autowired
     NotificationService notificationService;
 
+    @Autowired
+    NotificationCompletionService notificationCompletionService;
+
     @GetMapping("/notifications")
     public String getNotifications(Model model, Principal principal){
         List<Notification> notifications = notificationService.getNotificationsForUsername(principal.getName());
@@ -27,7 +31,7 @@ public class NotificationController {
 
     @PostMapping("/notifications/confirm")
     public String confirmNotification(@RequestParam Long id, Principal principal){
-        notificationService.completeNotification(id);
+        notificationCompletionService.completeNotification(id);
         return "redirect:/notifications";
     }
 }

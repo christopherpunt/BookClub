@@ -31,9 +31,6 @@ public class NotificationService {
     @Autowired
     BookRepository bookDao;
 
-    @Autowired
-    FriendService friendService;
-
     public boolean sendBorrowRequest(String username, Long friend, Long bookId) {
         Optional<User> sender = userDao.findByEmail(username);
         Optional<User> receiver = userDao.findById(friend);
@@ -82,37 +79,5 @@ public class NotificationService {
 
         Optional<List<Notification>> notificationList = notificationDao.findByReceiver(user.get());
         return notificationList.orElseGet(ArrayList::new);
-    }
-
-    public void completeNotification(Long id) {
-        Optional<Notification> notificationOptional = notificationDao.findById(id);
-        boolean handled = false;
-
-        if (notificationOptional.isEmpty()) {
-            return;
-        }
-        Notification notification = notificationOptional.get();
-
-        notification.setStatus(NotificationStatus.COMPLETED);
-
-        switch (notification.getNotificationType()) {
-            case BorrowRequest -> {
-                bookService.lendBook(
-                        (Long) notification.getNotificationData().get(NotificationData.BOOKID),
-                        notification.getReceiver(),
-                        notification.getSender());
-                handled = true;
-            }
-            case FriendRequest -> {
-                friendService.addNewFriendship(
-                        (String) notification.getNotificationData().get(NotificationData.USER_EMAIL),
-                        (User) notification.getNotificationData().get(NotificationData.CREATED_FRIEND));
-                handled = true;
-            }
-        }
-
-        if (handled) {
-            notificationDao.save(notification);
-        }
     }
 }

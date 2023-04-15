@@ -9,12 +9,12 @@ import lombok.Setter;
 @Setter
 public class Friendship {
 
-    public Friendship(){}
-
     public Friendship(User user, User friend){
         this.user = user;
         this.friend = friend;
     }
+
+    public Friendship() {}
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
