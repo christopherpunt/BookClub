@@ -8,6 +8,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Getter
@@ -34,12 +35,15 @@ public class Notification {
 
     @Convert(converter = NotificationDataConverter.class)
     @Column
-    private Map<String, Object> notificationData;
+    private Map<NotificationData, Object> notificationData;
 
     @Column
     private String action;
 
     public void addNotificationData(NotificationData key, Object value){
-        notificationData.put(key.getKey(), value);
+        if (notificationData == null){
+            notificationData = new HashMap<>();
+        }
+        notificationData.put(key, value);
     }
 }

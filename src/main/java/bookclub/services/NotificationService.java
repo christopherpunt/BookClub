@@ -23,9 +23,6 @@ public class NotificationService {
     NotificationRepository notificationDao;
 
     @Autowired
-    BookService bookService;
-
-    @Autowired
     UserRepository userDao;
 
     @Autowired

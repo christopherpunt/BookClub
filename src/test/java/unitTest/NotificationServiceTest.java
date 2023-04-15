@@ -1,5 +1,6 @@
 package unitTest;
 
+import bookclub.enums.NotificationData;
 import bookclub.enums.NotificationType;
 import bookclub.models.Book;
 import bookclub.models.Notification;
@@ -12,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import utils.BookTestUtils;
 import utils.UserTestUtils;
 
 import java.util.Optional;
@@ -39,8 +41,9 @@ public class NotificationServiceTest extends BaseUnitTest{
         //arrange
         User sender = UserTestUtils.createUser("Chris Punt");
         User receiver = UserTestUtils.createUser("Chris2 Punt2");
-        Book book = new Book();
-        book.setId(1L);
+        Book book = BookTestUtils.createOwnedBook(receiver);
+//        Book book = new Book();
+//        book.setId(1L);
 
         when(userDao.findByEmail(sender.getEmail())).thenReturn(Optional.of(sender));
         when(userDao.findById(receiver.getId())).thenReturn(Optional.of(receiver));
@@ -60,7 +63,7 @@ public class NotificationServiceTest extends BaseUnitTest{
         assertEquals(sender, notification.getSender());
         assertEquals(receiver, notification.getReceiver());
         assertEquals(NotificationType.BorrowRequest, notification.getNotificationType());
-        assertEquals(book.getId().toString(), notification.getNotificationData());
+        assertEquals(book.getId(), notification.getNotificationData().get(NotificationData.BOOKID));
     }
 
     @Test

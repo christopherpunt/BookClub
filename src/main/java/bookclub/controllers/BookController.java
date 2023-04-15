@@ -36,15 +36,12 @@ public class BookController {
     @GetMapping("/book_details/{id}")
     public String getBookDetails(@PathVariable Long id, Model model, Principal principal){
         Optional<Book> book = bookDao.findById(id);
-        Optional<User> userOptional = userDao.findByEmail(principal.getName());
-        if (userOptional.isPresent()){
-            List<User> friends = friendService.findAllFriendsFromUser(userOptional.get());
+        List<User> friends = friendService.findAllFriendsFromUser(principal.getName());
 
-            if(book.isPresent()){
-                model.addAttribute("book", book.get());
-                model.addAttribute("friends", friends);
-                return "book_details";
-            }
+        if(book.isPresent()){
+            model.addAttribute("book", book.get());
+            model.addAttribute("friends", friends);
+            return "book_details";
         }
 
         return "no book found";

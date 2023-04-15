@@ -56,7 +56,15 @@ public class FriendService {
         return true;
     }
 
-    public List<User> findAllFriendsFromUser(User user){
+    public List<User> findAllFriendsFromUser(String userEmail){
+        Optional<User> userOptional = userDao.findByEmail(userEmail);
+
+        if (userOptional.isEmpty()){
+            return List.of();
+        }
+
+        User user = userOptional.get();
+
         List<Friendship> userFriendships = friendshipDao.findAllFriendshipsByUser(user);
         List<Friendship> friendFriendships = friendshipDao.findAllFriendshipsByFriend(user);
 
@@ -69,15 +77,10 @@ public class FriendService {
     }
 
     public List<Book> findAllFriendsBooks(String userEmail){
-        Optional<User> userOptional = userDao.findByEmail(userEmail);
-
-        if (userOptional.isPresent()){
-            List<User> friends = findAllFriendsFromUser(userOptional.get());
-            return bookDao.findByUserIdIn(friends.stream()
-                    .map(User::getId).collect(Collectors.toList())).stream()
-                    .filter(Book::isOwner).toList();
-        }
-        return List.of();
+        List<User> friends = findAllFriendsFromUser(userEmail);
+        return bookDao.findByUserIdIn(friends.stream()
+                .map(User::getId).collect(Collectors.toList())).stream()
+                .filter(Book::isOwner).toList();
     }
 
     public List<Book> findAllFriendsBooksMatchSearch(String userEmail, String searchTerm){

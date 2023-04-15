@@ -135,12 +135,13 @@ public class FriendServiceTest extends BaseUnitTest {
         Friendship friendship2 = new Friendship(friend2, user);
         Friendship friendship3 = new Friendship(friend3, user);
 
+        when(userDao.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
         when(friendshipDao.findAllFriendshipsByUser(user)).thenReturn(List.of(friendship1));
         when(friendshipDao.findAllFriendshipsByFriend(user)).thenReturn(List.of(friendship2, friendship3));
 
         //act
         List<User> friends;
-        friends = friendService.findAllFriendsFromUser(user);
+        friends = friendService.findAllFriendsFromUser(user.getEmail());
 
         //assert
         assertEquals(3, friends.size());

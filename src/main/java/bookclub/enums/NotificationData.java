@@ -1,9 +1,7 @@
 package bookclub.enums;
 
 public enum NotificationData {
-    BOOKID("bookId"),
-    USER_EMAIL("user_email"),
-    CREATED_FRIEND("createdFriend");
+    BOOKID("bookId");
 
     private final String key;
 
