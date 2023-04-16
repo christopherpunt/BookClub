@@ -42,7 +42,7 @@ public class NotificationService {
         notification.setStatus(NotificationStatus.UNREAD);
         notification.setReceiver(receiver.get());
         notification.setSender(sender.get());
-        notification.addNotificationData(NotificationData.BOOKID, bookId);
+        notification.addNotificationData(NotificationData.BOOK_ID, bookId);
         notification.setAction("action");
 
         notificationDao.save(notification);

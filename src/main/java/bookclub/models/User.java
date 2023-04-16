@@ -20,9 +20,9 @@ public class User  implements UserDetails {
     public Long Id;
     @Column(nullable = false, unique = true)
     public String email;
-    @Column(nullable = false, length = 30)
+    @Column(length = 30)
     public String firstName;
-    @Column(nullable = false, length = 30)
+    @Column(length = 30)
     public String lastName;
     @Column(length = 128)
     public String password;

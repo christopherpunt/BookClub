@@ -35,7 +35,7 @@ public class NotificationCompletionService {
         switch (notification.getNotificationType()) {
             case BorrowRequest -> {
                 bookService.completeBorrowRequest(
-                        (Long) notification.getNotificationData().get(NotificationData.BOOKID),
+                        Long.valueOf((Integer)notification.getNotificationData().get(NotificationData.BOOK_ID.name())),
                         notification.getReceiver(),
                         notification.getSender());
                 handled = true;

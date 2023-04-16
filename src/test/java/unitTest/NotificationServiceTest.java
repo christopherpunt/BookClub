@@ -63,7 +63,7 @@ public class NotificationServiceTest extends BaseUnitTest{
         assertEquals(sender, notification.getSender());
         assertEquals(receiver, notification.getReceiver());
         assertEquals(NotificationType.BorrowRequest, notification.getNotificationType());
-        assertEquals(book.getId(), notification.getNotificationData().get(NotificationData.BOOKID));
+        assertEquals(book.getId(), notification.getNotificationData().get(NotificationData.BOOK_ID));
     }
 
     @Test

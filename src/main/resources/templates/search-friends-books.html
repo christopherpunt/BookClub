@@ -42,7 +42,7 @@
         <td>
           <form method="post" action="/borrowBook">
             <input type="hidden" name="bookId" th:value="${item.Id}">
-            <input type="hidden" name="friendId" th:value="${item.User.Id}">
+            <input type="hidden" name="lenderId" th:value="${item.User.Id}">
             <button type="submit" class="btn btn-primary">Request To Borrow</button>
           </form>
         </td>
