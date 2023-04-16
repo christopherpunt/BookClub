@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -32,6 +33,11 @@ public class FriendService {
     private NotificationService notificationService;
 
     public boolean addNewFriendship(String userEmail, User createdFriend){
+
+        if (Objects.equals(userEmail, createdFriend.getEmail())){
+            return false;
+        }
+
         Optional<User> userOptional = userDao.findByEmail(userEmail);
         Optional<User> friendOptional = userDao.findByEmail(createdFriend.getEmail());
 

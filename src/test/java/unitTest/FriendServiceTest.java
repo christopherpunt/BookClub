@@ -61,6 +61,20 @@ public class FriendServiceTest extends BaseUnitTest {
     }
 
     @Test
+    public void doNotAddSelfAsFriendTest(){
+        //arrange
+        User user = UserTestUtils.createUser("Chris Punt");
+        User friend = UserTestUtils.createUser("Chris Punt");
+
+        //act
+        boolean returnValue = friendService.addNewFriendship(user.getEmail(), friend);
+
+        //assert
+        assertFalse(returnValue);
+        verifyNoInteractions(notificationService);
+    }
+
+    @Test
     public void addUnregisteredFriendTest(){
         //arrange
         User user = UserTestUtils.createUser("Chris Punt");
