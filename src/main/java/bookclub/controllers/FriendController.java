@@ -1,7 +1,6 @@
 package bookclub.controllers;
 
 import bookclub.models.User;
-import bookclub.repositories.UserRepository;
 import bookclub.services.FriendService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,8 +14,6 @@ import java.util.List;
 
 @Controller
 public class FriendController {
-    @Autowired
-    private UserRepository userDao;
 
     @Autowired
     private FriendService friendService;

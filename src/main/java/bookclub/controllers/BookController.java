@@ -3,7 +3,6 @@ package bookclub.controllers;
 import bookclub.models.Book;
 import bookclub.models.User;
 import bookclub.repositories.BookRepository;
-import bookclub.repositories.UserRepository;
 import bookclub.services.BookService;
 import bookclub.services.FriendService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +25,6 @@ public class BookController {
     
     @Autowired
     BookRepository bookDao;
-
-    @Autowired
-    UserRepository userDao;
 
     @Autowired
     FriendService friendService;
