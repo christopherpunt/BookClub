@@ -5,7 +5,6 @@ import bookclub.services.BookService;
 import bookclub.services.FriendService;
 import bookclub.services.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -43,20 +42,20 @@ public class FriendBooksController {
     }
 
     @PostMapping("/borrowBook")
-    public ResponseEntity<String> borrowBook(@RequestParam Long lenderId, @RequestParam Long bookId, Principal principal){
+    public String borrowBook(@RequestParam Long lenderId, @RequestParam Long bookId, Principal principal){
         boolean returnValue = notificationService.sendBorrowRequest(principal.getName(), lenderId, bookId);
 
         if (!returnValue){
-            return ResponseEntity.badRequest().body("there was a problem sending the borrow request");
+            return "There was a problem sending the borrow request";
         }
 
-        return ResponseEntity.ok("Book request sent");
+        return "redirect:/home";
     }
 
     @PostMapping("book/returnBook")
-    public ResponseEntity<String> returnBook(@RequestParam Long bookId, @RequestParam Long borrowedFromUserId){
+    public String returnBook(@RequestParam Long bookId, @RequestParam Long borrowedFromUserId){
         bookService.returnBook(bookId, borrowedFromUserId);
-        return ResponseEntity.ok("Book Returned!");
+        return "redirect:/home";
     }
 
 }
