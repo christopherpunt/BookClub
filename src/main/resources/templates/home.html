@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:extends="layout">
+<head>
+  <meta charset="UTF-8">
+  <title>Home Page</title>
+  <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}">
+  <link th:rel ="stylesheet" type="text/css" th:href="@{/static/main.css}">
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<div th:replace="~{common/navbar :: navbar}"></div>
+
+<div th:fragment="content" class="container">
+  <h1>Welcome to Book Club, <span th:text="${username}"></span></h1>
+
+  <table class="table table-bordered table-striped">
+    <thead>
+    <tr>
+      <th>Image</th>
+      <th>Title</th>
+      <th>Author</th>
+      <th>Is Owner</th>
+      <th>BorrowedFromUser</th>
+      <th>LentToUser</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="item: ${books}" class="clickable-row">
+      <td><img th:src="${item.BookCoverUrl}"/></td>
+      <td th:attr="data-href=@{/book_details/{bookId}(bookId=${item.Id})}" class="book-id" th:hidden="true" th:text="${item.Id}"></td>
+      <td th:text="${item.Title}"></td>
+      <td th:text="${item.Author}"></td>
+      <td th:text="${item.isOwner}"></td>
+      <td th:text="${item.BorrowedFromUser != null ? item.BorrowedFromUser.getFullName() : ''}"></td>
+      <td th:text="${item.LentToUser != null ? item.LentToUser.getFullName() : ''}"></td>
+    </tr>
+    </tbody>
+  </table>
+
+  <!-- Add your home page content here -->
+</div>
+
+<script>
+    // Make the rows clickable
+    $('.clickable-row').on('click', function() {
+        var bookId = $(this).find('.book-id').text();
+        window.location.href = $(this).find('.book-id').data('href');
+    });
+</script>
+</body>
+</html>

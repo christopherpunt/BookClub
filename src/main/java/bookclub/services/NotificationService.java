@@ -23,27 +23,32 @@ public class NotificationService {
     NotificationRepository notificationDao;
 
     @Autowired
+    EmailService emailService;
+
+    @Autowired
     UserRepository userDao;
 
     @Autowired
     BookRepository bookDao;
 
     public boolean sendBorrowRequest(String username, Long friend, Long bookId) {
-        Optional<User> sender = userDao.findByEmail(username);
-        Optional<User> receiver = userDao.findById(friend);
+        Optional<User> borrower = userDao.findByEmail(username);
+        Optional<User> loaner = userDao.findById(friend);
         Optional<Book> book = bookDao.findById(bookId);
 
-        if (sender.isEmpty() || receiver.isEmpty() || book.isEmpty()) {
+        if (borrower.isEmpty() || loaner.isEmpty() || book.isEmpty()) {
             return false;
         }
 
         Notification notification = new Notification();
         notification.setNotificationType(NotificationType.BorrowRequest);
         notification.setStatus(NotificationStatus.UNREAD);
-        notification.setReceiver(receiver.get());
-        notification.setSender(sender.get());
+        notification.setReceiver(loaner.get());
+        notification.setSender(borrower.get());
         notification.addNotificationData(NotificationData.BOOK_ID, bookId);
         notification.setAction("action");
+
+        emailService.sendBookRequestNotification(loaner.get().getEmail(), borrower.get().getEmail(), bookId);
 
         notificationDao.save(notification);
         return true;
