@@ -42,10 +42,39 @@ public class EmailService {
 
         email.setTo(loanerEmail);
         email.setSubject("Book Request Notification");
-        String text = "<p>Dear " + loaner.getFirstName() + ",</p>"
-                + "<p>Your friend " + borrower.getFullName() +" has requested to borrow the book: " + book.getTitle() + "</p>"
-                + "<p>Thank you for using our app!</p>";
+        String text = "Dear " + loaner.getFirstName() + ","
+                + "\n\nYour friend " + borrower.getFullName() +" has requested to borrow the book: " + book.getTitle()
+                + "\n\nThank you for using our app!";
         email.setText(text);
+        mailSender.send(email);
+    }
+
+    public void sendFriendRequest(String senderEmail, String receiverEmail) {
+        Optional<User> senderOptional = userDao.findByEmail(senderEmail);
+        Optional<User> receiverOptional = userDao.findByEmail(receiverEmail);
+
+        if (senderOptional.isEmpty() || receiverOptional.isEmpty()){
+            return;
+        }
+
+        User sender = senderOptional.get();
+        User receiver = receiverOptional.get();
+
+        SimpleMailMessage email = new SimpleMailMessage();
+        email.setTo(receiverEmail);
+        email.setSubject("ShareABook Friend Request");
+        String text;
+        if (receiver.isRegistered()){
+            text = sender.getFullName() + " Invited you to be friends with them, " +
+                    "go accept their friend request now to start borrowing books from them";
+        } else{
+            text = sender.getFullName() + " Invited you to join ShareABook to be friends with them. " +
+                    "This is a platform where you can set up your personal library and view what books " +
+                    "your friends have in their library and share your books with others. " +
+                    "Join now at ShareABook.AzureWebsites.net";
+        }
+        email.setText(text);
+
         mailSender.send(email);
     }
 }

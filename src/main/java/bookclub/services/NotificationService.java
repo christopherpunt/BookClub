@@ -68,6 +68,8 @@ public class NotificationService {
         notification.setSender(sender.get());
         notification.setReceiver(receiver.get());
 
+        emailService.sendFriendRequest(sender.get().getEmail(), receiver.get().getEmail());
+
         notificationDao.save(notification);
         return true;
     }
