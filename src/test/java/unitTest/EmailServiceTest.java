@@ -46,7 +46,7 @@ public class EmailServiceTest extends BaseUnitTest {
         when(userDao.findByEmail(borrower.getEmail())).thenReturn(Optional.of(borrower));
 
         //act
-        emailService.sendBookRequestNotification(loaner.getEmail(), borrower.getEmail(), book.getId());
+        emailService.sendBookRequestNotification(borrower.getEmail(), loaner.getEmail(), book.getId());
 
         //assert
         ArgumentCaptor<SimpleMailMessage> emailCaptor = ArgumentCaptor.forClass(SimpleMailMessage.class);

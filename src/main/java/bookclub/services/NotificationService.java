@@ -1,8 +1,8 @@
 package bookclub.services;
 
 import bookclub.enums.NotificationData;
-import bookclub.enums.NotificationStatus;
 import bookclub.enums.NotificationType;
+import bookclub.enums.StatusEnum;
 import bookclub.models.Book;
 import bookclub.models.Notification;
 import bookclub.models.User;
@@ -31,9 +31,9 @@ public class NotificationService {
     @Autowired
     BookRepository bookDao;
 
-    public boolean sendBorrowRequest(String username, Long friend, Long bookId) {
-        Optional<User> borrower = userDao.findByEmail(username);
-        Optional<User> loaner = userDao.findById(friend);
+    public boolean sendBorrowRequest(String borrowerEmail, Long friendId, Long bookId) {
+        Optional<User> borrower = userDao.findByEmail(borrowerEmail);
+        Optional<User> loaner = userDao.findById(friendId);
         Optional<Book> book = bookDao.findById(bookId);
 
         if (borrower.isEmpty() || loaner.isEmpty() || book.isEmpty()) {
@@ -42,13 +42,13 @@ public class NotificationService {
 
         Notification notification = new Notification();
         notification.setNotificationType(NotificationType.BorrowRequest);
-        notification.setStatus(NotificationStatus.UNREAD);
+        notification.setStatus(StatusEnum.UNREAD);
         notification.setReceiver(loaner.get());
         notification.setSender(borrower.get());
         notification.addNotificationData(NotificationData.BOOK_ID, bookId);
         notification.setAction("action");
 
-        emailService.sendBookRequestNotification(loaner.get().getEmail(), borrower.get().getEmail(), bookId);
+        emailService.sendBookRequestNotification(borrower.get().getEmail(), loaner.get().getEmail(), bookId);
 
         notificationDao.save(notification);
         return true;
@@ -64,7 +64,7 @@ public class NotificationService {
 
         Notification notification = new Notification();
         notification.setNotificationType(NotificationType.FriendRequest);
-        notification.setStatus(NotificationStatus.UNREAD);
+        notification.setStatus(StatusEnum.UNREAD);
         notification.setSender(sender.get());
         notification.setReceiver(receiver.get());
 

@@ -1,6 +1,8 @@
 package bookclub.models;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
@@ -14,10 +16,7 @@ import java.util.List;
 @Entity
 @Getter
 @Setter
-public class User  implements UserDetails {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Long Id;
+public class User extends BaseEntity implements UserDetails {
     @Column(nullable = false, unique = true)
     public String email;
     @Column(length = 30)

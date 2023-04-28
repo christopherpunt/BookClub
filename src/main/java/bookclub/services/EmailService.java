@@ -23,7 +23,7 @@ public class EmailService {
     @Autowired
     private UserRepository userDao;
 
-    public void sendBookRequestNotification(String loanerEmail, String borrowerEmail, Long bookId){
+    public void sendBookRequestNotification(String borrowerEmail, String loanerEmail, Long bookId){
 
         Optional<Book> bookOptional = bookDao.findById(bookId);
         Optional<User> loanerOptional = userDao.findByEmail(loanerEmail);
