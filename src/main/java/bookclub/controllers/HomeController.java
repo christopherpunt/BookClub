@@ -16,8 +16,9 @@ public class HomeController {
 
     @GetMapping("/home")
     public ModelAndView index(Principal principal){
-        ModelAndView modelAndView = new ModelAndView("index.html");
+        ModelAndView modelAndView = new ModelAndView("home.html");
         modelAndView.addObject("books", bookService.getAllBooksForUser(principal.getName()));
+        modelAndView.addObject("username", principal.getName());
         return modelAndView;
     }
 }

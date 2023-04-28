@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-public class Book {
+public class Book extends BaseEntity {
 
     public Book(){}
 
@@ -16,7 +16,7 @@ public class Book {
     public Book(String json) {
         Book book = fromJson(json);
 
-        this.Id = book.getId();
+        this.setId(book.getId());
         this.user = book.getUser();
         this.isOwner = book.isOwner();
         this.Title = book.getTitle();
@@ -29,9 +29,6 @@ public class Book {
     }
 
     //region Properties
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
 
     @Column
     private boolean isOwner;

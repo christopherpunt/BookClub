@@ -1,8 +1,8 @@
 package bookclub.services;
 
 import bookclub.enums.NotificationData;
-import bookclub.enums.NotificationStatus;
 import bookclub.enums.NotificationType;
+import bookclub.enums.StatusEnum;
 import bookclub.models.Book;
 import bookclub.models.Notification;
 import bookclub.models.User;
@@ -23,27 +23,32 @@ public class NotificationService {
     NotificationRepository notificationDao;
 
     @Autowired
+    EmailService emailService;
+
+    @Autowired
     UserRepository userDao;
 
     @Autowired
     BookRepository bookDao;
 
-    public boolean sendBorrowRequest(String username, Long friend, Long bookId) {
-        Optional<User> sender = userDao.findByEmail(username);
-        Optional<User> receiver = userDao.findById(friend);
+    public boolean sendBorrowRequest(String borrowerEmail, Long friendId, Long bookId) {
+        Optional<User> borrower = userDao.findByEmail(borrowerEmail);
+        Optional<User> loaner = userDao.findById(friendId);
         Optional<Book> book = bookDao.findById(bookId);
 
-        if (sender.isEmpty() || receiver.isEmpty() || book.isEmpty()) {
+        if (borrower.isEmpty() || loaner.isEmpty() || book.isEmpty()) {
             return false;
         }
 
         Notification notification = new Notification();
         notification.setNotificationType(NotificationType.BorrowRequest);
-        notification.setStatus(NotificationStatus.UNREAD);
-        notification.setReceiver(receiver.get());
-        notification.setSender(sender.get());
+        notification.setStatus(StatusEnum.UNREAD);
+        notification.setReceiver(loaner.get());
+        notification.setSender(borrower.get());
         notification.addNotificationData(NotificationData.BOOK_ID, bookId);
         notification.setAction("action");
+
+        emailService.sendBookRequestNotification(borrower.get().getEmail(), loaner.get().getEmail(), bookId);
 
         notificationDao.save(notification);
         return true;
@@ -59,9 +64,11 @@ public class NotificationService {
 
         Notification notification = new Notification();
         notification.setNotificationType(NotificationType.FriendRequest);
-        notification.setStatus(NotificationStatus.UNREAD);
+        notification.setStatus(StatusEnum.UNREAD);
         notification.setSender(sender.get());
         notification.setReceiver(receiver.get());
+
+        emailService.sendFriendRequest(sender.get().getEmail(), receiver.get().getEmail());
 
         notificationDao.save(notification);
         return true;

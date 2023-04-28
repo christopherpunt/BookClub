@@ -24,6 +24,7 @@ public class BookTestUtils {
         book.setId(new Random().nextLong());
         book.setUser(user);
         book.setOwner(true);
+        book.setTitle(user.getFirstName() + "'s Book");
         return book;
     }
 

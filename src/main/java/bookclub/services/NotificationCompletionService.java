@@ -1,7 +1,7 @@
 package bookclub.services;
 
 import bookclub.enums.NotificationData;
-import bookclub.enums.NotificationStatus;
+import bookclub.enums.StatusEnum;
 import bookclub.models.Notification;
 import bookclub.repositories.NotificationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +30,7 @@ public class NotificationCompletionService {
         }
         Notification notification = notificationOptional.get();
 
-        notification.setStatus(NotificationStatus.COMPLETED);
+        notification.setStatus(StatusEnum.COMPLETED);
 
         switch (notification.getNotificationType()) {
             case BorrowRequest -> {
