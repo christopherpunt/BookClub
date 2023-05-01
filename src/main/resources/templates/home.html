@@ -6,46 +6,45 @@
   <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}">
   <link th:rel ="stylesheet" type="text/css" th:href="@{/static/main.css}">
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    .book-cover {
+      max-width: 150px;
+      max-height: 200px;
+      margin: 0 auto;
+    }
+    .card-body {
+      text-align: center;
+    }
+  </style>
 </head>
 <body>
 <div th:replace="~{common/navbar :: navbar}"></div>
 
 <div th:fragment="content" class="container">
-  <h1>Welcome to Book Club, <span th:text="${username}"></span></h1>
+  <h1>Welcome to Book Club, <span th:text="${fullName}"></span></h1>
 
-  <table class="table table-bordered table-striped">
-    <thead>
-    <tr>
-      <th>Image</th>
-      <th>Title</th>
-      <th>Author</th>
-      <th>Is Owner</th>
-      <th>BorrowedFromUser</th>
-      <th>LentToUser</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="item: ${books}" class="clickable-row">
-      <td><img th:src="${item.BookCoverUrl}"/></td>
-      <td th:attr="data-href=@{/book_details/{bookId}(bookId=${item.Id})}" class="book-id" th:hidden="true" th:text="${item.Id}"></td>
-      <td th:text="${item.Title}"></td>
-      <td th:text="${item.Author}"></td>
-      <td th:text="${item.isOwner}"></td>
-      <td th:text="${item.BorrowedFromUser != null ? item.BorrowedFromUser.getFullName() : ''}"></td>
-      <td th:text="${item.LentToUser != null ? item.LentToUser.getFullName() : ''}"></td>
-    </tr>
-    </tbody>
-  </table>
-
-  <!-- Add your home page content here -->
+  <div class="row row-cols-1 row-cols-md-3 g-4">
+    <div th:each="item: ${books}" class="col clickable-row">
+      <div class="card h-100">
+        <a th:attr="href=@{/book_details/{bookId}(bookId=${item.Id})}" class="book-id" th:hidden="true" th:text="${item.Id}"></a>
+        <img th:src="${item.BookCoverUrl}" class="card-img-top book-cover" alt="Book Cover">
+        <div class="card-body">
+          <h5 class="card-title" th:text="${item.Title}"></h5>
+          <p class="card-text" th:text="${item.Author}"></p>
+          <p th:if="${item.BorrowedFromUser}" th:text="'Borrowed from: ' + ${item.BorrowedFromUser.getFullName()}"></p>
+          <p th:if="${item.LentToUser}" th:text="'Lent to: ' + ${item.LentToUser.getFullName()}"></p>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
-    // Make the rows clickable
-    $('.clickable-row').on('click', function() {
-        var bookId = $(this).find('.book-id').text();
-        window.location.href = $(this).find('.book-id').data('href');
-    });
+  // Make the rows clickable
+  $('.clickable-row').on('click', function() {
+    var bookId = $(this).find('.book-id').text();
+    window.location.href = $(this).find('.book-id').attr('href');
+  });
 </script>
 </body>
 </html>

@@ -1,9 +1,11 @@
 package bookclub.models;
 
-import com.google.gson.Gson;
+import com.google.gson.*;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.lang.reflect.Type;
 
 @Getter
 @Setter
@@ -16,16 +18,19 @@ public class Book extends BaseEntity {
     public Book(String json) {
         Book book = fromJson(json);
 
-        this.setId(book.getId());
-        this.user = book.getUser();
-        this.isOwner = book.isOwner();
         this.Title = book.getTitle();
         this.Author = book.getAuthor();
         this.Isbn = book.getIsbn();
         this.Description = book.getDescription();
-        this.BorrowedFromUser = book.getBorrowedFromUser();
-        this.LentToUser = book.getLentToUser();
         this.BookCoverUrl = book.getBookCoverUrl();
+    }
+
+    public Book(String Title, String Author, String Isbn, String Description, String bookCoverUrl){
+        this.Title = Title;
+        this.Author = Author;
+        this.Isbn = Isbn;
+        this.Description = Description;
+        this.BookCoverUrl = bookCoverUrl;
     }
 
     //region Properties
@@ -64,11 +69,35 @@ public class Book extends BaseEntity {
 
     @Override
     public String toString(){
-        return new Gson().toJson(this);
+        JsonObject object = new JsonObject();
+
+        object.addProperty("Title", this.Title);
+        object.addProperty("Author", this.Author);
+        object.addProperty("Isbn", this.Isbn);
+        object.addProperty("Description", this.Description);
+        object.addProperty("BookCoverUrl", this.BookCoverUrl);
+
+        return new Gson().toJson(object);
     }
 
     public static Book fromJson(String json) {
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(Book.class, new BookDeserializer())
+                .create();
         return gson.fromJson(json, Book.class);
+    }
+
+    private static class BookDeserializer implements JsonDeserializer<Book> {
+        @Override
+        public Book deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+            JsonObject jsonObject = json.getAsJsonObject();
+            String title = jsonObject.get("Title").getAsString();
+            String author = jsonObject.get("Author").getAsString();
+            String isbn = jsonObject.get("Isbn").getAsString();
+            String description = jsonObject.get("Description").getAsString();
+            String bookCoverUrl = jsonObject.get("BookCoverUrl").getAsString();
+
+            return new Book(title, author, isbn, description, bookCoverUrl);
+        }
     }
 }
