@@ -13,16 +13,16 @@ import java.time.LocalDateTime;
 public abstract class BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    protected Long id;
 
     @Column(nullable = false)
-    private LocalDateTime createdDate;
+    protected LocalDateTime createdDate;
 
     @Column(nullable = false)
-    private LocalDateTime modifiedDate;
+    protected LocalDateTime modifiedDate;
 
     @Column(nullable = false)
-    private StatusEnum status;
+    protected StatusEnum status;
 
     @PrePersist
     protected void onCreate(){
