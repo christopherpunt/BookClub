@@ -1,5 +1,6 @@
 package bookclub.models;
 
+import bookclub.annotations.Purgeable;
 import bookclub.converters.NotificationDataConverter;
 import bookclub.enums.NotificationData;
 import bookclub.enums.NotificationType;
@@ -13,6 +14,7 @@ import java.util.Map;
 @Getter
 @Setter
 @Entity
+@Purgeable
 public class Notification extends BaseEntity {
     @ManyToOne
     private User receiver;

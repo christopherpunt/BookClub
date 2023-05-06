@@ -1,5 +1,6 @@
 package bookclub.models;
 
+import bookclub.annotations.Purgeable;
 import com.google.gson.*;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -10,6 +11,7 @@ import java.lang.reflect.Type;
 @Getter
 @Setter
 @Entity
+@Purgeable
 public class Book extends BaseEntity {
 
     public Book(){}
