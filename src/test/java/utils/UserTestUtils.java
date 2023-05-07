@@ -2,14 +2,11 @@ package utils;
 
 import bookclub.models.User;
 
-import java.util.Random;
-
 public class UserTestUtils {
 
     public static User
     createUser(String name){
         User user = new User();
-        user.setId(new Random().nextLong());
         user.setFirstName(name.split(" ")[0]);
         user.setLastName(name.split(" ")[1]);
         user.setEmail(user.getFirstName() + "@email.com");
