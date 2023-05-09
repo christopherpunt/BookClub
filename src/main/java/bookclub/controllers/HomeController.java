@@ -18,11 +18,11 @@ public class HomeController {
     BookService bookService;
 
     @Autowired
-    UserRepository userDao;
+    UserRepository userRepo;
 
     @GetMapping("/home")
     public ModelAndView index(Principal principal){
-        Optional<User> userOptional = userDao.findByEmail(principal.getName());
+        Optional<User> userOptional = userRepo.findByEmail(principal.getName());
         ModelAndView modelAndView = new ModelAndView("home.html");
         modelAndView.addObject("books", bookService.getAllBooksForUser(principal.getName()));
         modelAndView.addObject("fullName", userOptional.get().getFullName());

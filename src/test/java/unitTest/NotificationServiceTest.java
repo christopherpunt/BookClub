@@ -26,13 +26,13 @@ import static org.mockito.Mockito.when;
 public class NotificationServiceTest extends BaseUnitTest{
 
     @Mock
-    private NotificationRepository notificationDao;
+    private NotificationRepository notificationRepo;
 
     @Mock
-    private UserRepository userDao;
+    private UserRepository userRepo;
 
     @Mock
-    private BookRepository bookDao;
+    private BookRepository bookRepo;
 
     @Mock
     private EmailService emailService;
@@ -47,9 +47,9 @@ public class NotificationServiceTest extends BaseUnitTest{
         User loaner = UserTestUtils.createUser("Chris2 Punt2");
         Book book = BookTestUtils.createOwnedBook(loaner);
 
-        when(userDao.findByEmail(borrower.getEmail())).thenReturn(Optional.of(borrower));
-        when(userDao.findById(loaner.getId())).thenReturn(Optional.of(loaner));
-        when(bookDao.findById(book.getId())).thenReturn(Optional.of(book));
+        when(userRepo.findByEmail(borrower.getEmail())).thenReturn(Optional.of(borrower));
+        when(userRepo.findById(loaner.getId())).thenReturn(Optional.of(loaner));
+        when(bookRepo.findById(book.getId())).thenReturn(Optional.of(book));
 
         //act
         boolean returnValue = notificationService.sendBorrowRequest(borrower.getEmail(), loaner.getId(), book.getId());
@@ -58,7 +58,7 @@ public class NotificationServiceTest extends BaseUnitTest{
         assertTrue(returnValue);
 
         ArgumentCaptor<Notification> notificationCaptor = ArgumentCaptor.forClass(Notification.class);
-        verify(notificationDao).save(notificationCaptor.capture());
+        verify(notificationRepo).save(notificationCaptor.capture());
         assertNotNull(notificationCaptor.getValue());
         Notification notification = notificationCaptor.getValue();
 
@@ -76,8 +76,8 @@ public class NotificationServiceTest extends BaseUnitTest{
         User sender = UserTestUtils.createUser("Chris Punt");
         User receiver = UserTestUtils.createUser("Sydney Punt");
 
-        when(userDao.findByEmail(sender.getEmail())).thenReturn(Optional.of(sender));
-        when(userDao.findById(receiver.getId())).thenReturn(Optional.of(receiver));
+        when(userRepo.findByEmail(sender.getEmail())).thenReturn(Optional.of(sender));
+        when(userRepo.findById(receiver.getId())).thenReturn(Optional.of(receiver));
 
         //act
         boolean returnValue = notificationService.sendFriendRequest(sender.getEmail(), receiver.getId());
@@ -86,7 +86,7 @@ public class NotificationServiceTest extends BaseUnitTest{
         assertTrue(returnValue);
 
         ArgumentCaptor<Notification> notificationCaptor = ArgumentCaptor.forClass(Notification.class);
-        verify(notificationDao).save(notificationCaptor.capture());
+        verify(notificationRepo).save(notificationCaptor.capture());
         assertNotNull(notificationCaptor.getValue());
         Notification notification = notificationCaptor.getValue();
 

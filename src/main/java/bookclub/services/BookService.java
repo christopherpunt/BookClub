@@ -14,21 +14,21 @@ import java.util.Optional;
 @Service
 public class BookService {
     @Autowired
-    BookRepository bookDao;
+    BookRepository bookRepo;
 
     @Autowired
-    UserRepository userDao;
+    UserRepository userRepo;
 
     public List<Book> getAllBooksForUser(String username){
-        Optional<User> userOptional = userDao.findByEmail(username);
+        Optional<User> userOptional = userRepo.findByEmail(username);
         if (userOptional.isPresent()){
-            return bookDao.findByUser(userOptional.get());
+            return bookRepo.findByUser(userOptional.get());
         }
         return Collections.emptyList();
     }
 
     public boolean updateAllDetails(Book book) {
-        Optional<Book> foundBook = bookDao.findById(book.getId());
+        Optional<Book> foundBook = bookRepo.findById(book.getId());
         Book bookToSave;
 
         if (foundBook.isPresent()){
@@ -39,35 +39,35 @@ public class BookService {
             bookToSave.setDescription(book.getDescription());
             bookToSave.setBorrowedFromUser(book.getBorrowedFromUser());
             bookToSave.setLentToUser(book.getLentToUser());
-            bookDao.save(bookToSave);
+            bookRepo.save(bookToSave);
             return true;
         }
         return false;
     }
 
     public boolean newBookForOwner(String username, Book book) {
-        Optional<User> user = userDao.findByEmail(username);
+        Optional<User> user = userRepo.findByEmail(username);
 
         if (user.isPresent()) {
             book.setUser(user.get());
             book.setOwner(true);
             //TODO: fix description when its too long
             book.setDescription("");
-            bookDao.save(book);
+            bookRepo.save(book);
             return true;
         }
         return false;
     }
 
     public boolean completeBorrowRequest(Long bookId, User giver, User receiver){
-        Optional<Book> bookOptional = bookDao.findById(bookId);
+        Optional<Book> bookOptional = bookRepo.findById(bookId);
 
         if (bookOptional.isEmpty()){
             return false;
         }
         Book book = bookOptional.get();
         book.setLentToUser(receiver);
-        bookDao.save(book);
+        bookRepo.save(book);
 
         Book newBook = new Book();
         newBook.setUser(receiver);
@@ -78,26 +78,26 @@ public class BookService {
         newBook.setDescription(book.getDescription());
         newBook.setIsbn(book.getIsbn());
 
-        bookDao.save(newBook);
+        bookRepo.save(newBook);
 
         return true;
     }
 
     public boolean returnBook(Long bookId, Long ownerId) {
-        Optional<Book> bookOptional = bookDao.findById(bookId);
-        Optional<User> ownerOptional = userDao.findById(ownerId);
+        Optional<Book> bookOptional = bookRepo.findById(bookId);
+        Optional<User> ownerOptional = userRepo.findById(ownerId);
 
         if (bookOptional.isEmpty() || ownerOptional.isEmpty()){
             return false;
         }
         Book book = bookOptional.get();
         book.setBorrowedFromUser(null);
-        bookDao.save(book);
+        bookRepo.save(book);
 
         User owner = ownerOptional.get();
-        Book ownersBook = bookDao.findByUserAndIsbn(owner, book.getIsbn());
+        Book ownersBook = bookRepo.findByUserAndIsbn(owner, book.getIsbn());
         ownersBook.setLentToUser(null);
-        bookDao.save(ownersBook);
+        bookRepo.save(ownersBook);
 
         return true;
 

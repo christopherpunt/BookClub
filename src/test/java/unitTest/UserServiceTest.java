@@ -21,7 +21,7 @@ import static org.mockito.Mockito.*;
 
 public class UserServiceTest extends BaseUnitTest{
     @Mock
-    private UserRepository userDao;
+    private UserRepository userRepo;
 
     @InjectMocks
     @Spy
@@ -32,14 +32,14 @@ public class UserServiceTest extends BaseUnitTest{
         //arrange
         String password = "solofest";
         User user = UserTestUtils.createUser("Sydney", "Punt", "sydney@email.com", password);
-        when(userDao.save(user)).thenReturn(user);
+        when(userRepo.save(user)).thenReturn(user);
 
         //act
         userService.createUser(user);
 
         //assert
         ArgumentCaptor<User> captor = ArgumentCaptor.forClass(User.class);
-        verify(userDao).save(captor.capture());
+        verify(userRepo).save(captor.capture());
 
         assertEquals(user.getFirstName(), captor.getValue().getFirstName());
         assertEquals(user.getLastName(), captor.getValue().getLastName());
@@ -57,7 +57,7 @@ public class UserServiceTest extends BaseUnitTest{
         User user = UserTestUtils.createUser("Sydney", "Punt", "smfrelier@gmail.com", "password");
         user.setRegistered(true);
 
-        when(userDao.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+        when(userRepo.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
 
         //act
         AuthenticationServiceException exception = assertThrows(AuthenticationServiceException.class, () -> userService.createUser(user));
@@ -65,8 +65,8 @@ public class UserServiceTest extends BaseUnitTest{
         //assert
         assertEquals("A registered user with that email already exists", exception.getMessage());
 
-        verify(userDao).findByEmail(user.getEmail());
-        verifyNoMoreInteractions(userDao);
+        verify(userRepo).findByEmail(user.getEmail());
+        verifyNoMoreInteractions(userRepo);
     }
 
     @Test
@@ -79,15 +79,15 @@ public class UserServiceTest extends BaseUnitTest{
         user.addNewFriend(friend);
 
         User newUser = UserTestUtils.createUser("Chris2", "Punt2", "chrispunt@email.com", password);
-        when(userDao.findByEmail(newUser.getEmail())).thenReturn(Optional.of(user));
+        when(userRepo.findByEmail(newUser.getEmail())).thenReturn(Optional.of(user));
 
         //act
         userService.createUser(newUser);
 
         //assert
         ArgumentCaptor<User> captor = ArgumentCaptor.forClass(User.class);
-        verify(userDao).findByEmail(newUser.getEmail());
-        verify(userDao).save(captor.capture()); //save the original user but with new values from newUser
+        verify(userRepo).findByEmail(newUser.getEmail());
+        verify(userRepo).save(captor.capture()); //save the original user but with new values from newUser
 
         assertEquals(newUser.getFirstName(), captor.getValue().getFirstName());
         assertEquals(newUser.getLastName(), captor.getValue().getLastName());
@@ -111,7 +111,7 @@ public class UserServiceTest extends BaseUnitTest{
 
         //assert
         ArgumentCaptor<User> captor = ArgumentCaptor.forClass(User.class);
-        verify(userDao).save(captor.capture());
+        verify(userRepo).save(captor.capture());
 
         assertFalse(captor.getValue().isRegistered());
     }
@@ -121,7 +121,7 @@ public class UserServiceTest extends BaseUnitTest{
         //arrange
         User user = UserTestUtils.createUser("Chris", "Punt", "chrisPunt@email.com", null);
 
-        when(userDao.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+        when(userRepo.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
 
         //act
         AuthenticationServiceException exception = assertThrows(AuthenticationServiceException.class, () -> userService.createUnregisteredUser(user));
@@ -129,15 +129,15 @@ public class UserServiceTest extends BaseUnitTest{
         //assert
         assertEquals("A user with that email already exists", exception.getMessage());
 
-        verify(userDao).findByEmail(user.getEmail());
-        verifyNoMoreInteractions(userDao);
+        verify(userRepo).findByEmail(user.getEmail());
+        verifyNoMoreInteractions(userRepo);
     }
 
     @Test
     public void loadByUsernameTest(){
         //arrange
         User user = UserTestUtils.createUser("Sydney", "Punt", "smfrelier@gmail.com", "solofest");
-        when(userDao.findByEmail(user.email)).thenReturn(Optional.of(user));
+        when(userRepo.findByEmail(user.email)).thenReturn(Optional.of(user));
 
         //act
         UserDetails returned = userService.loadUserByUsername(user.getEmail());
@@ -151,7 +151,7 @@ public class UserServiceTest extends BaseUnitTest{
     public void loadByUsernameDoesntExistTest(){
         //arrange
         User user = UserTestUtils.createUser("Sydney", "Punt", "smfrelier@gmail.com", "solofest");
-        when(userDao.findByEmail(user.email)).thenReturn(Optional.empty());
+        when(userRepo.findByEmail(user.email)).thenReturn(Optional.empty());
 
         //act
         UsernameNotFoundException exception = assertThrows(UsernameNotFoundException.class, () -> userService.loadUserByUsername(user.getEmail()));

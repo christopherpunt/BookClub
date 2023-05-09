@@ -19,6 +19,17 @@ public class BookTestUtils {
         return book;
     }
 
+    public static Book createBook(User user, String title, String author, String isbn, String description) {
+        Book book = new Book();
+        book.setUser(user);
+        book.setId(new Random().nextLong());
+        book.setTitle(title);
+        book.setAuthor(author);
+        book.setIsbn(isbn);
+        book.setDescription(description);
+        return book;
+    }
+
     public static Book createOwnedBook(User user) {
         Book book = new Book();
         book.setId(new Random().nextLong());

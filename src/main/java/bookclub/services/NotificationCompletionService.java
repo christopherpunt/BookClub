@@ -13,7 +13,7 @@ import java.util.Optional;
 public class NotificationCompletionService {
 
     @Autowired
-    NotificationRepository notificationDao;
+    NotificationRepository notificationRepo;
 
     @Autowired
     BookService bookService;
@@ -22,7 +22,7 @@ public class NotificationCompletionService {
     FriendService friendService;
 
     public void completeNotification(Long id) {
-        Optional<Notification> notificationOptional = notificationDao.findById(id);
+        Optional<Notification> notificationOptional = notificationRepo.findById(id);
         boolean handled = false;
 
         if (notificationOptional.isEmpty()) {
@@ -47,7 +47,7 @@ public class NotificationCompletionService {
         }
 
         if (handled) {
-            notificationDao.save(notification);
+            notificationRepo.save(notification);
         }
     }
 }
