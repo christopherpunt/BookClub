@@ -25,16 +25,16 @@ import static org.mockito.Mockito.*;
 public class FriendServiceTest extends BaseUnitTest {
 
     @Mock
-    private UserRepository userDao;
+    private UserRepository userRepo;
 
     @Mock
-    private FriendshipRepository friendshipDao;
+    private FriendshipRepository friendshipRepo;
 
     @Mock
     private UserService userService;
 
     @Mock
-    private BookRepository bookDao;
+    private BookRepository bookRepo;
 
     @Mock
     private NotificationService notificationService;
@@ -48,9 +48,9 @@ public class FriendServiceTest extends BaseUnitTest {
         User user = UserTestUtils.createUser("Chris Punt");
         User friend = UserTestUtils.createUser("Sydney Punt");
 
-        when(userDao.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
-        when(userDao.findByEmail(friend.getEmail())).thenReturn(Optional.of(friend));
-        when(friendshipDao.findFriendship(user, friend)).thenReturn(Optional.empty());
+        when(userRepo.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+        when(userRepo.findByEmail(friend.getEmail())).thenReturn(Optional.of(friend));
+        when(friendshipRepo.findFriendship(user, friend)).thenReturn(Optional.empty());
 
         //act
         boolean returnValue = friendService.addNewFriendship(user.getEmail(), friend);
@@ -80,7 +80,7 @@ public class FriendServiceTest extends BaseUnitTest {
         User user = UserTestUtils.createUser("Chris Punt");
         User friend = UserTestUtils.createUser("Sydney Punt");
 
-        when(userDao.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+        when(userRepo.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
         when(userService.createUnregisteredUser(friend)).thenReturn(friend);
         when(notificationService.sendFriendRequest(user.getEmail(), friend.getId())).thenReturn(true);
 
@@ -101,16 +101,16 @@ public class FriendServiceTest extends BaseUnitTest {
 
         Friendship friendship = new Friendship(user, friend);
 
-        when(userDao.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
-        when(userDao.findByEmail(friend.getEmail())).thenReturn(Optional.of(friend));
-        when(friendshipDao.findFriendship(user, friend)).thenReturn(Optional.of(friendship));
+        when(userRepo.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+        when(userRepo.findByEmail(friend.getEmail())).thenReturn(Optional.of(friend));
+        when(friendshipRepo.findFriendship(user, friend)).thenReturn(Optional.of(friendship));
 
         //act
         friendService.addNewFriendship(user.getEmail(), friend);
 
         //assert
         verifyNoInteractions(notificationService);
-        verifyNoMoreInteractions(friendshipDao);
+        verifyNoMoreInteractions(friendshipRepo);
     }
 
     @Test
@@ -121,8 +121,8 @@ public class FriendServiceTest extends BaseUnitTest {
         User friend2 = UserTestUtils.createUser("Gail Punt");
 
         List<Friendship> friendships = FriendshipTestUtils.createFriendships(user, friend1, friend2);
-        when(userDao.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
-        when(friendshipDao.findAllFriendshipsByUser(user)).thenReturn(friendships);
+        when(userRepo.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+        when(friendshipRepo.findAllFriendshipsByUser(user)).thenReturn(friendships);
 
         //act
         List<Book> returnedBooks = friendService.findAllFriendsBooks(user.getEmail());
@@ -132,7 +132,7 @@ public class FriendServiceTest extends BaseUnitTest {
 
         @SuppressWarnings("unchecked")
         ArgumentCaptor<List<Long>> userIdListCaptor = ArgumentCaptor.forClass(List.class);
-        verify(bookDao).findByUserIdIn(userIdListCaptor.capture());
+        verify(bookRepo).findByUserIdIn(userIdListCaptor.capture());
 
         assertEquals(2, userIdListCaptor.getValue().size());
     }
@@ -149,9 +149,9 @@ public class FriendServiceTest extends BaseUnitTest {
         Friendship friendship2 = new Friendship(friend2, user);
         Friendship friendship3 = new Friendship(friend3, user);
 
-        when(userDao.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
-        when(friendshipDao.findAllFriendshipsByUser(user)).thenReturn(List.of(friendship1));
-        when(friendshipDao.findAllFriendshipsByFriend(user)).thenReturn(List.of(friendship2, friendship3));
+        when(userRepo.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+        when(friendshipRepo.findAllFriendshipsByUser(user)).thenReturn(List.of(friendship1));
+        when(friendshipRepo.findAllFriendshipsByFriend(user)).thenReturn(List.of(friendship2, friendship3));
 
         //act
         List<User> friends;

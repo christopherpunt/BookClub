@@ -24,14 +24,14 @@ public class BookController {
     BookService bookService;
     
     @Autowired
-    BookRepository bookDao;
+    BookRepository bookRepo;
 
     @Autowired
     FriendService friendService;
 
     @GetMapping("/book_details/{id}")
     public String getBookDetails(@PathVariable Long id, Model model, Principal principal){
-        Optional<Book> book = bookDao.findById(id);
+        Optional<Book> book = bookRepo.findById(id);
         List<User> friends = friendService.findAllFriendsFromUser(principal.getName());
 
         if(book.isPresent()){
@@ -45,7 +45,7 @@ public class BookController {
 
     @GetMapping("/editBookDetails/{id}")
     public String editBookDetails(@PathVariable Long id, Model model){
-        Optional<Book> book = bookDao.findById(id);
+        Optional<Book> book = bookRepo.findById(id);
 
         if(book.isPresent()){
             model.addAttribute("book", book.get());
@@ -66,7 +66,7 @@ public class BookController {
 
     @PostMapping("/deleteBook/{id}")
     public RedirectView removeBook(@PathVariable Long id, Model model){
-        bookDao.deleteById(id);
+        bookRepo.deleteById(id);
         RedirectView redirectView = new RedirectView();
         redirectView.setUrl("/home");
         return redirectView;
