@@ -23,10 +23,10 @@ import static org.mockito.Mockito.when;
 public class EmailServiceTest extends BaseUnitTest {
 
     @Mock
-    BookRepository bookDao;
+    BookRepository bookRepo;
 
     @Mock
-    UserRepository userDao;
+    UserRepository userRepo;
 
     @Mock
     JavaMailSender mailSender;
@@ -41,9 +41,9 @@ public class EmailServiceTest extends BaseUnitTest {
         User borrower = UserTestUtils.createUser("Sydney", "Punt", "christopherpunt@outlook.com", null);
         Book book = BookTestUtils.createOwnedBook(loaner);
 
-        when(bookDao.findById(book.getId())).thenReturn(Optional.of(book));
-        when(userDao.findByEmail(loaner.getEmail())).thenReturn(Optional.of(loaner));
-        when(userDao.findByEmail(borrower.getEmail())).thenReturn(Optional.of(borrower));
+        when(bookRepo.findById(book.getId())).thenReturn(Optional.of(book));
+        when(userRepo.findByEmail(loaner.getEmail())).thenReturn(Optional.of(loaner));
+        when(userRepo.findByEmail(borrower.getEmail())).thenReturn(Optional.of(borrower));
 
         //act
         emailService.sendBookRequestNotification(borrower.getEmail(), loaner.getEmail(), book.getId());

@@ -18,16 +18,16 @@ public class EmailService {
     private JavaMailSender mailSender;
 
     @Autowired
-    private BookRepository bookDao;
+    private BookRepository bookRepo;
 
     @Autowired
-    private UserRepository userDao;
+    private UserRepository userRepo;
 
     public void sendBookRequestNotification(String borrowerEmail, String loanerEmail, Long bookId){
 
-        Optional<Book> bookOptional = bookDao.findById(bookId);
-        Optional<User> loanerOptional = userDao.findByEmail(loanerEmail);
-        Optional<User> borrowerOptional = userDao.findByEmail(borrowerEmail);
+        Optional<Book> bookOptional = bookRepo.findById(bookId);
+        Optional<User> loanerOptional = userRepo.findByEmail(loanerEmail);
+        Optional<User> borrowerOptional = userRepo.findByEmail(borrowerEmail);
 
 
         if (bookOptional.isEmpty() || loanerOptional.isEmpty() || borrowerOptional.isEmpty()){
@@ -50,8 +50,8 @@ public class EmailService {
     }
 
     public void sendFriendRequest(String senderEmail, String receiverEmail) {
-        Optional<User> senderOptional = userDao.findByEmail(senderEmail);
-        Optional<User> receiverOptional = userDao.findByEmail(receiverEmail);
+        Optional<User> senderOptional = userRepo.findByEmail(senderEmail);
+        Optional<User> receiverOptional = userRepo.findByEmail(receiverEmail);
 
         if (senderOptional.isEmpty() || receiverOptional.isEmpty()){
             return;

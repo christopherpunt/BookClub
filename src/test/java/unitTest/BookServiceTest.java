@@ -21,10 +21,10 @@ import static org.mockito.Mockito.*;
 public class BookServiceTest extends BaseUnitTest {
 
     @Mock
-    BookRepository bookDao;
+    BookRepository bookRepo;
 
     @Mock
-    UserRepository userDao;
+    UserRepository userRepo;
 
     @InjectMocks
     BookService bookService;
@@ -35,8 +35,8 @@ public class BookServiceTest extends BaseUnitTest {
         User user = UserTestUtils.createUser("Chris Punt");
         List<Book> books = BookTestUtils.createBooksForUser(10, user);
 
-        when(userDao.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
-        when(bookDao.findByUser(user)).thenReturn(books);
+        when(userRepo.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+        when(bookRepo.findByUser(user)).thenReturn(books);
 
         //act
         List<Book> returnedBooks = bookService.getAllBooksForUser(user.getEmail());
@@ -53,8 +53,8 @@ public class BookServiceTest extends BaseUnitTest {
         List<Book> returnedBooks = bookService.getAllBooksForUser(user.getEmail());
 
         //assert
-        verify(userDao).findByEmail(user.getEmail());
-        verifyNoInteractions(bookDao);
+        verify(userRepo).findByEmail(user.getEmail());
+        verifyNoInteractions(bookRepo);
 
         assertNotNull(returnedBooks);
         assertEquals(0, returnedBooks.size());
@@ -66,7 +66,7 @@ public class BookServiceTest extends BaseUnitTest {
         User user = UserTestUtils.createUser("Chris Punt");
         Book book = BookTestUtils.createBook("Title", "Author", "Description", "ISBN");
 
-        when(userDao.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
+        when(userRepo.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
 
         //act
         boolean returnValue = bookService.newBookForOwner(user.getEmail(), book);
@@ -75,7 +75,7 @@ public class BookServiceTest extends BaseUnitTest {
         assertTrue(returnValue);
 
         ArgumentCaptor<Book> bookCaptor = ArgumentCaptor.forClass(Book.class);
-        verify(bookDao).save(bookCaptor.capture());
+        verify(bookRepo).save(bookCaptor.capture());
         assertTrue(bookCaptor.getValue().isOwner());
         assertEquals(user, bookCaptor.getValue().getUser());
     }
@@ -87,7 +87,7 @@ public class BookServiceTest extends BaseUnitTest {
         User receiver = UserTestUtils.createUser("Sydney Punt");
         Book book = BookTestUtils.createOwnedBook(giver);
 
-        when(bookDao.findById(book.getId())).thenReturn(Optional.of(book));
+        when(bookRepo.findById(book.getId())).thenReturn(Optional.of(book));
 
         //act
         boolean returnValue = bookService.completeBorrowRequest(book.getId(),giver, receiver);
@@ -96,7 +96,7 @@ public class BookServiceTest extends BaseUnitTest {
         assertTrue(returnValue);
 
         ArgumentCaptor<Book> bookCaptor = ArgumentCaptor.forClass(Book.class);
-        verify(bookDao, times(2)).save(bookCaptor.capture());
+        verify(bookRepo, times(2)).save(bookCaptor.capture());
 
         //lenders book
         assertEquals(giver, bookCaptor.getAllValues().get(0).getUser());
@@ -119,9 +119,9 @@ public class BookServiceTest extends BaseUnitTest {
         Book ownersBook = BookTestUtils.createOwnedBook(owner);
         Book borrowersBook = BookTestUtils.createBorrowedBook(owner, borrower);
 
-        when(bookDao.findById(borrowersBook.getId())).thenReturn(Optional.of(borrowersBook));
-        when(userDao.findById(owner.getId())).thenReturn(Optional.of(owner));
-        when(bookDao.findByUserAndIsbn(owner, borrowersBook.getIsbn())).thenReturn(ownersBook);
+        when(bookRepo.findById(borrowersBook.getId())).thenReturn(Optional.of(borrowersBook));
+        when(userRepo.findById(owner.getId())).thenReturn(Optional.of(owner));
+        when(bookRepo.findByUserAndIsbn(owner, borrowersBook.getIsbn())).thenReturn(ownersBook);
 
         //act
         boolean returnValue = bookService.returnBook(borrowersBook.getId(), owner.getId());
@@ -130,7 +130,7 @@ public class BookServiceTest extends BaseUnitTest {
         assertTrue(returnValue);
 
         ArgumentCaptor<Book> bookCaptor = ArgumentCaptor.forClass(Book.class);
-        verify(bookDao, times(2)).save(bookCaptor.capture());
+        verify(bookRepo, times(2)).save(bookCaptor.capture());
 
         List<Book> savedBooks = bookCaptor.getAllValues();
 

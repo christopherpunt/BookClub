@@ -18,16 +18,16 @@ import java.util.stream.Collectors;
 @Service
 public class FriendService {
     @Autowired
-    private UserRepository userDao;
+    private UserRepository userRepo;
 
     @Autowired
-    private FriendshipRepository friendshipDao;
+    private FriendshipRepository friendshipRepo;
 
     @Autowired
     private UserService userService;
 
     @Autowired
-    private BookRepository bookDao;
+    private BookRepository bookRepo;
 
     @Autowired
     private NotificationService notificationService;
@@ -38,8 +38,8 @@ public class FriendService {
             return false;
         }
 
-        Optional<User> userOptional = userDao.findByEmail(userEmail);
-        Optional<User> friendOptional = userDao.findByEmail(createdFriend.getEmail());
+        Optional<User> userOptional = userRepo.findByEmail(userEmail);
+        Optional<User> friendOptional = userRepo.findByEmail(createdFriend.getEmail());
 
         if (userOptional.isEmpty()){
             return false;
@@ -52,7 +52,7 @@ public class FriendService {
         }
         User foundFriend = friendOptional.get();
 
-        Optional<Friendship> friendshipOptional = friendshipDao.findFriendship(user, foundFriend);
+        Optional<Friendship> friendshipOptional = friendshipRepo.findFriendship(user, foundFriend);
         //if friendship already exists can't create new friendship
         if (friendshipOptional.isPresent()){
             return false;
@@ -63,7 +63,7 @@ public class FriendService {
     }
 
     public List<User> findAllFriendsFromUser(String userEmail){
-        Optional<User> userOptional = userDao.findByEmail(userEmail);
+        Optional<User> userOptional = userRepo.findByEmail(userEmail);
 
         if (userOptional.isEmpty()){
             return List.of();
@@ -71,8 +71,8 @@ public class FriendService {
 
         User user = userOptional.get();
 
-        List<Friendship> userFriendships = friendshipDao.findAllFriendshipsByUser(user);
-        List<Friendship> friendFriendships = friendshipDao.findAllFriendshipsByFriend(user);
+        List<Friendship> userFriendships = friendshipRepo.findAllFriendshipsByUser(user);
+        List<Friendship> friendFriendships = friendshipRepo.findAllFriendshipsByFriend(user);
 
         List<User> friends = new ArrayList<>();
 
@@ -84,7 +84,7 @@ public class FriendService {
 
     public List<Book> findAllFriendsBooks(String userEmail){
         List<User> friends = findAllFriendsFromUser(userEmail);
-        return bookDao.findByUserIdIn(friends.stream()
+        return bookRepo.findByUserIdIn(friends.stream()
                 .map(User::getId).collect(Collectors.toList())).stream()
                 .filter(Book::isOwner).toList();
     }
@@ -98,11 +98,11 @@ public class FriendService {
     }
 
     public void completeFriendship(String email, User friend) {
-        Optional<User> userOptional = userDao.findByEmail(email);
-        Optional<User> friendOptional = userDao.findByEmail(friend.getEmail());
+        Optional<User> userOptional = userRepo.findByEmail(email);
+        Optional<User> friendOptional = userRepo.findByEmail(friend.getEmail());
 
         if (userOptional.isPresent() && friendOptional.isPresent()){
-            friendshipDao.save(new Friendship(userOptional.get(), friendOptional.get()));
+            friendshipRepo.save(new Friendship(userOptional.get(), friendOptional.get()));
         }
     }
 }

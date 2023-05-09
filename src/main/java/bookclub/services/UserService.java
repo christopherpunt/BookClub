@@ -16,10 +16,10 @@ import java.util.Optional;
 @Service
 public class UserService implements UserDetailsService {
     @Autowired
-    UserRepository userDao;
+    UserRepository userRepo;
 
     public User createUser(User user) {
-        Optional<User> existingUser = userDao.findByEmail(user.getEmail());
+        Optional<User> existingUser = userRepo.findByEmail(user.getEmail());
         if (existingUser.isPresent()){
             return handleCreateExistingUser(existingUser.get(), user);
         } else{
@@ -49,28 +49,28 @@ public class UserService implements UserDetailsService {
         userToSave.setPassword(encodedPassword);
         userToSave.setRegistered(true);
 
-        return userDao.save(userToSave);
+        return userRepo.save(userToSave);
     }
 
     public User createUnregisteredUser(User user){
-        Optional<User> existingUser = userDao.findByEmail(user.getEmail());
+        Optional<User> existingUser = userRepo.findByEmail(user.getEmail());
 
         if (existingUser.isPresent()){
             throw new AuthenticationServiceException("A user with that email already exists");
         }
         user.setRegistered(false);
 
-        return userDao.save(user);
+        return userRepo.save(user);
     }
 
     public List<User> getUsers() {
-        return userDao.findAll();
+        return userRepo.findAll();
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        Optional<User> user = userDao.findByEmail(username);
+        Optional<User> user = userRepo.findByEmail(username);
 
         if (user.isEmpty()){
             throw new UsernameNotFoundException("Could not find username with email: " + username);

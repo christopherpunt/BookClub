@@ -20,21 +20,21 @@ import java.util.Optional;
 public class NotificationService {
 
     @Autowired
-    NotificationRepository notificationDao;
+    NotificationRepository notificationRepo;
 
     @Autowired
     EmailService emailService;
 
     @Autowired
-    UserRepository userDao;
+    UserRepository userRepo;
 
     @Autowired
-    BookRepository bookDao;
+    BookRepository bookRepo;
 
     public boolean sendBorrowRequest(String borrowerEmail, Long friendId, Long bookId) {
-        Optional<User> borrower = userDao.findByEmail(borrowerEmail);
-        Optional<User> loaner = userDao.findById(friendId);
-        Optional<Book> book = bookDao.findById(bookId);
+        Optional<User> borrower = userRepo.findByEmail(borrowerEmail);
+        Optional<User> loaner = userRepo.findById(friendId);
+        Optional<Book> book = bookRepo.findById(bookId);
 
         if (borrower.isEmpty() || loaner.isEmpty() || book.isEmpty()) {
             return false;
@@ -50,13 +50,13 @@ public class NotificationService {
 
         emailService.sendBookRequestNotification(borrower.get().getEmail(), loaner.get().getEmail(), bookId);
 
-        notificationDao.save(notification);
+        notificationRepo.save(notification);
         return true;
     }
 
     public boolean sendFriendRequest(String username, Long userId) {
-        Optional<User> sender = userDao.findByEmail(username);
-        Optional<User> receiver = userDao.findById(userId);
+        Optional<User> sender = userRepo.findByEmail(username);
+        Optional<User> receiver = userRepo.findById(userId);
 
         if (sender.isEmpty() || receiver.isEmpty()) {
             return false;
@@ -70,18 +70,18 @@ public class NotificationService {
 
         emailService.sendFriendRequest(sender.get().getEmail(), receiver.get().getEmail());
 
-        notificationDao.save(notification);
+        notificationRepo.save(notification);
         return true;
     }
 
     public List<Notification> getNotificationsForUsername(String username) {
-        Optional<User> user = userDao.findByEmail(username);
+        Optional<User> user = userRepo.findByEmail(username);
 
         if (user.isEmpty()) {
             return new ArrayList<>();
         }
 
-        Optional<List<Notification>> notificationList = notificationDao.findByReceiver(user.get());
+        Optional<List<Notification>> notificationList = notificationRepo.findByReceiver(user.get());
         return notificationList.orElseGet(ArrayList::new);
     }
 }
