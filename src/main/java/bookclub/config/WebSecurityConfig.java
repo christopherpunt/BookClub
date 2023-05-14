@@ -21,7 +21,7 @@ public class WebSecurityConfig {
             .formLogin()
                 .loginPage("/login")
                 .permitAll()
-                .defaultSuccessUrl("/home", true).and().csrf().disable();
+                .defaultSuccessUrl("/", true).and().csrf().disable();
         return http.build();
     }
 
