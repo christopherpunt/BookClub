@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <head>
   <meta charset="UTF-8"/>
   <title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE">ShareABook</title>
@@ -11,6 +12,7 @@
   <layout:fragment name="head"></layout:fragment>
 </head>
 <body>
+
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
   <div class="container-fluid">
@@ -35,7 +37,10 @@
       </ul>
       <ul class="navbar-nav ms-auto">
         <li class="nav-item">
-          <a class="nav-link" href="/notifications">Notifications</a>
+          <a class="nav-link" href="/notifications">
+            Notifications
+            <span th:if="${notificationCount > 0}" class="badge bg-primary" th:text="${notificationCount}"></span>
+          </a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="/login?logout">Logout</a>
@@ -44,8 +49,9 @@
     </div>
   </div>
 </nav>
-<!-- Content container -->
 
+
+<!-- Content container -->
 <div class="container mt-5" layout:fragment="content">
   <p>This is the default content. You can replace it by creating new files and importing this template.</p>
 </div>
