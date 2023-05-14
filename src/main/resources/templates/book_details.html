@@ -1,13 +1,14 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default}">
 <head>
   <meta charset="UTF-8">
   <title>Book Details</title>
-  <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}">
 </head>
 <body>
-<div th:insert="~{common/navbar :: navbar}"></div>
-<div class="container mt-4">
+
+<section layout:fragment="content">
   <div class="row mb-4">
     <div class="col-md-6">
       <h1>Book Details</h1>
@@ -52,7 +53,7 @@
 
     </div>
   </div>
-</div>
+</section>
 
 <div th:replace="~{common/findFriendModal :: findFriendModal}"></div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"

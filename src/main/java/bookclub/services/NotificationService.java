@@ -84,4 +84,9 @@ public class NotificationService {
         Optional<List<Notification>> notificationList = notificationRepo.findByReceiver(user.get());
         return notificationList.orElseGet(ArrayList::new);
     }
+
+    public List<Notification> getUncompletedNotificationsForUser(String username){
+        List<Notification> notifications = getNotificationsForUsername(username);
+        return notifications.stream().filter(n -> n.getStatus().getValue() < StatusEnum.COMPLETED.getValue()).toList();
+    }
 }

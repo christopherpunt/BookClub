@@ -1,16 +1,14 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default}">
 <head>
   <meta charset="UTF-8">
   <title>Book Club</title>
-  <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}">
-  <link th:rel ="stylesheet" type="text/css" th:href="@{/static/main.css}">
 </head>
 <body class="dark">
-<!-- Include the navbar fragment -->
-<div th:insert="~{common/navbar :: navbar}"></div>
 
-<div class="container">
+<section layout:fragment="content">
   <h1>Search for a book</h1>
   <div id="alert-container"></div>
   <form method="post" action="/searchFriendsBooks">
@@ -51,7 +49,7 @@
       </tbody>
     </table>
   </div>
+</section>
 
-</div>
 </body>
 </html>
