@@ -5,8 +5,31 @@
 <head>
   <meta charset="UTF-8">
   <title>Book Club</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css">
+  <style>
+    .book-card {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      margin-bottom: 1rem;
+      border-radius: 0.25rem;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+    }
 
+    .book-card-img {
+      height: auto;
+      width: 100px;
+      object-fit: cover;
+    }
 
+    .book-card-body {
+      width: calc(100% - 110px);
+      padding: 1rem;
+    }
+  </style>
 </head>
 <body class="dark">
 
@@ -22,26 +45,21 @@
 
   <div th:if="${not #lists.isEmpty(books)}">
     <h2>Results</h2>
-    <table class="table table-striped">
-      <thead>
-      <tr>
-        <th>Thumbnail</th>
-        <th>Title</th>
-        <th>Author</th>
-        <th>ISBN</th>
-        <th></th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr th:each="item: ${books}">
-        <td><img th:src="${item.BookCoverUrl}"/></td>
-        <td th:text="${item.Title}"></td>
-        <td th:text="${item.Author}"></td>
-        <td th:text="${item.Isbn}"></td>
-        <td><button type="button" class="btn btn-primary" name="book" th:value="${item}" id="add-to-library-button">Add to Library</button></td>
-      </tr>
-      </tbody>
-    </table>
+    <div class="card-deck">
+      <div class="row">
+        <div th:each="item: ${books}" class="col-md-6 col-lg-4">
+          <div class="book-card">
+            <img class="book-card-img" th:src="${item.BookCoverUrl}"/>
+            <div class="book-card-body">
+              <h5 class="card-title" th:text="${item.Title}"></h5>
+              <p class="card-text" th:text="${item.Author}"></p>
+              <p class="card-text" th:text="${item.Isbn}"></p>
+              <button type="button" class="btn btn-primary" name="book" th:value="${item}" id="add-to-library-button">Add to Library</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
@@ -95,6 +113,27 @@
           })
           .catch((error) => console.error(error));
       });
+    });
+
+    const bookResults = document.querySelectorAll(".book-result");
+
+    bookResults.forEach((bookResult) => {
+      const thumbnail = bookResult.querySelector(".book-thumbnail");
+      thumbnail.style.maxWidth = "100px";
+      thumbnail.style.maxHeight = "100px";
+
+      const title = bookResult.querySelector(".book-title");
+      title.classList.add("card-title");
+
+      const author = bookResult.querySelector(".book-author");
+      author.classList.add("card-text");
+
+      const isbn = bookResult.querySelector(".book-isbn");
+      isbn.classList.add("card-text");
+
+      const button = bookResult.querySelector(".btn[name='book']");
+      button.classList.add("btn-primary");
+      button.classList.add("w-100");
     });
   </script>
 </section>

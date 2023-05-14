@@ -5,6 +5,52 @@
 <head>
   <meta charset="UTF-8">
   <title>Book Club</title>
+  <style>
+    .card {
+      display: flex;
+      flex-direction: row;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+      margin: 20px;
+    }
+
+    .card img {
+      width: 150px;
+      height: auto;
+      object-fit: cover;
+      border-radius: 10px 0 0 10px;
+    }
+
+    .card-body {
+      padding: 20px;
+    }
+
+    .card-title {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    .card-text {
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+
+    .card-button {
+      font-size: 18px;
+      padding: 10px;
+      border-radius: 5px;
+      background-color: #007bff;
+      border: none;
+      color: white;
+      transition: background-color 0.3s ease;
+    }
+
+    .card-button:hover {
+      background-color: #0069d9;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body class="dark">
 
@@ -20,34 +66,21 @@
 
   <div th:if="${not #lists.isEmpty(friendsBooks)}">
     <h2>Friends Books</h2>
-    <table class="table table-striped">
-      <thead>
-      <tr>
-        <th>Thumbnail</th>
-        <th>Title</th>
-        <th>Author</th>
-        <th>ISBN</th>
-        <th></th>
-      </tr>
-      </thead>
-      <tbody>
-
-      <tr th:each="item: ${friendsBooks}">
-        <td><img th:src="${item.BookCoverUrl}"/></td>
-        <td th:text="${item.Title}"></td>
-        <td th:text="${item.Author}"></td>
-        <td th:text="${item.Isbn}"></td>
-        <td>
+    <div class="card-group">
+      <div th:each="item: ${friendsBooks}" class="card">
+        <img th:src="${item.BookCoverUrl}"/>
+        <div class="card-body">
+          <h5 class="card-title" th:text="${item.Title}"></h5>
+          <p class="card-text" th:text="${item.Author}"></p>
+          <p class="card-text" th:text="${item.Isbn}"></p>
           <form method="post" action="/borrowBook">
             <input type="hidden" name="bookId" th:value="${item.Id}">
             <input type="hidden" name="lenderId" th:value="${item.User.Id}">
-            <button type="submit" class="btn btn-primary">Request To Borrow</button>
+            <button type="submit" class="card-button">Request To Borrow</button>
           </form>
-        </td>
-      </tr>
-
-      </tbody>
-    </table>
+        </div>
+      </div>
+    </div>
   </div>
 </section>
 
