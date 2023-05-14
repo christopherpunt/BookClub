@@ -7,25 +7,23 @@
     <title>Home Page</title>
     <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}">
     <link th:rel ="stylesheet" type="text/css" th:href="@{/static/main.css}">
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
-    .book-cover {
-      max-width: 150px;
-      max-height: 200px;
-      margin: 0 auto;
-    }
-    .card-body {
-      text-align: center;
-    }
-  </style>
+        .book-cover {
+            max-width: 150px;
+            max-height: 200px;
+            margin: 0 auto;
+        }
+        .card-body {
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
 
 <section layout:fragment="content">
     <div class="row row-cols-1 row-cols-md-3 g-4">
-        <div th:each="item: ${books}" class="col clickable-row">
+        <div th:each="item: ${books}" class="col clickable-row" th:attr="data-href=@{/book_details/{bookId}(bookId=${item.Id})}">
             <div class="card h-100">
-                <a th:attr="href=@{/book_details/{bookId}(bookId=${item.Id})}" class="book-id" th:hidden="true" th:text="${item.Id}"></a>
                 <img th:src="${item.BookCoverUrl}" class="card-img-top book-cover" alt="Book Cover">
                 <div class="card-body">
                     <h5 class="card-title" th:text="${item.Title}"></h5>
@@ -39,12 +37,14 @@
 
 </section>
 
-<script>
-  // Make the rows clickable
-  $('.clickable-row').on('click', function() {
-    var bookId = $(this).find('.book-id').text();
-    window.location.href = $(this).find('.book-id').attr('href');
-  });
-</script>
+<section layout:fragment="scripts">
+    <script>
+        // Make the rows clickable
+        $('.clickable-row').on('click', function() {
+            window.location.href = $(this).data("href");
+        });
+    </script>
+</section>
+
 </body>
 </html>

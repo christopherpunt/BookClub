@@ -1,13 +1,14 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default}">
 <head>
   <meta charset="UTF-8">
   <title>Add Friend</title>
-  <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}">
 </head>
 <body class="dark">
-<div th:insert="~{common/navbar :: navbar}"></div>
-<div class="container">
+
+<section layout:fragment="content">
   <h2>Add Friend</h2>
   <form method="post" th:action="@{/addFriend}" th:object="${newFriend}">
     <div class="form-group">
@@ -16,6 +17,7 @@
     </div>
     <button type="submit" class="btn btn-primary">Send Friend Request</button>
   </form>
-</div>
+</section>
+
 </body>
 </html>

@@ -1,16 +1,16 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default}">
 <head>
   <meta charset="UTF-8">
   <title>Book Club</title>
-  <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}">
-  <link th:rel ="stylesheet" type="text/css" th:href="@{/static/main.css}">
+
+
 </head>
 <body class="dark">
-<!-- Include the navbar fragment -->
-<div th:insert="~{common/navbar :: navbar}"></div>
 
-<div class="container">
+<section layout:fragment="content">
   <h1>Search for a book</h1>
   <div id="alert-container"></div>
   <form method="post" action="/searchGoogleBooks">
@@ -43,59 +43,61 @@
       </tbody>
     </table>
   </div>
-</div>
+</section>
 
-<script>
-const addToLibraryButtons = document.querySelectorAll(".btn[name='book']");
+<section layout:fragment="scripts">
+  <script>
+    const addToLibraryButtons = document.querySelectorAll(".btn[name='book']");
 
-addToLibraryButtons.forEach((button) => {
-  button.addEventListener("click", () => {
-    const book = button.value;
-    const requestBody = JSON.stringify(book);
+    addToLibraryButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const book = button.value;
+        const requestBody = JSON.stringify(book);
 
-    fetch("/addBook", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: requestBody
-    })
-      .then((response) => response.text())
-      .then((data) => {
-          console.log(data);
-          const alertContainer = document.createElement("div");
-          alertContainer.classList.add("alert-container");
+        fetch("/addBook", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: requestBody
+        })
+          .then((response) => response.text())
+          .then((data) => {
+              console.log(data);
+              const alertContainer = document.createElement("div");
+              alertContainer.classList.add("alert-container");
 
-          const alertBox = document.createElement("div");
-          alertBox.classList.add("alert-box");
-          alertBox.innerText = data;
+              const alertBox = document.createElement("div");
+              alertBox.classList.add("alert-box");
+              alertBox.innerText = data;
 
-          const closeButton = document.createElement("button");
-          closeButton.classList.add("close-button");
-          closeButton.innerText = "x";
-          closeButton.addEventListener("click", () => {
-              alertContainer.remove();
-          });
+              const closeButton = document.createElement("button");
+              closeButton.classList.add("close-button");
+              closeButton.innerText = "x";
+              closeButton.addEventListener("click", () => {
+                  alertContainer.remove();
+              });
 
-          alertBox.appendChild(closeButton);
-          alertContainer.appendChild(alertBox);
-          document.body.appendChild(alertContainer);
+              alertBox.appendChild(closeButton);
+              alertContainer.appendChild(alertBox);
+              document.body.appendChild(alertContainer);
 
-          // Change background color based on success flag
-          if (data.includes("success")) {
-            alertBox.style.backgroundColor = "#c3e6cb"; // green color
-          } else {
-            alertBox.style.backgroundColor = "#f8d7da"; // red color
-          }
+              // Change background color based on success flag
+              if (data.includes("success")) {
+                alertBox.style.backgroundColor = "#c3e6cb"; // green color
+              } else {
+                alertBox.style.backgroundColor = "#f8d7da"; // red color
+              }
 
-          setTimeout(() => {
-              alertContainer.remove();
-          }, 3000);
-      })
-      .catch((error) => console.error(error));
-  });
-});
+              setTimeout(() => {
+                  alertContainer.remove();
+              }, 3000);
+          })
+          .catch((error) => console.error(error));
+      });
+    });
+  </script>
+</section>
 
-</script>
 </body>
 </html>

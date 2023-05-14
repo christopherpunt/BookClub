@@ -1,51 +1,50 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default}">
 <head>
   <meta charset="UTF-8">
   <title>Edit Book Details</title>
-  <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}">
 </head>
 <body>
-<!-- Include the navbar fragment -->
-<div th:insert="~{common/navbar :: navbar}"></div>
 
-<div class="container mt-4">
-  <h1>Edit Book Details</h1>
-  <hr />
+<section layout:fragment="content">
+    <h1>Edit Book Details</h1>
+    <hr />
 
-  <form th:action="@{/updateBook}" th:method="POST" th:object="${book}">
-    <div class="row">
-        <input type="hidden" name="id" th:value="${book.Id}" />
-        <label for="title">Title:</label>
-        <input type="text" class="form-control" id="title" th:field="*{title}" />
-        <label for="author">Author:</label>
-        <input type="text" class="form-control" id="author" th:field="*{author}" />
-        <label for="isbn">ISBN:</label>
-        <input type="text" class="form-control" id="isbn" th:field="*{isbn}" />
-        <label for="description">Description:</label>
-        <textarea class="form-control" id="description" th:field="*{description}"></textarea>
-    </div>
+    <form th:action="@{/updateBook}" th:method="POST" th:object="${book}">
+        <div class="row">
+            <input type="hidden" name="id" th:value="${book.Id}" />
+            <label for="title">Title:</label>
+            <input type="text" class="form-control" id="title" th:field="*{title}" />
+            <label for="author">Author:</label>
+            <input type="text" class="form-control" id="author" th:field="*{author}" />
+            <label for="isbn">ISBN:</label>
+            <input type="text" class="form-control" id="isbn" th:field="*{isbn}" />
+            <label for="description">Description:</label>
+            <textarea class="form-control" id="description" th:field="*{description}"></textarea>
+        </div>
 
-    <div class="row mt-4">
-      <div class="col-md-6">
-        <label for="borrowedFromUser">Borrowed From:</label>
-        <input type="text" class="form-control" id="borrowedFromUser" th:field="*{borrowedFromUser}" />
-      </div>
-      <div class="col-md-6">
-        <label for="lentToUser">Lent To:</label>
-        <input type="text" class="form-control" id="lentToUser" th:field="*{lentToUser}" />
-      </div>
-    </div>
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <label for="borrowedFromUser">Borrowed From:</label>
+                <input type="text" class="form-control" id="borrowedFromUser" th:field="*{borrowedFromUser}" />
+            </div>
+            <div class="col-md-6">
+                <label for="lentToUser">Lent To:</label>
+                <input type="text" class="form-control" id="lentToUser" th:field="*{lentToUser}" />
+            </div>
+        </div>
 
-    <button class="btn btn-primary mt-4" type="submit">Save Changes</button>
-  </form>
+        <button class="btn btn-primary mt-4" type="submit">Save Changes</button>
+    </form>
 
-  <hr />
+    <hr />
 
-  <form th:action="@{/deleteBook/{id}(id=${book.id})}" th:method="POST">
-    <button class="btn btn-danger" type="submit">Delete Book</button>
-  </form>
-</div>
+    <form th:action="@{/deleteBook/{id}(id=${book.id})}" th:method="POST">
+        <button class="btn btn-danger" type="submit">Delete Book</button>
+    </form>
+</section>
 
 </body>
 </html>
