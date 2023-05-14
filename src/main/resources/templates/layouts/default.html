@@ -12,7 +12,7 @@
 
   <layout:fragment name="head"></layout:fragment>
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100">
 
 <!-- Navbar -->
 <nav class="navbar navbar-expand-md navbar-dark bg-dark">
@@ -51,10 +51,8 @@
   </div>
 </nav>
 
-
-
 <!-- Content container -->
-<div class="container mt-5" layout:fragment="content">
+<div class="container mt-5 flex-grow-1" layout:fragment="content">
   <p>This is the default content. You can replace it by creating new files and importing this template.</p>
 </div>
 
@@ -64,7 +62,6 @@
     <span>&copy; 2023 ShareABook</span>
   </div>
 </footer>
-
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
