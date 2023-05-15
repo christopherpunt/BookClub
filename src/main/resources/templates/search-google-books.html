@@ -5,7 +5,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Book Club</title>
-
+  <link th:rel ="stylesheet" type="text/css" th:href="@{/static/cardStyle.css}">
 
 </head>
 <body class="dark">
@@ -19,30 +19,20 @@
       <button type="submit" class="btn btn-primary">Search</button>
     </div>
   </form>
-
-  <div th:if="${not #lists.isEmpty(books)}">
-    <h2>Results</h2>
-    <table class="table table-striped">
-      <thead>
-      <tr>
-        <th>Thumbnail</th>
-        <th>Title</th>
-        <th>Author</th>
-        <th>ISBN</th>
-        <th></th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr th:each="item: ${books}">
-        <td><img th:src="${item.BookCoverUrl}"/></td>
-        <td th:text="${item.Title}"></td>
-        <td th:text="${item.Author}"></td>
-        <td th:text="${item.Isbn}"></td>
-        <td><button type="button" class="btn btn-primary" name="book" th:value="${item}" id="add-to-library-button">Add to Library</button></td>
-      </tr>
-      </tbody>
-    </table>
+  <div class="row row-cols-1 row-cols-md-3 g-4">
+    <div th:each="item: ${books}" class="col">
+      <div class="card">
+        <img class="card-img-top book-cover" th:src="${item.BookCoverUrl}"/>
+        <div class="card-body">
+          <h5 class="card-title" th:text="${item.Title}"></h5>
+          <p class="card-text" th:text="${item.Author}"></p>
+          <p class="card-text" th:text="${item.Isbn}"></p>
+          <button type="button" class="btn btn-primary" name="book" th:value="${item}" id="add-to-library-button">Add to Library</button>
+        </div>
+      </div>
+    </div>
   </div>
+
 </section>
 
 <section layout:fragment="scripts">
@@ -95,6 +85,27 @@
           })
           .catch((error) => console.error(error));
       });
+    });
+
+    const bookResults = document.querySelectorAll(".book-result");
+
+    bookResults.forEach((bookResult) => {
+      const thumbnail = bookResult.querySelector(".book-thumbnail");
+      thumbnail.style.maxWidth = "100px";
+      thumbnail.style.maxHeight = "100px";
+
+      const title = bookResult.querySelector(".book-title");
+      title.classList.add("card-title");
+
+      const author = bookResult.querySelector(".book-author");
+      author.classList.add("card-text");
+
+      const isbn = bookResult.querySelector(".book-isbn");
+      isbn.classList.add("card-text");
+
+      const button = bookResult.querySelector(".btn[name='book']");
+      button.classList.add("btn-primary");
+      button.classList.add("w-100");
     });
   </script>
 </section>
