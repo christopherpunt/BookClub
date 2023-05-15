@@ -5,31 +5,8 @@
 <head>
   <meta charset="UTF-8">
   <title>Book Club</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css">
-  <style>
-    .book-card {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      width: 100%;
-      margin-bottom: 1rem;
-      border-radius: 0.25rem;
-      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-      overflow: hidden;
-    }
+  <link th:rel ="stylesheet" type="text/css" th:href="@{/static/cardStyle.css}">
 
-    .book-card-img {
-      height: auto;
-      width: 100px;
-      object-fit: cover;
-    }
-
-    .book-card-body {
-      width: calc(100% - 110px);
-      padding: 1rem;
-    }
-  </style>
 </head>
 <body class="dark">
 
@@ -42,25 +19,20 @@
       <button type="submit" class="btn btn-primary">Search</button>
     </div>
   </form>
-
-  <div th:if="${not #lists.isEmpty(books)}">
-    <h2>Results</h2>
-    <div class="card-deck">
-      <div class="row">
-        <div th:each="item: ${books}" class="col-md-6 col-lg-4">
-          <div class="book-card">
-            <img class="book-card-img" th:src="${item.BookCoverUrl}"/>
-            <div class="book-card-body">
-              <h5 class="card-title" th:text="${item.Title}"></h5>
-              <p class="card-text" th:text="${item.Author}"></p>
-              <p class="card-text" th:text="${item.Isbn}"></p>
-              <button type="button" class="btn btn-primary" name="book" th:value="${item}" id="add-to-library-button">Add to Library</button>
-            </div>
-          </div>
+  <div class="row row-cols-1 row-cols-md-3 g-4">
+    <div th:each="item: ${books}" class="col">
+      <div class="card">
+        <img class="card-img-top book-cover" th:src="${item.BookCoverUrl}"/>
+        <div class="card-body">
+          <h5 class="card-title" th:text="${item.Title}"></h5>
+          <p class="card-text" th:text="${item.Author}"></p>
+          <p class="card-text" th:text="${item.Isbn}"></p>
+          <button type="button" class="btn btn-primary" name="book" th:value="${item}" id="add-to-library-button">Add to Library</button>
         </div>
       </div>
     </div>
   </div>
+
 </section>
 
 <section layout:fragment="scripts">
