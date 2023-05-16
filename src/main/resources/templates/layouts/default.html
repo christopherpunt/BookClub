@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -38,6 +39,12 @@
         </li>
       </ul>
       <ul class="navbar-nav ms-auto">
+        <li class="nav-item">
+          <a class="nav-link" sec:authorize="hasAuthority('ADMIN')" href="/admin/users">
+            Users
+          </a>
+        </li>
+
         <li class="nav-item">
           <a class="nav-link" href="/notifications">
             Notifications

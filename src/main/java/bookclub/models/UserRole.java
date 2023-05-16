@@ -9,6 +9,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UserRole extends BaseEntity {
+    UserRole(){
+
+    }
 
     UserRole(User user, UserRoleEnum role){
         this.user = user;

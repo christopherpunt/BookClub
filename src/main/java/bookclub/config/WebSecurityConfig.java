@@ -1,5 +1,6 @@
 package bookclub.config;
 
+import bookclub.enums.UserRoleEnum;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -13,15 +14,22 @@ import org.springframework.security.web.SecurityFilterChain;
 public class WebSecurityConfig {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .authorizeHttpRequests()
-                .requestMatchers("/register").permitAll().anyRequest().fullyAuthenticated()
+                .authorizeRequests()
+                .requestMatchers("/login", "/register").permitAll() // Allow access to login and register pages for everyone
+                .requestMatchers("/users").hasAuthority(UserRoleEnum.ADMIN.name()) // Restrict access to /users page to only ADMIN users
+                .anyRequest().authenticated() // Require authentication for all other pages
                 .and()
-            .formLogin()
-                .loginPage("/login")
-                .permitAll()
-                .defaultSuccessUrl("/", true).and().csrf().disable();
+                .formLogin() // Configure login form
+                .loginPage("/login") // Specify the login page URL
+                .defaultSuccessUrl("/") // Redirect to "/" (root) page after successful login
+                .and()
+                .logout() // Configure logout
+                .logoutUrl("/logout") // Specify the logout URL
+                .logoutSuccessUrl("/login?logout") // Redirect to login page with logout parameter
+                .and()
+                .csrf().disable(); // Disable CSRF protection for simplicity (you may want to enable it in production)
         return http.build();
     }
 

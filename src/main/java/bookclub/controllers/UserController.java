@@ -35,11 +35,7 @@ public class UserController {
         return userService.createUser(user);
     }
 
-    @RequestMapping(value = "/users", method=RequestMethod.GET)
-    public String getUsers(Model model){
-        model.addAttribute("users", userService.getUsers());
-        return "admin/user-management";
-    }
+
 
     @GetMapping("/login")
     public String login(){
