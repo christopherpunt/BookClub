@@ -18,6 +18,7 @@
       <th>Email</th>
       <th>Full Name</th>
       <th>Registered</th>
+      <th>Roles</th>
       <th>Actions</th>
     </tr>
     </thead>
@@ -27,6 +28,13 @@
       <td th:text="${user.email}"></td>
       <td th:text="${user.getFullName()}"></td>
       <td th:text="${user.isRegistered} ? 'Yes' : 'No'"></td>
+      <td>
+        <ul>
+          <li th:each="role : ${user.userRoles}">
+            <span th:text="${role.userRole}"></span>
+          </li>
+        </ul>
+      </td>
       <td>
         <a class="btn btn-info" th:href="@{/users/{id}/edit(id=${user.id})}">Edit</a>
         <a class="btn btn-danger" th:href="@{/users/{id}/delete(id=${user.id})}">Delete</a>

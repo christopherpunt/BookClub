@@ -35,8 +35,6 @@ public class UserController {
         return userService.createUser(user);
     }
 
-
-
     @GetMapping("/login")
     public String login(){
         return "login";
