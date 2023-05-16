@@ -33,14 +33,14 @@ public class NotificationCompletionService {
         notification.setStatus(StatusEnum.COMPLETED);
 
         switch (notification.getNotificationType()) {
-            case BorrowRequest -> {
+            case BORROW_REQUEST -> {
                 bookService.completeBorrowRequest(
                         Long.valueOf((Integer)notification.getNotificationData().get(NotificationData.BOOK_ID.name())),
                         notification.getReceiver(),
                         notification.getSender());
                 handled = true;
             }
-            case FriendRequest -> {
+            case FRIEND_REQUEST -> {
                 friendService.completeFriendship(notification.getSender().getEmail(), notification.getReceiver());
                 handled = true;
             }

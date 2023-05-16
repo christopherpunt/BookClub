@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layouts/default}">
+<head>
+  <meta charset="UTF-8">
+  <title>User Management</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body>
+
+<section layout:fragment="content">
+
+
+  <h1>User Management</h1>
+  <table class="table">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Email</th>
+      <th>Full Name</th>
+      <th>Registered</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user : ${users}">
+      <td th:text="${user.id}"></td>
+      <td th:text="${user.email}"></td>
+      <td th:text="${user.getFullName()}"></td>
+      <td th:text="${user.isRegistered} ? 'Yes' : 'No'"></td>
+      <td>
+        <a class="btn btn-info" th:href="@{/users/{id}/edit(id=${user.id})}">Edit</a>
+        <a class="btn btn-danger" th:href="@{/users/{id}/delete(id=${user.id})}">Delete</a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+
+</section>
+
+</body>
+</html>

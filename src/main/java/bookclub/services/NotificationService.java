@@ -41,7 +41,7 @@ public class NotificationService {
         }
 
         Notification notification = new Notification();
-        notification.setNotificationType(NotificationType.BorrowRequest);
+        notification.setNotificationType(NotificationType.BORROW_REQUEST);
         notification.setStatus(StatusEnum.UNREAD);
         notification.setReceiver(loaner.get());
         notification.setSender(borrower.get());
@@ -63,7 +63,7 @@ public class NotificationService {
         }
 
         Notification notification = new Notification();
-        notification.setNotificationType(NotificationType.FriendRequest);
+        notification.setNotificationType(NotificationType.FRIEND_REQUEST);
         notification.setStatus(StatusEnum.UNREAD);
         notification.setSender(sender.get());
         notification.setReceiver(receiver.get());
