@@ -28,5 +28,4 @@ public class UserRepositoryTest extends BaseJpaIntegrationTest{
         assertEquals(1, returnedUsers.stream().findFirst().get().getUserRoles().size());
         assertEquals(UserRoleEnum.ADMIN, returnedUsers.stream().findFirst().get().getUserRoles().stream().findFirst().get().getUserRole());
     }
-
 }
