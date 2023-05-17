@@ -16,20 +16,21 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .authorizeRequests()
+            .authorizeHttpRequests()
                 .requestMatchers("/login", "/register").permitAll() // Allow access to login and register pages for everyone
-                .requestMatchers("/users").hasAuthority(UserRoleEnum.ADMIN.name()) // Restrict access to /users page to only ADMIN users
+                .requestMatchers("/admin/**").hasAuthority(UserRoleEnum.ADMIN.name()) // Restrict access to /users page to only ADMIN users
                 .anyRequest().authenticated() // Require authentication for all other pages
-                .and()
-                .formLogin() // Configure login form
+            .and()
+            .formLogin() // Configure login form
                 .loginPage("/login") // Specify the login page URL
                 .defaultSuccessUrl("/", true) // Redirect to "/" (root) page after successful login
-                .and()
-                .logout() // Configure logout
+            .and()
+            .logout() // Configure logout
                 .logoutUrl("/logout") // Specify the logout URL
                 .logoutSuccessUrl("/login?logout") // Redirect to login page with logout parameter
-                .and()
-                .csrf().disable(); // Disable CSRF protection for simplicity (you may want to enable it in production)
+            .and()
+            .csrf().disable(); // Disable CSRF protection for simplicity (you may want to enable it in production)
+
         return http.build();
     }
 
