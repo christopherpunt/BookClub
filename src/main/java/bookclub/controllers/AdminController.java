@@ -1,6 +1,6 @@
 package bookclub.controllers;
 
-import bookclub.services.UserService;
+import bookclub.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class AdminController {
 
     @Autowired
-    UserService userService;
+    UserRepository userRepo;
 
     @RequestMapping(value = "/users", method= RequestMethod.GET)
     public String getUsers(Model model){
-        model.addAttribute("users", userService.getUsers());
+        model.addAttribute("users", userRepo.findAll());
         return "admin/user-management";
     }
 }

@@ -1,9 +1,6 @@
 package bookclub.models;
 
-import bookclub.enums.UserRoleEnum;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,12 +25,9 @@ public class User extends BaseEntity {
     private List<Friendship> friendships;
     @OneToMany
     private List<Notification> notifications;
-    @OneToMany
-    private List<UserRole> userRoles;
-
-    public UserRole addUserRole(UserRoleEnum roleEnum){
-        return new UserRole(this, roleEnum);
-    }
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    private List<UserRole> userRoles = new ArrayList<>();
 
     public List<User> getFriends() {
         List<User> friends = new ArrayList<>();

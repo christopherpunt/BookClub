@@ -1,7 +1,10 @@
 package bookclub.models;
 
 import bookclub.enums.UserRoleEnum;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,15 +12,11 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UserRole extends BaseEntity {
+
     UserRole() {}
-
-    UserRole(User user, UserRoleEnum role){
-        this.user = user;
-        this.userRole = role;
+    public UserRole(UserRoleEnum userRoleEnum){
+        this.userRole = userRoleEnum;
     }
-
-    @ManyToOne
-    private User user;
 
     @Column
     @Enumerated(EnumType.STRING)

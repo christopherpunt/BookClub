@@ -23,7 +23,7 @@ public class WebSecurityConfig {
                 .and()
                 .formLogin() // Configure login form
                 .loginPage("/login") // Specify the login page URL
-                .defaultSuccessUrl("/") // Redirect to "/" (root) page after successful login
+                .defaultSuccessUrl("/", true) // Redirect to "/" (root) page after successful login
                 .and()
                 .logout() // Configure logout
                 .logoutUrl("/logout") // Specify the logout URL

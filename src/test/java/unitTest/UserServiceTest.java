@@ -4,7 +4,6 @@ import bookclub.enums.UserRoleEnum;
 import bookclub.models.User;
 import bookclub.models.UserRole;
 import bookclub.repositories.UserRepository;
-import bookclub.repositories.UserRoleRepository;
 import bookclub.services.UserService;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
@@ -26,9 +25,6 @@ import static org.mockito.Mockito.*;
 public class UserServiceTest extends BaseUnitTest{
     @Mock
     private UserRepository userRepo;
-
-    @Mock
-    private UserRoleRepository userRoleRepo;
 
     @InjectMocks
     @Spy
@@ -145,10 +141,8 @@ public class UserServiceTest extends BaseUnitTest{
         //arrange
         User user = UserTestUtils.createUser("Sydney", "Punt", "smfrelier@gmail.com", "solofest");
         when(userRepo.findByEmail(user.email)).thenReturn(Optional.of(user));
-
-        UserRole userRole = user.addUserRole(UserRoleEnum.USER);
-
-        when(userRoleRepo.findAllUserRolesByUser(user)).thenReturn(List.of(userRole));
+        UserRole userRole = new UserRole(UserRoleEnum.USER);
+        user.setUserRoles(List.of(userRole));
 
         //act
         UserDetails returned = userService.loadUserByUsername(user.getEmail());
@@ -156,6 +150,8 @@ public class UserServiceTest extends BaseUnitTest{
         //assert
         assertEquals(user.getEmail(), returned.getUsername());
         assertEquals(user.getPassword(), returned.getPassword());
+        assertEquals(1, returned.getAuthorities().size());
+        assertEquals(UserRoleEnum.USER.name(), returned.getAuthorities().stream().findFirst().get().getAuthority());
     }
 
     @Test
