@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default}">
+<head>
+  <meta charset="UTF-8">
+  <title>Test Content Page</title>
+</head>
+<body>
+
+<section layout:fragment="content">
+  <h1>Edit User Details</h1>
+  <form th:action="@{/admin/users/edit}" th:object="${user}" method="post">
+    <input type="hidden" th:field="*{id}" />
+
+    <div>
+      <label>Email:</label>
+      <input type="email" th:field="*{email}" required />
+    </div>
+
+    <div>
+      <label>First Name:</label>
+      <input type="text" th:field="*{firstName}" required />
+    </div>
+
+    <div>
+      <label>Last Name:</label>
+      <input type="text" th:field="*{lastName}" required />
+    </div>
+
+    <div>
+      <label>Registered:</label>
+      <input type="checkbox" th:field="*{registered}" />
+    </div>
+
+    <ul>
+      <li th:each="role : ${userRoles}">
+        <span th:text="${role.name()}"></span>
+      </li>
+    </ul>
+    <ul>
+      <li th:each="role : ${allRoles}">
+        <span th:text="${role.getUserRole()}"></span>
+      </li>
+    </ul>
+
+    <select multiple class="form-control" id="dropDownList" name="selectedRoles">
+      <option th:each="role : ${allRoles}" th:value="${role.getUserRole()}" th:text="${role.getUserRole()}"></option>
+    </select>
+
+    <div>
+      <button type="submit">Save</button>
+    </div>
+  </form></section>
+
+</body>
+</html>

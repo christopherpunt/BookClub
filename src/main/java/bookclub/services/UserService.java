@@ -16,6 +16,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -111,5 +112,25 @@ public class UserService implements UserDetailsService {
                 user.getPassword(),
                 authorities
         );
+    }
+
+    public void updateUser(User user, List<String> selectedRoles) {
+        Optional<User> userOptional = userRepo.findById(user.getId());
+
+        List<UserRole> newRoles = selectedRoles.stream()
+                .map(UserRoleEnum::valueOf)
+                .map(UserRole::new)
+                .toList();
+
+        userRoleRepo.saveAll(newRoles);
+
+        if (userOptional.isPresent()) {
+            User foundUser = userOptional.get();
+            foundUser.setFirstName(user.getFirstName());
+            foundUser.setLastName(user.getLastName());
+            foundUser.setRegistered(user.isRegistered());
+            foundUser.setUserRoles(new ArrayList<>(newRoles));
+            userRepo.save(foundUser);
+        }
     }
 }
