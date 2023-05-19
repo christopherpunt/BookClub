@@ -42,7 +42,7 @@ public class AdminController {
         User user = userOptional.get();
         var enums = Arrays.stream(UserRoleEnum.values()).map(UserRole::new).collect(Collectors.toList());
         model.addAttribute("user", user);
-        model.addAttribute("userRoles", user.getUserRoles().stream().map(UserRole::getUserRole));
+        model.addAttribute("userRoles", user.getUserRoles().stream().map(UserRole::getUserRole).toList());
         model.addAttribute("allRoles", enums);
         return "admin/adminEditUser";
     }
