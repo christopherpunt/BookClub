@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layouts/default}">
+<head>
+  <meta charset="UTF-8">
+  <title>User Management</title>
+</head>
+<body>
+
+<section layout:fragment="content">
+
+  <h1>User Management</h1>
+  <table class="table">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Email</th>
+      <th>Full Name</th>
+      <th>Registered</th>
+      <th>Roles</th>
+      <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user : ${users}">
+      <td th:text="${user.id}"></td>
+      <td th:text="${user.email}"></td>
+      <td th:text="${user.getFullName()}"></td>
+      <td th:text="${user.isRegistered} ? 'Yes' : 'No'"></td>
+      <td>
+        <ul>
+          <li th:each="role : ${user.userRoles}">
+            <span th:text="${role.userRole}"></span>
+          </li>
+        </ul>
+      </td>
+      <td>
+        <a class="btn btn-info" th:href="@{/admin/users/{id}/edit(id=${user.id})}">Edit</a>
+        <a class="btn btn-danger" th:href="@{admin/users/{id}/delete(id=${user.id})}">Delete</a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+
+</section>
+
+</body>
+</html>

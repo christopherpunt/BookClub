@@ -1,6 +1,8 @@
 package unitTest;
 
+import bookclub.enums.UserRoleEnum;
 import bookclub.models.User;
+import bookclub.models.UserRole;
 import bookclub.repositories.UserRepository;
 import bookclub.services.UserService;
 import org.junit.jupiter.api.Test;
@@ -14,6 +16,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import utils.UserTestUtils;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -138,6 +141,8 @@ public class UserServiceTest extends BaseUnitTest{
         //arrange
         User user = UserTestUtils.createUser("Sydney", "Punt", "smfrelier@gmail.com", "solofest");
         when(userRepo.findByEmail(user.email)).thenReturn(Optional.of(user));
+        UserRole userRole = new UserRole(UserRoleEnum.USER);
+        user.setUserRoles(List.of(userRole));
 
         //act
         UserDetails returned = userService.loadUserByUsername(user.getEmail());
@@ -145,6 +150,8 @@ public class UserServiceTest extends BaseUnitTest{
         //assert
         assertEquals(user.getEmail(), returned.getUsername());
         assertEquals(user.getPassword(), returned.getPassword());
+        assertEquals(1, returned.getAuthorities().size());
+        assertEquals(UserRoleEnum.USER.name(), returned.getAuthorities().stream().findFirst().get().getAuthority());
     }
 
     @Test

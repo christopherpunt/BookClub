@@ -1,5 +1,6 @@
 package bookclub.controllers;
 
+import bookclub.enums.UserRoleEnum;
 import bookclub.models.User;
 import bookclub.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +9,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.List;
 
 @Controller
 public class UserController {
@@ -16,14 +16,23 @@ public class UserController {
     @Autowired
     UserService userService;
 
+    @GetMapping("/registerAdminUser")
+    @ResponseBody
+    public String registerAsAdmin(Principal principal){
+        userService.registerAsRole(principal.getName(), UserRoleEnum.ADMIN);
+        return "Registration Successful";
+    }
+
+    @GetMapping("/registerUserRole")
+    @ResponseBody
+    public String registerAsUser(Principal principal){
+        userService.registerAsRole(principal.getName(), UserRoleEnum.USER);
+        return "Registration Successful";
+    }
+
     @RequestMapping(value = "/user", method= RequestMethod.POST)
     public User createUser(@RequestBody User user) {
         return userService.createUser(user);
-    }
-
-    @RequestMapping(value = "/users", method=RequestMethod.GET)
-    public List<User> getUsers(){
-        return userService.getUsers();
     }
 
     @GetMapping("/login")
@@ -50,5 +59,4 @@ public class UserController {
         String name = principal.getName();
         return "hello" + name;
     }
-
 }

@@ -64,7 +64,7 @@ public class NotificationServiceTest extends BaseUnitTest{
 
         assertEquals(borrower, notification.getSender());
         assertEquals(loaner, notification.getReceiver());
-        assertEquals(NotificationType.BorrowRequest, notification.getNotificationType());
+        assertEquals(NotificationType.BORROW_REQUEST, notification.getNotificationType());
         assertEquals(book.getId(), notification.getNotificationData().get(NotificationData.BOOK_ID));
 
         verify(emailService).sendBookRequestNotification(borrower.getEmail(), loaner.getEmail(), book.getId());
@@ -92,7 +92,7 @@ public class NotificationServiceTest extends BaseUnitTest{
 
         assertEquals(sender, notification.getSender());
         assertEquals(receiver, notification.getReceiver());
-        assertEquals(NotificationType.FriendRequest, notification.getNotificationType());
+        assertEquals(NotificationType.FRIEND_REQUEST, notification.getNotificationType());
 
         verify(emailService).sendFriendRequest(sender.getEmail(), receiver.getEmail());
     }

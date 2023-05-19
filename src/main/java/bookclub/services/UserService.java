@@ -1,22 +1,34 @@
 package bookclub.services;
 
+import bookclub.enums.UserRoleEnum;
 import bookclub.models.User;
+import bookclub.models.UserRole;
 import bookclub.repositories.UserRepository;
+import bookclub.repositories.UserRoleRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationServiceException;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService implements UserDetailsService {
     @Autowired
     UserRepository userRepo;
+
+    @Autowired
+    UserRoleRepository userRoleRepo;
 
     public User createUser(User user) {
         Optional<User> existingUser = userRepo.findByEmail(user.getEmail());
@@ -63,19 +75,62 @@ public class UserService implements UserDetailsService {
         return userRepo.save(user);
     }
 
-    public List<User> getUsers() {
-        return userRepo.findAll();
+    public void registerAsRole(String username, UserRoleEnum roleEnum) {
+        User user = userRepo.findByEmail(username)
+                .orElseThrow(() -> new UsernameNotFoundException("A user with that email could not be found"));
+
+        List<UserRole> userRoles = user.getUserRoles();
+
+        boolean roleExists = userRoles.stream()
+                .anyMatch(role -> role.getUserRole() == roleEnum);
+
+        if (!roleExists) {
+            UserRole userRole = new UserRole(roleEnum);
+            userRole = userRoleRepo.save(userRole); // Save the UserRole entity
+
+            userRoles.add(userRole);
+            user.setUserRoles(userRoles);
+            userRepo.save(user);
+        }
     }
 
     @Override
+    @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepo.findByEmail(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Could not find username with email: " + username));
 
-        Optional<User> user = userRepo.findByEmail(username);
+        user.getUserRoles().size(); // Eagerly fetch the userRoles collection
 
-        if (user.isEmpty()){
-            throw new UsernameNotFoundException("Could not find username with email: " + username);
+        Collection<? extends GrantedAuthority> authorities = user.getUserRoles()
+                .stream()
+                .map(role -> new SimpleGrantedAuthority(role.getUserRole().name()))
+                .collect(Collectors.toList());
+
+        return new org.springframework.security.core.userdetails.User(
+                user.getEmail(),
+                user.getPassword(),
+                authorities
+        );
+    }
+
+    public void updateUser(User user, List<String> selectedRoles) {
+        Optional<User> userOptional = userRepo.findById(user.getId());
+
+        List<UserRole> newRoles = selectedRoles.stream()
+                .map(UserRoleEnum::valueOf)
+                .map(UserRole::new)
+                .toList();
+
+        userRoleRepo.saveAll(newRoles);
+
+        if (userOptional.isPresent()) {
+            User foundUser = userOptional.get();
+            foundUser.setFirstName(user.getFirstName());
+            foundUser.setLastName(user.getLastName());
+            foundUser.setRegistered(user.isRegistered());
+            foundUser.setUserRoles(new ArrayList<>(newRoles));
+            userRepo.save(foundUser);
         }
-
-        return user.get();
     }
 }
