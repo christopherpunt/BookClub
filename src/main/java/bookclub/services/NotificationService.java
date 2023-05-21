@@ -1,6 +1,5 @@
 package bookclub.services;
 
-import bookclub.enums.NotificationData;
 import bookclub.enums.NotificationType;
 import bookclub.enums.StatusEnum;
 import bookclub.models.Book;
@@ -45,8 +44,8 @@ public class NotificationService {
         notification.setStatus(StatusEnum.UNREAD);
         notification.setReceiver(loaner.get());
         notification.setSender(borrower.get());
-        notification.addNotificationData(NotificationData.BOOK_ID, bookId);
-        notification.setAction("action");
+//        notification.addNotificationData(NotificationData.BOOK_ID, bookId);
+//        notification.setAction("action");
 
         emailService.sendBookRequestNotification(borrower.get().getEmail(), loaner.get().getEmail(), bookId);
 

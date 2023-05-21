@@ -1,6 +1,5 @@
 package bookclub.services;
 
-import bookclub.enums.NotificationData;
 import bookclub.enums.StatusEnum;
 import bookclub.models.Notification;
 import bookclub.repositories.NotificationRepository;
@@ -34,11 +33,11 @@ public class NotificationCompletionService {
 
         switch (notification.getNotificationType()) {
             case BORROW_REQUEST -> {
-                bookService.completeBorrowRequest(
-                        Long.valueOf((Integer)notification.getNotificationData().get(NotificationData.BOOK_ID.name())),
-                        notification.getReceiver(),
-                        notification.getSender());
-                handled = true;
+//                bookService.completeBorrowRequest(
+//                        Long.valueOf((Integer)notification.getNotificationData().get(NotificationData.BOOK_ID.name())),
+//                        notification.getReceiver(),
+//                        notification.getSender());
+//                handled = true;
             }
             case FRIEND_REQUEST -> {
                 friendService.completeFriendship(notification.getSender().getEmail(), notification.getReceiver());
