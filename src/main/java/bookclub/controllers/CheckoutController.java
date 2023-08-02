@@ -6,13 +6,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class SubscriptionController {
+public class CheckoutController {
 
     @Value("${stripe.public.key}")
     private String stripePublicKey;
 
-    @GetMapping("/checkout")
-    public String checkout(Model model){
+    @GetMapping("/donate")
+    public String donate(Model model){
 
         model.addAttribute("stripePublicKey", stripePublicKey);
         return "pay/checkout";

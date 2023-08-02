@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default}">
 <head>
   <meta charset="utf-8" />
   <title>Accept a payment</title>
@@ -17,16 +19,27 @@
   <script src="/static/checkout.js" defer></script>
 </head>
 <body>
-<!-- Display a payment form -->
-<form id="payment-form">
-  <div id="payment-element">
-    <!--Stripe.js injects the Payment Element-->
+
+<section layout:fragment="content">
+  <!-- Display a payment form -->
+  <div class="container">
+    <form id="payment-form">
+      <div class="form-group">
+        <label for="donateAmount">Amount</label>
+        <input type="number" id="donateAmount" name="donateAmount" class="form-control"/>
+      </div>
+      <div id="payment-element">
+        <!--Stripe.js injects the Payment Element-->
+      </div>
+      <button id="submit">
+        <div class="spinner hidden" id="spinner"></div>
+        <span id="button-text">Pay now</span>
+      </button>
+      <div id="payment-message" class="hidden"></div>
+    </form>
   </div>
-  <button id="submit">
-    <div class="spinner hidden" id="spinner"></div>
-    <span id="button-text">Pay now</span>
-  </button>
-  <div id="payment-message" class="hidden"></div>
-</form>
+</section>
+
+
 </body>
 </html>
