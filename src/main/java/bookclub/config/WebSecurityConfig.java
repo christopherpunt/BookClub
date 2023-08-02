@@ -17,7 +17,7 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
             .authorizeHttpRequests()
-                .requestMatchers("/login", "/register").permitAll() // Allow access to login and register pages for everyone
+                .requestMatchers("/login", "/register", "/stripe/**").permitAll() // Allow access to login and register pages for everyone
                 .requestMatchers("/admin/**").hasAuthority(UserRoleEnum.ADMIN.name()) // Restrict access to /users page to only ADMIN users
                 .anyRequest().authenticated() // Require authentication for all other pages
             .and()
