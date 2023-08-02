@@ -34,7 +34,7 @@ public class StripeWebHookController {
                     );
                 } catch (SignatureVerificationException e) {
                     // Invalid signature
-                    logger.info("⚠️  Webhook error while validating signature.");
+                    logger.warn("⚠️  Webhook error while validating signature.");
                     return "";
                 }
             }
