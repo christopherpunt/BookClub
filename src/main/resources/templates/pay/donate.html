@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html   xmlns:th="http://www.thymeleaf.org"
+        xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+        layout:decorate="~{layouts/default}">
+<head>
+  <meta charset="UTF-8">
+  <title>Test Content Page</title>
+</head>
+<body>
+
+<section layout:fragment="content">
+  <form id="donate-form" th:action="@{/checkout}" th:object="${donateForm}" method="POST">
+    <p><b>Please Donate to support this application!</b></p>
+    <p>Email: <label for="email"></label><input type="text" th:field="*{email}" id="email" placeholder="Email Address" required></p>
+    <p>Amount: <label for="amount"></label><input type="text" th:field="*{amount}" id="amount" placeholder="Amount" required></p>
+    <p><input type="submit"></p>
+  </form>
+</section>
+
+</body>
+</html>

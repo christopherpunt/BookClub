@@ -1,7 +1,7 @@
 package bookclub.controllers;
 
-import bookclub.dtos.CreatePayment;
 import bookclub.dtos.CreatePaymentResponse;
+import bookclub.dtos.DonateForm;
 import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentIntent;
 import com.stripe.param.PaymentIntentCreateParams;
@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class PaymentController {
 
     @PostMapping("/create-payment-intent")
-    public CreatePaymentResponse createPaymentIntent(@RequestBody CreatePayment createPayment) throws StripeException {
+    public CreatePaymentResponse createPaymentIntent(@RequestBody DonateForm donateForm) throws StripeException {
         PaymentIntentCreateParams params = PaymentIntentCreateParams.builder()
-            .setAmount(10 * 100L)
+            .setAmount(donateForm.getAmount() * 100L)
             .setCurrency("usd")
             .build();
 
@@ -24,5 +24,4 @@ public class PaymentController {
 
         return new CreatePaymentResponse(paymentIntent.getClientSecret());
     }
-
 }

@@ -13,6 +13,7 @@
       /*<![CDATA[*/
 
          var stripePublicKey = /*[[${stripePublicKey}]]*/ null;
+         var amount = /*[[${amount}]]*/ null;
 
        /*]]>*/
 </script>
@@ -24,10 +25,6 @@
   <!-- Display a payment form -->
   <div class="container">
     <form id="payment-form">
-      <div class="form-group">
-        <label for="donateAmount">Amount</label>
-        <input type="number" id="donateAmount" name="donateAmount" class="form-control"/>
-      </div>
       <div id="payment-element">
         <!--Stripe.js injects the Payment Element-->
       </div>
