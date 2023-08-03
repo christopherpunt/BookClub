@@ -5,6 +5,7 @@ import bookclub.dtos.DonateForm;
 import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentIntent;
 import com.stripe.param.PaymentIntentCreateParams;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class PaymentController {
 
     @PostMapping("/create-payment-intent")
-    public CreatePaymentResponse createPaymentIntent(@RequestBody DonateForm donateForm) throws StripeException {
+    public CreatePaymentResponse createPaymentIntent(@RequestBody @Valid DonateForm donateForm) throws StripeException {
         PaymentIntentCreateParams params = PaymentIntentCreateParams.builder()
             .setAmount(donateForm.getAmount() * 100L)
             .setCurrency("usd")
