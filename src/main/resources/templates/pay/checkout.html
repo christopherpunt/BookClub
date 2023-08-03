@@ -25,6 +25,8 @@
   <!-- Display a payment form -->
   <div class="container">
     <form id="payment-form">
+      <p><b>Thank you for supporting BookClub!</b></p>
+      <p>After entering your details below, you will be charged <span th:text="${amount}">[xx]</span> USD.</p>
       <div id="payment-element">
         <!--Stripe.js injects the Payment Element-->
       </div>
