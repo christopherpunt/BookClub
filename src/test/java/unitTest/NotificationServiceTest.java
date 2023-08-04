@@ -1,14 +1,14 @@
 package unitTest;
 
-import bookclub.enums.NotificationType;
-import bookclub.models.Book;
-import bookclub.models.Notification;
-import bookclub.models.User;
-import bookclub.repositories.BookRepository;
-import bookclub.repositories.NotificationRepository;
-import bookclub.repositories.UserRepository;
-import bookclub.services.EmailService;
-import bookclub.services.NotificationService;
+import bookclub.book.Book;
+import bookclub.book.BookRepository;
+import bookclub.notification.Notification;
+import bookclub.notification.NotificationRepository;
+import bookclub.notification.NotificationService;
+import bookclub.notification.NotificationType;
+import bookclub.user.EmailService;
+import bookclub.user.User;
+import bookclub.user.UserRepository;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;

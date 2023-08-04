@@ -1,10 +1,6 @@
 package unitTest;
 
-import bookclub.enums.UserRoleEnum;
-import bookclub.models.User;
-import bookclub.models.UserRole;
-import bookclub.repositories.UserRepository;
-import bookclub.services.UserService;
+import bookclub.user.*;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;

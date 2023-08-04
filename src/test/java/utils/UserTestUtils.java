@@ -1,6 +1,6 @@
 package utils;
 
-import bookclub.models.User;
+import bookclub.user.User;
 
 public class UserTestUtils {
 

@@ -1,7 +1,7 @@
 package utils;
 
-import bookclub.models.Book;
-import bookclub.models.User;
+import bookclub.book.Book;
+import bookclub.user.User;
 
 import java.util.ArrayList;
 import java.util.List;

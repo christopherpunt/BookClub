@@ -1,9 +1,9 @@
 package integrationTest;
 
-import bookclub.models.Book;
-import bookclub.models.User;
-import bookclub.repositories.BookRepository;
-import bookclub.repositories.UserRepository;
+import bookclub.book.Book;
+import bookclub.book.BookRepository;
+import bookclub.user.User;
+import bookclub.user.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import utils.BookTestUtils;

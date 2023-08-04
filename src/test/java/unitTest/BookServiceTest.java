@@ -1,10 +1,10 @@
 package unitTest;
 
-import bookclub.models.Book;
-import bookclub.models.User;
-import bookclub.repositories.BookRepository;
-import bookclub.repositories.UserRepository;
-import bookclub.services.BookService;
+import bookclub.book.Book;
+import bookclub.book.BookRepository;
+import bookclub.book.BookService;
+import bookclub.user.User;
+import bookclub.user.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;

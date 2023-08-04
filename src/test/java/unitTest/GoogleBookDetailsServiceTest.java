@@ -1,7 +1,7 @@
 package unitTest;
 
-import bookclub.models.Book;
-import bookclub.services.GoogleBookDetailsService;
+import bookclub.book.Book;
+import bookclub.book.GoogleBookDetailsService;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
