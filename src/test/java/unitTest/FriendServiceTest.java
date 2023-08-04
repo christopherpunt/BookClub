@@ -1,14 +1,14 @@
 package unitTest;
 
-import bookclub.models.Book;
-import bookclub.models.Friendship;
-import bookclub.models.User;
-import bookclub.repositories.BookRepository;
-import bookclub.repositories.FriendshipRepository;
-import bookclub.repositories.UserRepository;
-import bookclub.services.FriendService;
-import bookclub.services.NotificationService;
-import bookclub.services.UserService;
+import bookclub.book.Book;
+import bookclub.book.BookRepository;
+import bookclub.friend.FriendService;
+import bookclub.friend.Friendship;
+import bookclub.friend.FriendshipRepository;
+import bookclub.notification.NotificationService;
+import bookclub.user.User;
+import bookclub.user.UserRepository;
+import bookclub.user.UserService;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;

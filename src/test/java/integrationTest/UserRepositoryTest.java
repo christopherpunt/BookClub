@@ -1,9 +1,9 @@
 package integrationTest;
 
-import bookclub.enums.UserRoleEnum;
-import bookclub.models.User;
-import bookclub.models.UserRole;
-import bookclub.repositories.UserRepository;
+import bookclub.user.User;
+import bookclub.user.UserRepository;
+import bookclub.user.UserRole;
+import bookclub.user.UserRoleEnum;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import utils.UserTestUtils;
