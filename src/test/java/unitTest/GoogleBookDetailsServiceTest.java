@@ -21,10 +21,10 @@ public class GoogleBookDetailsServiceTest {
         }
 
         assertNotNull(book);
-        assertEquals("Harry Potter the Complete Series", book.getTitle());
+        assertEquals("Harry Potter Paperback Boxed Set: Books 1-7", book.getTitle());
         assertEquals("J. K. Rowling", book.getAuthor());
         assertEquals("9780545162074", book.getIsbn());
-        assertEquals("Collects the complete series that relates the adventures of young Harry Potter, who attends Hogwarts School of Witchcraft and Wizardry, where he and others of his kind learn their craft.", book.getDescription());
+        assertEquals("For the first time, Rowling's seven bestselling Harry Potter books are available in a paperback boxed set. This is the ultimate Harry Potter collection for Potter fans.", book.getDescription());
     }
 
     @Test
