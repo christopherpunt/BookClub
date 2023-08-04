@@ -20,14 +20,14 @@ public class FriendController {
     @GetMapping("/myFriends")
     public ModelAndView getFriendsList(Principal principal){
         List<User> friends = friendService.findAllFriendsFromUser(principal.getName());
-        ModelAndView modelAndView = new ModelAndView("friends.html");
+        ModelAndView modelAndView = new ModelAndView("friend/friends.html");
         modelAndView.addObject("friends", friends);
         return modelAndView;
     }
 
     @GetMapping("/addFriend")
     public String addFriendView(){
-        return "add-friend";
+        return "friend/add-friend";
     }
 
     @PostMapping("/addFriend")

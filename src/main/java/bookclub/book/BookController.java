@@ -34,7 +34,7 @@ public class BookController {
         if(book.isPresent()){
             model.addAttribute("book", book.get());
             model.addAttribute("friends", friends);
-            return "book_details";
+            return "book/book_details";
         }
 
         return "no book found";
@@ -46,7 +46,7 @@ public class BookController {
 
         if(book.isPresent()){
             model.addAttribute("book", book.get());
-            return "edit_book_details";
+            return "book/edit_book_details";
         }
         return "no book found";
     }
@@ -56,7 +56,7 @@ public class BookController {
         boolean updated = bookService.updateAllDetails(book);
 
         if (updated){
-            return "redirect:/book_details/" + book.getId();
+            return "redirect:/book/book_details/" + book.getId();
         }
         return "redirect:/home";
     }

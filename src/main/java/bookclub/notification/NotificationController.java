@@ -23,7 +23,7 @@ public class NotificationController {
     public String getNotifications(Model model, Principal principal){
         List<Notification> notifications = notificationService.getNotificationsForUsername(principal.getName());
         model.addAttribute("notifications", notifications);
-        return "notificationsPage";
+        return "notification/notificationsPage";
     }
 
     @PostMapping("/notifications/confirm")

@@ -27,7 +27,7 @@ public class FriendBooksController {
     @GetMapping("/searchFriendsBooks")
     public ModelAndView showSearchFriendsBooks(Principal principal){
         List<Book> friendsBooks = friendService.findAllFriendsBooks(principal.getName());
-        ModelAndView modelAndView = new ModelAndView("search-friends-books.html");
+        ModelAndView modelAndView = new ModelAndView("friend/search-friends-books.html");
         modelAndView.addObject("friendsBooks", friendsBooks);
         return modelAndView;
     }
@@ -35,7 +35,7 @@ public class FriendBooksController {
     @PostMapping("/searchFriendsBooks")
     public ModelAndView searchFriendsBooks(@RequestParam String searchTerm, Principal principal){
         List<Book> friendsBooks = friendService.findAllFriendsBooksMatchSearch(principal.getName(), searchTerm);
-        ModelAndView modelAndView = new ModelAndView("search-friends-books.html");
+        ModelAndView modelAndView = new ModelAndView("friend/search-friends-books.html");
         modelAndView.addObject("friendsBooks", friendsBooks);
         return modelAndView;
     }

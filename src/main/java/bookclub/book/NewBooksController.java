@@ -19,14 +19,14 @@ public class NewBooksController {
 
     @GetMapping("/searchGoogleBooks")
     public String showCreateBookForm(){
-        return "search-google-books";
+        return "book/search-google-books";
     }
 
     @PostMapping("/searchGoogleBooks")
     public ModelAndView searchBookFromTitle(@RequestBody String title, Principal principal){
         List<Book> books = GoogleBookDetailsService.getBooksBasedOnTitle(title);
 
-        ModelAndView modelAndView = new ModelAndView("search-google-books.html");
+        ModelAndView modelAndView = new ModelAndView("book/search-google-books.html");
         modelAndView.addObject("books", books);
         return modelAndView;
     }

@@ -34,21 +34,21 @@ public class UserController {
 
     @GetMapping("/login")
     public String login(){
-        return "login";
+        return "login/login";
     }
 
     @GetMapping("/register")
     public String showRegistrationForm(Model model){
         model.addAttribute("user", new User());
 
-        return "signup_form";
+        return "login/signup_form";
     }
 
     @PostMapping("/register")
     public String processRegister(User user) {
         userService.createUser(user);
 
-        return "register_success";
+        return "login/register_success";
     }
 
     @GetMapping("/currentUser")
