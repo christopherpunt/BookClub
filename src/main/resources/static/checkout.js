@@ -37,6 +37,12 @@ async function initialize() {
   paymentElement.mount("#payment-element");
 }
 
+// Function to get the base URL of the current website
+function getBaseURL() {
+  const base = window.location.protocol + "//" + window.location.host;
+  return base;
+}
+
 async function handleSubmit(e) {
   e.preventDefault();
   setLoading(true);
@@ -46,7 +52,7 @@ async function handleSubmit(e) {
     confirmParams: {
       // Make sure to change this to your payment completion page
       //TODO: how should I set this payment completion page
-      return_url: 'http://localhost:8080/checkout',
+      return_url: getBaseURL() + '/',
     },
   });
 
