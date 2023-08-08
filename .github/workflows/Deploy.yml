@@ -46,11 +46,6 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: java-app
-          
-      - name: Azure Login
-        uses: azure/login@v1
-        with: 
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
@@ -58,5 +53,5 @@ jobs:
         with:
           app-name: 'ShareABook'
           slot-name: 'production'
-          publish-profile: ${{ secrets.AzureAppService_PublishProfile_78cb6a5340db4b578071c72c9900acbe }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_82FE5B545D8149AB9ABF7CFE28C60D82 }}
           package: '*.jar'
