@@ -69,7 +69,6 @@ test {
     environment 'DB_PASSWORD', 'testpassword'
 }
 
-bootJar.enabled = false
 jar {
     archiveBaseName = 'BookClub'
     version = '1.0-SNAPSHOT'
