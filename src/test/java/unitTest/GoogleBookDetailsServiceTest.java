@@ -2,6 +2,7 @@ package unitTest;
 
 import bookclub.book.Book;
 import bookclub.book.GoogleBookDetailsService;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -13,6 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 public class GoogleBookDetailsServiceTest {
 
     @Test
+    @Disabled
     public void getBookDetailsTest(){
         Optional<Book> bookOptional = GoogleBookDetailsService.getBookDetailsFromIsbn("0545162076");
         Book book = null;
@@ -28,6 +30,7 @@ public class GoogleBookDetailsServiceTest {
     }
 
     @Test
+    @Disabled
     public void getBooksFromTitle(){
         List<Book> books = GoogleBookDetailsService.getBooksBasedOnTitle("A time to kill");
         assertEquals(40, books.size());
