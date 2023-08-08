@@ -8,14 +8,20 @@ import com.stripe.model.StripeObject;
 import com.stripe.net.Webhook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.text.MessageFormat;
+
 @RestController
 public class StripeWebHookController {
+
+    @Autowired
+    private PaymentService paymentService;
 
     private Logger logger = LoggerFactory.getLogger(StripeWebHookController.class);
 
@@ -54,7 +60,9 @@ public class StripeWebHookController {
                     PaymentIntent paymentIntent = (PaymentIntent) stripeObject;
                     // Then define and call a method to handle the successful payment intent.
                     if (paymentIntent != null) {
-                        handlePaymentIntentSucceeded(paymentIntent);
+                        String userEmail = paymentIntent.getMetadata().get("donorEmail");
+                        logger.info(MessageFormat.format("Payment from {0} for ${1} succeeded.", userEmail, paymentIntent.getAmount()));
+                        paymentService.handlePaymentCompleted(userEmail, paymentIntent.getId(), paymentIntent.getAmount());
                     }
                     break;
                 default:
@@ -64,9 +72,7 @@ public class StripeWebHookController {
             return "";
     }
 
-    private void handlePaymentIntentSucceeded(PaymentIntent paymentIntent){
-        logger.info("Payment for " + paymentIntent.getAmount() + " succeeded.");
+    private void handlePaymentIntentSucceeded(PaymentIntent paymentIntent, String donorEmail){
 
-        //TODO: handle payment
     }
 }

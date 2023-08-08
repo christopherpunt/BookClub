@@ -1,14 +1,12 @@
 package bookclub.payment;
 
 
-public class CreatePaymentResponse {
-    public String getClientSecret() {
-        return clientSecret;
-    }
+import lombok.Getter;
+import lombok.Setter;
 
-    public void setClientSecret(String clientSecret) {
-        this.clientSecret = clientSecret;
-    }
+@Getter
+@Setter
+public class CreatePaymentResponse {
 
     private String clientSecret;
 
