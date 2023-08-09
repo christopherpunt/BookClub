@@ -25,27 +25,37 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav">
-        <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="/">Home</a>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="libraryDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Library
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="libraryDropdown">
+            <li><a class="dropdown-item" href="/">My Library</a></li>
+            <li><a class="dropdown-item" href="/searchGoogleBooks">Add Books</a></li>
+          </ul>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/searchGoogleBooks">Add books to library</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/searchFriendsBooks">Find Friends Books</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/myFriends">MyFriends</a>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="friendsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Friends
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="friendsDropdown">
+            <li><a class="dropdown-item" href="/searchFriendsBooks">Find Friends' Books</a></li>
+            <li><a class="dropdown-item" href="/myFriends">My Friends</a></li>
+          </ul>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="/donate">Donate</a>
         </li>
       </ul>
+
       <ul class="navbar-nav ms-auto">
-        <li class="nav-item">
-          <a class="nav-link" sec:authorize="hasAuthority('ADMIN')" href="/admin/users">
-            Users
+        <li class="nav-item dropdown" sec:authorize="hasAuthority('ADMIN')">
+          <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Admin
           </a>
+          <ul class="dropdown-menu" aria-labelledby="libraryDropdown">
+            <li><a class="dropdown-item" href="/admin/users">Users</a></li>
+          </ul>
         </li>
 
         <li class="nav-item">
