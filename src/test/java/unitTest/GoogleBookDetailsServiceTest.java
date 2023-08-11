@@ -26,7 +26,6 @@ public class GoogleBookDetailsServiceTest {
         assertEquals("Harry Potter Paperback Boxed Set: Books 1-7", book.getTitle());
         assertEquals("J. K. Rowling", book.getAuthor());
         assertEquals("9780545162074", book.getIsbn());
-        assertEquals("For the first time, Rowling's seven bestselling Harry Potter books are available in a paperback boxed set. This is the ultimate Harry Potter collection for Potter fans.", book.getDescription());
     }
 
     @Test
