@@ -31,8 +31,9 @@ public class NewBooksController {
         return modelAndView;
     }
 
-    @PostMapping(value = "/addBook", consumes = "application/json")
-    public ResponseEntity<String> addBook(@RequestBody Book book, Principal principal) {
+    @PostMapping(value = "/addBook")
+    public ResponseEntity<String> addBook(@RequestBody String bookString, Principal principal) {
+        Book book = new Book(bookString);
         boolean success = bookService.newBookForOwner(principal.getName(), book);
 
         if (success){

@@ -48,13 +48,13 @@ public class FriendBooksController {
             return "There was a problem sending the borrow request";
         }
 
-        return "redirect:/home";
+        return "redirect:/";
     }
 
     @PostMapping("book/returnBook")
     public String returnBook(@RequestParam Long bookId, @RequestParam Long borrowedFromUserId){
         bookService.returnBook(bookId, borrowedFromUserId);
-        return "redirect:/home";
+        return "redirect:/";
     }
 
 }

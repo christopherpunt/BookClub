@@ -98,13 +98,8 @@ public class GoogleBookDetailsService {
         Book book = new Book();
 
         book.setIsbn(getIsbn13(jsonBook));
-
         book.setTitle(getTitle(jsonBook));
-
         book.setAuthor(getAuthors(jsonBook));
-
-        book.setDescription(getDescription(jsonBook));
-
         book.setBookCoverUrl(getImageUrl(jsonBook));
 
         return book;

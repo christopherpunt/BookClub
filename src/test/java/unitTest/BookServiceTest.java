@@ -64,7 +64,7 @@ public class BookServiceTest extends BaseUnitTest {
     public void addBookAsOwnedByUserTest(){
         //arrange
         User user = UserTestUtils.createUser("Chris Punt");
-        Book book = BookTestUtils.createBook("Title", "Author", "Description", "ISBN");
+        Book book = BookTestUtils.createBook("Title", "Author", "ISBN");
 
         when(userRepo.findByEmail(user.getEmail())).thenReturn(Optional.of(user));
 
@@ -143,7 +143,5 @@ public class BookServiceTest extends BaseUnitTest {
         assertNull(savedBooks.get(1).getLentToUser());
         assertEquals(owner, savedBooks.get(1).getUser());
         assertTrue(savedBooks.get(1).isOwner());
-
-
     }
 }

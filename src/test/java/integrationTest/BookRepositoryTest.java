@@ -31,9 +31,9 @@ public class BookRepositoryTest extends BaseJpaIntegrationTest{
         userRepository.save(user1);
         userRepository.save(user2);
 
-        Book book1 = BookTestUtils.createBook(user1, "Title1", "Author1", "1234567890", "Book 1");
-        Book book2 = BookTestUtils.createBook(user1, "Title2", "Author2", "1234567890", "Book 2");
-        Book book3 = BookTestUtils.createBook(user2, "Title3", "Author3", "1234567890", "Book 3");
+        Book book1 = BookTestUtils.createBook(user1, "Title1", "Author1", "1234567890");
+        Book book2 = BookTestUtils.createBook(user1, "Title2", "Author2", "1234567890");
+        Book book3 = BookTestUtils.createBook(user2, "Title3", "Author3", "1234567890");
 
         bookRepo.saveAll(Arrays.asList(book1, book2, book3));
 
