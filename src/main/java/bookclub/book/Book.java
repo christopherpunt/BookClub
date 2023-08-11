@@ -23,15 +23,13 @@ public class Book extends BaseEntity {
         this.Title = book.getTitle();
         this.Author = book.getAuthor();
         this.Isbn = book.getIsbn();
-        this.Description = book.getDescription();
         this.BookCoverUrl = book.getBookCoverUrl();
     }
 
-    public Book(String Title, String Author, String Isbn, String Description, String bookCoverUrl){
+    public Book(String Title, String Author, String Isbn, String bookCoverUrl){
         this.Title = Title;
         this.Author = Author;
         this.Isbn = Isbn;
-        this.Description = Description;
         this.BookCoverUrl = bookCoverUrl;
     }
 
@@ -53,10 +51,6 @@ public class Book extends BaseEntity {
     @Column
     private String Isbn;
 
-    @Lob
-    @Column(columnDefinition="TEXT")
-    private String Description;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "borrowed_from_user_id")
     private User BorrowedFromUser;
@@ -76,7 +70,6 @@ public class Book extends BaseEntity {
         object.addProperty("Title", this.Title);
         object.addProperty("Author", this.Author);
         object.addProperty("Isbn", this.Isbn);
-        object.addProperty("Description", this.Description);
         object.addProperty("BookCoverUrl", this.BookCoverUrl);
 
         return new Gson().toJson(object);
@@ -96,10 +89,9 @@ public class Book extends BaseEntity {
             String title = jsonObject.get("Title").getAsString();
             String author = jsonObject.get("Author").getAsString();
             String isbn = jsonObject.get("Isbn").getAsString();
-            String description = jsonObject.get("Description").getAsString();
             String bookCoverUrl = jsonObject.get("BookCoverUrl").getAsString();
 
-            return new Book(title, author, isbn, description, bookCoverUrl);
+            return new Book(title, author, isbn, bookCoverUrl);
         }
     }
 }

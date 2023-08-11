@@ -34,7 +34,6 @@ public class BookService {
             bookToSave.setTitle(book.getTitle());
             bookToSave.setAuthor(book.getAuthor());
             bookToSave.setIsbn(book.getIsbn());
-            bookToSave.setDescription(book.getDescription());
             bookToSave.setBorrowedFromUser(book.getBorrowedFromUser());
             bookToSave.setLentToUser(book.getLentToUser());
             bookRepo.save(bookToSave);
@@ -49,8 +48,6 @@ public class BookService {
         if (user.isPresent()) {
             book.setUser(user.get());
             book.setOwner(true);
-            //TODO: fix description when its too long
-            book.setDescription("");
             bookRepo.save(book);
             return true;
         }
@@ -73,7 +70,6 @@ public class BookService {
         newBook.setBookCoverUrl(book.getBookCoverUrl());
         newBook.setTitle(book.getTitle());
         newBook.setAuthor(book.getAuthor());
-        newBook.setDescription(book.getDescription());
         newBook.setIsbn(book.getIsbn());
 
         bookRepo.save(newBook);

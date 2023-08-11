@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.servlet.view.RedirectView;
 
 import java.security.Principal;
 import java.util.List;
@@ -58,14 +57,12 @@ public class BookController {
         if (updated){
             return "redirect:/book/book_details/" + book.getId();
         }
-        return "redirect:/home";
+        return "redirect:/";
     }
 
     @PostMapping("/deleteBook/{id}")
-    public RedirectView removeBook(@PathVariable Long id, Model model){
+    public String removeBook(@PathVariable Long id, Model model){
         bookRepo.deleteById(id);
-        RedirectView redirectView = new RedirectView();
-        redirectView.setUrl("/home");
-        return redirectView;
+        return "redirect:/";
     }
 }
