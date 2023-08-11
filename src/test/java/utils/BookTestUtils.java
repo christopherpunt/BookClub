@@ -9,24 +9,22 @@ import java.util.Random;
 
 public class BookTestUtils {
 
-    public static Book createBook(String title, String author, String isbn, String description) {
+    public static Book createBook(String title, String author, String isbn) {
         Book book = new Book();
         book.setId(new Random().nextLong());
         book.setTitle(title);
         book.setAuthor(author);
         book.setIsbn(isbn);
-        book.setDescription(description);
         return book;
     }
 
-    public static Book createBook(User user, String title, String author, String isbn, String description) {
+    public static Book createBook(User user, String title, String author, String isbn) {
         Book book = new Book();
         book.setUser(user);
         book.setId(new Random().nextLong());
         book.setTitle(title);
         book.setAuthor(author);
         book.setIsbn(isbn);
-        book.setDescription(description);
         return book;
     }
 
@@ -48,8 +46,6 @@ public class BookTestUtils {
         return book;
 
     }
-
-
 
     public static List<Book> createBooksForUser(int numBooks, User user){
         List<Book> books = new ArrayList<>();
