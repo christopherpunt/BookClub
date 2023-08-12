@@ -1,5 +1,6 @@
 package bookclub.book;
 
+import bookclub.purge.PurgeableEntity;
 import bookclub.shared.BaseEntity;
 import bookclub.user.User;
 import com.google.gson.*;
@@ -12,6 +13,7 @@ import java.lang.reflect.Type;
 @Getter
 @Setter
 @Entity
+@PurgeableEntity
 public class Book extends BaseEntity {
 
     public Book(){}
