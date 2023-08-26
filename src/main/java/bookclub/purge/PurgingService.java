@@ -24,7 +24,7 @@ public class PurgingService {
     @Autowired
     private ApplicationContext applicationContext;
 
-    @Scheduled(cron = "0 */1 * * * *") // Schedule to run every 5 minutes
+    @Scheduled(cron = "0 0 * * * *") // Schedule to run every hour
     public List<BaseEntity> purgeEntities() {
         List<BaseEntity> purgedEntities = new ArrayList<>();
 
