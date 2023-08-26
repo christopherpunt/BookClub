@@ -1,5 +1,6 @@
 package bookclub.notification;
 
+import bookclub.purge.PurgeableEntity;
 import bookclub.shared.BaseEntity;
 import bookclub.user.User;
 import jakarta.persistence.*;
@@ -9,6 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
+@PurgeableEntity(repositoryClass = NotificationRepository.class)
 public class Notification extends BaseEntity {
     @ManyToOne
     private User receiver;
