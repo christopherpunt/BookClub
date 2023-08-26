@@ -8,5 +8,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface PurgeableEntity {
+    Class<?> repositoryClass();
     int daysBeforePurge() default 30; // Default threshold, you can adjust this
 }

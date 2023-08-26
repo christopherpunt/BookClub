@@ -1,43 +1,57 @@
 package bookclub.purge;
 
+import bookclub.shared.BaseEntity;
+import bookclub.shared.PurgeableRepository;
+import bookclub.shared.StatusEnum;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 @Service
 public class PurgingService {
+    private Logger logger = LoggerFactory.getLogger(PurgingService.class);
 
-    public void purgeEntities() {
+    @Autowired
+    private ApplicationContext applicationContext;
+
+    @Scheduled(cron = "0 */1 * * * *") // Schedule to run every 5 minutes
+    public List<BaseEntity> purgeEntities() {
+        List<BaseEntity> purgedEntities = new ArrayList<>();
+
         List<Class<?>> purgeableEntityClasses = getClassesWithAnnotation();
 
         for (Class<?> entityClass : purgeableEntityClasses) {
             PurgeableEntity purgeableAnnotation = entityClass.getAnnotation(PurgeableEntity.class);
             int daysBeforePurge = purgeableAnnotation.daysBeforePurge();
-            Date thresholdDate = calculateThresholdDate(daysBeforePurge);
+            LocalDateTime thresholdDate = calculateThresholdDate(daysBeforePurge);
 
-//            List<?> entitiesToPurge = entityManager.createQuery("SELECT e FROM " + entityClass.getSimpleName() + " e WHERE e.status = :status AND e.modifiedDate < :thresholdDate")
-//                    .setParameter("status", StatusEnum.DELETED) // Adjust as needed
-//                    .setParameter("thresholdDate", thresholdDate)
-//                    .getResultList();
-//
-//            // Delete the purged entities
-//            for (Object entity : entitiesToPurge) {
-//                entityManager.remove(entity);
-//            }
+            @SuppressWarnings("unchecked")
+            PurgeableRepository<BaseEntity> repository = (PurgeableRepository<BaseEntity>)
+                    applicationContext.getBean(purgeableAnnotation.repositoryClass());
+            List<BaseEntity> entitiesToPurge = repository.findByStatusAndModifiedDateBefore(StatusEnum.DELETED, thresholdDate);
+
+            // Delete the purged entities
+            repository.deleteAll(entitiesToPurge);
+            purgedEntities.addAll(entitiesToPurge);
         }
+
+        logger.info("Successfully purged {} items from the database", purgedEntities.size());
+        return purgedEntities;
     }
 
-    private Date calculateThresholdDate(int daysBeforePurge) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date());
-        calendar.add(Calendar.DAY_OF_MONTH, -daysBeforePurge);
-        return calendar.getTime();
+
+    private LocalDateTime calculateThresholdDate(int daysBeforePurge) {
+        return LocalDateTime.now().minusDays(daysBeforePurge);
     }
 
     private List<Class<?>> getClassesWithAnnotation() {

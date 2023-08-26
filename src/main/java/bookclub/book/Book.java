@@ -13,7 +13,7 @@ import java.lang.reflect.Type;
 @Getter
 @Setter
 @Entity
-@PurgeableEntity
+@PurgeableEntity(repositoryClass = BookRepository.class)
 public class Book extends BaseEntity {
 
     public Book(){}
